@@ -20,6 +20,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import ScrollToTop from "./components/ScrollToTop"
+import Overseas from "@/pages/Overseas";
 
 
 const queryClient = new QueryClient();
@@ -32,7 +33,6 @@ const App = () => (
       <Toaster />
       <Sonner />
 
-
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
@@ -43,6 +43,7 @@ const App = () => (
           <Route path="/online-training" element={<OnlineTraining />} />
           <Route path="/classroom-training" element={<ClassroomTraining />} />
           <Route path="/corporate-training" element={<CorporateTraining />} />
+          <Route path="/overseas" element={<Overseas />} />
           <Route path="/placements" element={<Placements />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/about" element={<About />} />

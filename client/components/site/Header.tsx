@@ -9,6 +9,7 @@ const navItems = [
   { to: "/online-training", label: "Online Training" },
   { to: "/classroom-training", label: "Classroom" },
   { to: "/corporate-training", label: "Corporate" },
+  { to: "/overseas", label: "Overseas" },
   { to: "/placements", label: "Placements" },
   { to: "/blog", label: "Blog" },
   { to: "/about", label: "About" },

@@ -2,15 +2,16 @@ import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-// import Hero1 from "../../../public/image.png";
-// import Hero2 from "../../../public/DA.png";
-import Hero3 from "../../../public/py1.png";
-import hero4 from "../../../public/AIdata2.jpg"
+import Hero1 from "../../../public/honeBanner/crt.jpeg";
+import Hero2 from "../../../public/honeBanner/databricks.jpeg";
+import Hero3 from "../../../public/honeBanner/german.jpeg";
+import hero4 from "../../../public/honeBanner/service.jpeg";
 
 const slides = [
+  // { image: Hero3, cta: { label: "Explore Courses", to: "/courses" } },
   { image: Hero3, cta: { label: "Explore Courses", to: "/courses" } },
-  // { image: Hero2, cta: { label: "View Programs", to: "/courses" } },
-  // { image: Hero1, cta: { label: "Contact Us", to: "/contact" } },
+  { image: Hero2, cta: { label: "View Programs", to: "/courses" } },
+  { image: Hero1, cta: { label: "Contact Us", to: "/contact" } },
   { image: hero4, cta: { label: "Contact Us", to: "/contact" } },
 ];
 
@@ -29,7 +30,9 @@ export default function HeroSlider() {
     const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
     emblaApi.on("select", onSelect);
     onSelect();
-    return () => emblaApi.off("select", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
   }, [emblaApi]);
 
   // Auto-play
@@ -43,9 +46,9 @@ export default function HeroSlider() {
   }, [emblaApi, playing]);
 
   return (
-    <div className="relative w-full max-w-[1920px] mx-auto">
+    <div className=" relative w-full max-w-[1920px] mx-auto">
       {/* Slides */}
-      <div className="overflow-hidden" ref={emblaRef}>
+      <div className=" overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {slides.map((s, idx) => (
             <div key={idx} className="min-w-full relative">
@@ -55,12 +58,12 @@ export default function HeroSlider() {
                   alt={`Slide ${idx + 1}`}
                   className="w-full h-full object-cover object-center"
                   onError={(e) => {
-                    e.target.src = "https://via.placeholder.com/1920x1080";
+                    (e.target as HTMLImageElement).src = "https://via.placeholder.com/1920x1080";
                   }}
                 />
-                <div className="absolute inset-0 bg-black/20 xs:bg-black/25 sm:bg-black/30" />
+                {/* <div className="absolute inset-0 bg-black/20 xs:bg-black/25 sm:bg-black/30" /> */}
               </div>
-            </div>
+            </div>  
           ))}
         </div>
       </div>

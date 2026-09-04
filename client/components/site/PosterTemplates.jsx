@@ -2,14 +2,49 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { SparklesIcon, PlayCircleIcon, TrophyIcon, EyeIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import newposter6 from "../../../public/newposter6.jpg";
-import newposter5 from "../../../public/newposter5.jpg";
-import poster3 from "../../../public/poster3.jpg";
-import poster4 from "../../../public/poster4.jpg";
-
+import newposter6 from "../../../public/homeUpdates/newposter6.jpg";
+import newposter5 from "../../../public/homeUpdates/newposter5.jpg";
+import poster3 from "../../../public/homeUpdates/poster3.jpg"; 
+import poster4 from "../../../public/homeUpdates/poster4.jpg";
+import service from "../../../public/homeUpdates/service.jpeg";
+import databricks from "../../../public/homeUpdates/databricks.jpeg";
+import german from "../../../public/homeUpdates/german.jpeg";
+// import germani from "../../../public/homeUpdates/germani.jpeg";
 export default function PosterTemplates() {
   // Poster templates data
   const posterTemplates = [
+    {
+      title: "ServiceNow AI-Data Analytics",
+      description: "Traning",
+      icon: SparklesIcon,
+      color: "from-blue-500 to-cyan-500",
+      bgColor: "from-blue-100/10 to-cyan-900/10",
+      previewImage: service,
+    },
+    {
+      title: "German Language",
+      description: "Traning",
+      icon: SparklesIcon,
+      color: "from-blue-500 to-cyan-500",
+      bgColor: "from-blue-100/10 to-cyan-900/10",
+      previewImage: germani,
+    },
+    {
+      title: "DataBricks AI-Data Analytics",
+      description: "Traning",
+      icon: SparklesIcon,
+      color: "from-blue-500 to-cyan-500",
+      bgColor: "from-blue-100/10 to-cyan-900/10",
+      previewImage: databricks,
+    },
+    {
+      title: "German",
+      description: "Traning",
+      icon: SparklesIcon,
+      color: "from-blue-500 to-cyan-500",
+      bgColor: "from-blue-100/10 to-cyan-900/10",
+      previewImage: german,
+    },
     {
       title: "AI-Data Analytics",
       description: "Traning & Certification",
@@ -72,7 +107,7 @@ export default function PosterTemplates() {
 
       {/* Cards Container */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto px-4">
-        {posterTemplates.map((template, index) => {
+        {[...posterTemplates, ...posterTemplates].map((template, index) => {
           const IconComponent = template.icon;
           return (
             <motion.div
