@@ -12,8 +12,8 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0(react@18.3.1)
       '@types/xlsx':
-        specifier: ^0.0.36
-        version: 0.0.36
+        specifier: ^0.0.35
+        version: 0.0.35
       dotenv:
         specifier: ^17.2.1
         version: 17.2.1
@@ -1484,9 +1484,8 @@ packages:
   '@types/webxr@0.5.22':
     resolution: {integrity: sha512-Vr6Stjv5jPRqH690f5I5GLjVk8GSsoQSYJ2FVd/3jJF7KaqfwPi3ehfBS96mlQ2kPCwZaX6U0rG2+NGHBKkA/A==}
 
-  '@types/xlsx@0.0.36':
-    resolution: {integrity: sha512-mvfrKiKKMErQzLMF8ElYEH21qxWCZtN59pHhWGmWCWFJStYdMWjkDSAy6mGowFxHXaXZWe5/TW7pBUiWclIVOw==}
-    deprecated: This is a stub types definition for xlsx (https://github.com/sheetjs/js-xlsx). xlsx provides its own type definitions, so you don't need @types/xlsx installed!
+  '@types/xlsx@0.0.35':
+    resolution: {integrity: sha512-s0x3DYHZzOkxtjqOk/Nv1ezGzpbN7I8WX+lzlV/nFfTDOv7x4d8ZwGHcnaiB8UCx89omPsftQhS5II3jeWePxQ==}
 
   '@use-gesture/core@10.3.1':
     resolution: {integrity: sha512-WcINiDt8WjqBdUXye25anHiNxPc0VOrlT8F6LLkU6cycrOGUDyY/yyFmsg3k8i5OLvv25llc0QC45GhR/C8llw==}
@@ -4187,9 +4186,7 @@ snapshots:
 
   '@types/webxr@0.5.22': {}
 
-  '@types/xlsx@0.0.36':
-    dependencies:
-      xlsx: 0.18.5
+  '@types/xlsx@0.0.35': {}
 
   '@use-gesture/core@10.3.1': {}
 
