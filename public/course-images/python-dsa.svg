@@ -1,0 +1,35 @@
+<svg width="800" height="450" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g_python_dsa" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#14532d"/>
+    </linearGradient>
+    <radialGradient id="g_python_dsa_glow" cx="80%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="g_python_dsa_dots" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.6" fill="#ffffff" fill-opacity="0.16"/>
+    </pattern>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#g_python_dsa)"/>
+  <rect width="800" height="450" fill="url(#g_python_dsa_dots)"/>
+  <rect width="800" height="450" fill="url(#g_python_dsa_glow)"/>
+
+  <circle cx="740" cy="-40" r="220" fill="#ffffff" opacity="0.06"/>
+  <circle cx="-60" cy="490" r="200" fill="#000000" opacity="0.12"/>
+
+  <!-- icon badge -->
+  <circle cx="650" cy="150" r="80" fill="#ffffff" fill-opacity="0.14"/>
+  <circle cx="650" cy="150" r="80" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2"/>
+  <g transform="translate(650,150)"><line x1="0" y1="-64.6" x2="-60.8" y2="11.399999999999999" stroke="#ffffff" stroke-width="7.6" stroke-linecap="round"/><line x1="0" y1="-64.6" x2="60.8" y2="11.399999999999999" stroke="#ffffff" stroke-width="7.6" stroke-linecap="round"/><line x1="-60.8" y1="11.399999999999999" x2="-30.4" y2="64.6" stroke="#ffffff" stroke-width="7.6" stroke-linecap="round"/><line x1="-60.8" y1="11.399999999999999" x2="30.4" y2="64.6" stroke="#ffffff" stroke-width="7.6" stroke-linecap="round"/><circle cx="0" cy="-64.6" r="17.099999999999998" fill="#ffffff"/><circle cx="-60.8" cy="11.399999999999999" r="17.099999999999998" fill="#ffffff"/><circle cx="60.8" cy="11.399999999999999" r="17.099999999999998" fill="#ffffff"/><circle cx="-30.4" cy="64.6" r="17.099999999999998" fill="#ffffff"/><circle cx="30.4" cy="64.6" r="17.099999999999998" fill="#ffffff"/></g>
+
+  <!-- category pill -->
+  <rect x="28" y="30" width="126.5" height="34" rx="17" fill="#ffffff" fill-opacity="0.18"/>
+  <text x="43" y="53" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" fill="#ffffff" letter-spacing="0.5">PROGRAMMING</text>
+
+  <!-- title -->
+  <text x="30" y="402" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#ffffff">Python &amp; DSA</text>
+  <rect x="30" y="420" width="70" height="5" rx="2.5" fill="#ffffff" fill-opacity="0.85"/>
+</svg>

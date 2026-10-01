@@ -1,9 +1,18 @@
+import usePageMeta from "@/hooks/use-page-meta";
 import Layout from "@/components/site/Layout";
 import CourseCard from "@/components/site/CourseCard";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { courses } from "@/data/courses";
-import { SparklesIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  SparklesIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+  AcademicCapIcon,
+  UserGroupIcon,
+  BriefcaseIcon,
+} from "@heroicons/react/24/outline";
+import { StarIcon as StarSolid } from "@heroicons/react/24/solid";
 
 // Design System (kept consistent with CourseDetails)
 const COLORS = {
@@ -13,8 +22,8 @@ const COLORS = {
 };
 
 const TYPOGRAPHY = {
-  h1: "text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter",
-  subtitle: "text-lg sm:text-xl text-foreground/70",
+  h1: "text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold tracking-tight leading-[1.1]",
+  subtitle: "text-[18px] sm:text-[19px] md:text-[20px] text-foreground/70",
 };
 
 const stagger = {
@@ -34,7 +43,15 @@ const fadeInUp = (delay: number = 0) => ({
   },
 });
 
+const STATS = [
+  { icon: AcademicCapIcon, value: "9+", label: "Expert-Led Courses" },
+  { icon: UserGroupIcon, value: "1200+", label: "Learners Trained" },
+  { icon: BriefcaseIcon, value: "50+", label: "Hiring Partners" },
+  { icon: StarSolid, value: "4.8", label: "Average Rating" },
+];
+
 export default function Courses() {
+  usePageMeta("Courses", "Explore job-oriented courses in Python, Java, AI & Data Analytics, Cyber Security, Cloud and more with placement support.");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("");
   const [level, setLevel] = useState<string>("");
@@ -86,16 +103,31 @@ export default function Courses() {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center md:text-left"
               >
-                <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-3xl bg-white/80 dark:bg-zinc-900/80 border border-violet-200 dark:border-violet-800 mb-6 backdrop-blur-md">
-                  <SparklesIcon className="w-6 h-6 text-pink-500" />
-                  <span className="font-medium text-violet-600 dark:text-violet-300 tracking-wide">DISCOVER YOUR NEXT SKILL</span>
-                </div>
                 <h1 className={`${TYPOGRAPHY.h1} bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500 bg-clip-text text-transparent`}>
                   Our Popular Courses
                 </h1>
-                <p className={`${TYPOGRAPHY.subtitle} mt-6 max-w-2xl md:mx-0 mx-auto`}>
+                <p className={`${TYPOGRAPHY.subtitle} mt-3 max-w-2xl md:mx-0 mx-auto`}>
                   Interactive, job-ready programs with hands-on projects, real-world case studies, and expert mentor support.
                 </p>
+
+                {/* Trust Stats Strip */}
+                <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-2 max-w-2xl md:mx-0 mx-auto">
+                  {STATS.map((stat, i) => (
+                    <motion.div
+                      key={stat.label}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.15 + i * 0.05 }}
+                      className="flex flex-col items-center md:items-start gap-1 rounded-xl bg-white/70 dark:bg-zinc-900/70 border border-violet-200/70 dark:border-violet-800/60 px-3 py-2.5 backdrop-blur-md"
+                    >
+                      <stat.icon className="w-4 h-4 text-pink-500" />
+                      <span className="text-2xl font-bold text-foreground leading-none">{stat.value}</span>
+                      <span className="text-xs uppercase tracking-wide text-foreground/60 text-center md:text-left">
+                        {stat.label}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
               </motion.div>
 
               {/* Filters */}
@@ -104,18 +136,18 @@ export default function Courses() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
               >
-                <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl rounded-3xl border border-violet-200/80 dark:border-violet-800/80 p-6 md:p-8 shadow-xl">
-                  <div className="flex flex-col lg:flex-row gap-4">
+                <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl rounded-3xl border border-violet-200/80 dark:border-violet-800/80 p-3 md:p-4 shadow-xl">
+                  <div className="flex flex-col lg:flex-row gap-2.5">
                     {/* Search */}
                     <div className="relative flex-1">
-                      <div className="absolute left-5 top-1/2 -translate-y-1/2 text-violet-400">
-                        <MagnifyingGlassIcon className="w-5 h-5" />
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-violet-400">
+                        <MagnifyingGlassIcon className="w-4 h-4" />
                       </div>
                       <input
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search courses by title or keywords..."
-                        className="w-full pl-12 pr-5 py-4 bg-white dark:bg-zinc-800 border border-violet-200 dark:border-violet-700 rounded-2xl focus:outline-none focus:border-pink-400 text-base placeholder:text-muted-foreground"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-zinc-800 border border-violet-200 dark:border-violet-700 rounded-2xl focus:outline-none focus:border-pink-400 text-sm placeholder:text-muted-foreground"
                       />
                     </div>
 
@@ -123,7 +155,7 @@ export default function Courses() {
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      className="px-6 py-4 bg-white dark:bg-zinc-800 border border-violet-200 dark:border-violet-700 rounded-2xl focus:outline-none focus:border-pink-400 text-base cursor-pointer min-w-[180px]"
+                      className="px-4 py-2.5 bg-white dark:bg-zinc-800 border border-violet-200 dark:border-violet-700 rounded-2xl focus:outline-none focus:border-pink-400 text-sm cursor-pointer min-w-[150px]"
                     >
                       <option value="">All Categories</option>
                       {categories.map((cat) => (
@@ -137,7 +169,7 @@ export default function Courses() {
                     <select
                       value={level}
                       onChange={(e) => setLevel(e.target.value)}
-                      className="px-6 py-4 bg-white dark:bg-zinc-800 border border-violet-200 dark:border-violet-700 rounded-2xl focus:outline-none focus:border-pink-400 text-base cursor-pointer min-w-[160px]"
+                      className="px-4 py-2.5 bg-white dark:bg-zinc-800 border border-violet-200 dark:border-violet-700 rounded-2xl focus:outline-none focus:border-pink-400 text-sm cursor-pointer min-w-[130px]"
                     >
                       <option value="">All Levels</option>
                       {levels.map((lvl) => (
@@ -151,9 +183,9 @@ export default function Courses() {
                     {(query || category || level) && (
                       <button
                         onClick={clearFilters}
-                        className="flex items-center justify-center gap-2 px-8 py-4 bg-white dark:bg-zinc-800 hover:bg-pink-50 dark:hover:bg-pink-950 border border-violet-200 dark:border-violet-700 hover:border-pink-400 rounded-2xl text-pink-500 hover:text-pink-600 transition-all font-medium"
+                        className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-white dark:bg-zinc-800 hover:bg-pink-50 dark:hover:bg-pink-950 border border-violet-200 dark:border-violet-700 hover:border-pink-400 rounded-2xl text-pink-500 hover:text-pink-600 transition-all font-medium text-sm"
                       >
-                        <XMarkIcon className="w-5 h-5" />
+                        <XMarkIcon className="w-4 h-4" />
                         Clear
                       </button>
                     )}
@@ -161,13 +193,21 @@ export default function Courses() {
                 </div>
               </motion.div>
 
+              {/* Results Count */}
+              <div className="flex items-center justify-between px-1">
+                <p className="text-sm text-foreground/60">
+                  Showing <span className="font-semibold text-foreground">{filtered.length}</span>{" "}
+                  {filtered.length === 1 ? "course" : "courses"}
+                </p>
+              </div>
+
               {/* Courses Grid */}
               <motion.div
                 variants={stagger}
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true }}
-                className="grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
+                className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-stretch"
               >
                 {filtered.map((course, index) => (
                   <motion.div
@@ -264,22 +304,17 @@ export default function Courses() {
                     Why Choose Us?
                   </h4>
                   <ul className="space-y-4 text-sm text-foreground/70">
-                    <li className="flex gap-3">
-                      <span className="text-pink-400 mt-1">★</span>
-                      Industry-aligned curriculum
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="text-pink-400 mt-1">★</span>
-                      Real-world projects &amp; case studies
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="text-pink-400 mt-1">★</span>
-                      Expert instructors from top companies
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="text-pink-400 mt-1">★</span>
-                      Placement assistance
-                    </li>
+                    {[
+                      "Industry-aligned curriculum",
+                      "Real-world projects & case studies",
+                      "Expert instructors from top companies",
+                      "Placement assistance",
+                    ].map((item) => (
+                      <li key={item} className="flex gap-3 items-start">
+                        <StarSolid className="w-4 h-4 text-pink-400 mt-0.5 shrink-0" />
+                        {item}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </motion.div>

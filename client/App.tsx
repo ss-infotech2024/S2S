@@ -18,7 +18,7 @@ import Placements from "./pages/Placements";
 import Blog from "./pages/Blog";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import PlaceholderPage from "./pages/PlaceholderPage";
+import Portal from "./pages/Portal";
 import ScrollToTop from "./components/ScrollToTop"
 import Overseas from "@/pages/Overseas";
 
@@ -48,8 +48,7 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/portal" element={<PlaceholderPage title="Student Portal" description="Login and access your dashboard." />} />
-          <Route path="/admin" element={<PlaceholderPage title="Admin Dashboard" description="Manage courses, students, and enquiries." />} />
+          <Route path="/portal" element={<Portal />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

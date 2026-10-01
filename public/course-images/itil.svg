@@ -1,0 +1,41 @@
+<svg width="800" height="450" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g_itil" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#312e81"/>
+    </linearGradient>
+    <radialGradient id="g_itil_glow" cx="80%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="g_itil_dots" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.6" fill="#ffffff" fill-opacity="0.16"/>
+    </pattern>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#g_itil)"/>
+  <rect width="800" height="450" fill="url(#g_itil_dots)"/>
+  <rect width="800" height="450" fill="url(#g_itil_glow)"/>
+
+  <circle cx="740" cy="-40" r="220" fill="#ffffff" opacity="0.06"/>
+  <circle cx="-60" cy="490" r="200" fill="#000000" opacity="0.12"/>
+
+  <!-- icon badge -->
+  <circle cx="650" cy="150" r="80" fill="#ffffff" fill-opacity="0.14"/>
+  <circle cx="650" cy="150" r="80" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2"/>
+  
+        <g transform="translate(650,150)">
+          <rect x="-49.4" y="-64.6" width="98.8" height="129.2" rx="11.399999999999999" fill="none" stroke="#ffffff" stroke-width="9.5"/>
+          <rect x="-22.799999999999997" y="-76.0" width="45.599999999999994" height="19.0" rx="5.699999999999999" fill="#ffffff"/>
+          <path d="M -30.4 -15.2 L -15.2 0.0 L 19.0 -34.199999999999996" fill="none" stroke="#ffffff" stroke-width="9.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="-30.4" y1="26.599999999999998" x2="30.4" y2="26.599999999999998" stroke="#ffffff" stroke-width="9.5" stroke-linecap="round"/>
+        </g>
+
+  <!-- category pill -->
+  <rect x="28" y="30" width="164.5" height="34" rx="17" fill="#ffffff" fill-opacity="0.18"/>
+  <text x="43" y="53" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" fill="#ffffff" letter-spacing="0.5">IT SERVICE MGMT</text>
+
+  <!-- title -->
+  <text x="30" y="402" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#ffffff">ITIL</text>
+  <rect x="30" y="420" width="70" height="5" rx="2.5" fill="#ffffff" fill-opacity="0.85"/>
+</svg>

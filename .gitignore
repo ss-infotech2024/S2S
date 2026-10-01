@@ -1,27 +1,21 @@
-# Logs
-logs
+# dependencies
+node_modules/
+
+# build output
+dist/
+build/
+.netlify/
+.vercel/
+
+# environment files (keep real secrets out of Git)
+.env
+.env.*
+!.env.example
+
+# logs and OS/editor files
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-.config/
-!.env
+Thumbs.db
+.vscode/
+.idea/

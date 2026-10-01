@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 112" role="img" aria-label="SS Online Training – Skill 2 Success">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b2d8e"/>
+      <stop offset="1" stop-color="#d4508f"/>
+    </linearGradient>
+  </defs>
+  <!-- emblem -->
+  <circle cx="56" cy="56" r="50" fill="none" stroke="url(#g)" stroke-width="5"/>
+  <!-- screen -->
+  <rect x="28" y="30" width="56" height="38" rx="5" fill="url(#g)"/>
+  <rect x="33" y="35" width="46" height="28" rx="2.5" fill="#fff"/>
+  <!-- play -->
+  <path d="M50 42.5 L66 49 L50 55.5 Z" fill="url(#g)"/>
+  <!-- stand -->
+  <path d="M46 74 H66" stroke="url(#g)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M56 68 V74" stroke="url(#g)" stroke-width="4"/>
+  <!-- signal arcs -->
+  <path d="M40 22 A24 24 0 0 1 72 22" fill="none" stroke="url(#g)" stroke-width="3.5" stroke-linecap="round" opacity=".55"/>
+  <!-- wordmark -->
+  <g font-family="'Inter','Segoe UI',Arial,Helvetica,sans-serif">
+    <text x="122" y="46" font-size="30" font-weight="800" fill="#4a2a72" letter-spacing="1">SS ONLINE</text>
+    <text x="122" y="76" font-size="30" font-weight="800" fill="url(#g)" letter-spacing="1">TRAINING</text>
+    <text x="123" y="98" font-size="14" font-style="italic" font-weight="500" fill="#7a5a9a">Skill 2 Success</text>
+  </g>
+</svg>

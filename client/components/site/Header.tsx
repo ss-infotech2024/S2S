@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import AuthModal from "./AuthModal";
 
 const navItems = [
   { to: "/", label: "Home" },
@@ -18,6 +19,8 @@ const navItems = [
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const openAuth = () => { setAuthOpen(true); setOpen(false); };
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-white backdrop-blur ">
       <div className="container flex h-24 items-center justify-between">
@@ -57,9 +60,7 @@ export default function Header() {
               {item.label}
             </NavLink>
           ))}
-          <Link to="/portal">
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Student Portal</Button>
-          </Link>
+          <Button onClick={openAuth} className="bg-primary text-primary-foreground hover:bg-primary/90">Login / Register</Button>
         </nav>
         <button
           className="inline-flex items-center justify-center rounded-md p-2 text-foreground md:hidden"
@@ -89,12 +90,11 @@ export default function Header() {
                 {item.label}
               </NavLink>
             ))}
-            <Link to="/portal" onClick={() => setOpen(false)}>
-              <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">Student Portal</Button>
-            </Link>
+            <Button onClick={openAuth} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">Login / Register</Button>
           </nav>
         </div>
       )}
+      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </header>
   );
 }

@@ -1,0 +1,40 @@
+<svg width="800" height="450" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g_cyber_security" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#7f1d1d"/>
+    </linearGradient>
+    <radialGradient id="g_cyber_security_glow" cx="80%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="g_cyber_security_dots" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.6" fill="#ffffff" fill-opacity="0.16"/>
+    </pattern>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#g_cyber_security)"/>
+  <rect width="800" height="450" fill="url(#g_cyber_security_dots)"/>
+  <rect width="800" height="450" fill="url(#g_cyber_security_glow)"/>
+
+  <circle cx="740" cy="-40" r="220" fill="#ffffff" opacity="0.06"/>
+  <circle cx="-60" cy="490" r="200" fill="#000000" opacity="0.12"/>
+
+  <!-- icon badge -->
+  <circle cx="650" cy="150" r="80" fill="#ffffff" fill-opacity="0.14"/>
+  <circle cx="650" cy="150" r="80" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2"/>
+  
+        <g transform="translate(650,150)">
+          <path d="M 0 -68.39999999999999 L 60.8 -41.8 L 60.8 19.0 C 60.8 60.8 30.4 76.0 0 72.2 C -30.4 76.0 -60.8 60.8 -60.8 19.0 L -60.8 -41.8 Z"
+                fill="none" stroke="#ffffff" stroke-width="11.399999999999999" stroke-linejoin="round"/>
+          <path d="M -26.599999999999998 0 L -5.699999999999999 24.7 L 30.4 -22.799999999999997" fill="none" stroke="#ffffff" stroke-width="13.299999999999999" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+
+  <!-- category pill -->
+  <rect x="28" y="30" width="145.5" height="34" rx="17" fill="#ffffff" fill-opacity="0.18"/>
+  <text x="43" y="53" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" fill="#ffffff" letter-spacing="0.5">CYBERSECURITY</text>
+
+  <!-- title -->
+  <text x="30" y="402" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#ffffff">Cyber Security</text>
+  <rect x="30" y="420" width="70" height="5" rx="2.5" fill="#ffffff" fill-opacity="0.85"/>
+</svg>

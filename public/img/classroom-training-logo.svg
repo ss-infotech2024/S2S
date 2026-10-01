@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 410 112" role="img" aria-label="SS Classroom Training – Skill 2 Success">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b2d8e"/>
+      <stop offset="1" stop-color="#d4508f"/>
+    </linearGradient>
+  </defs>
+  <!-- emblem -->
+  <circle cx="56" cy="56" r="50" fill="none" stroke="url(#g)" stroke-width="5"/>
+  <!-- graduation cap -->
+  <path d="M56 26 L90 41 L56 56 L22 41 Z" fill="url(#g)"/>
+  <path d="M37 50 V63 Q56 74 75 63 V50 L56 58 Z" fill="url(#g)" opacity=".85"/>
+  <path d="M86 43 V62" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="86" cy="65" r="3.5" fill="url(#g)"/>
+  <!-- open book -->
+  <path d="M32 76 Q44 71 56 77 Q68 71 80 76 V86 Q68 81 56 87 Q44 81 32 86 Z" fill="url(#g)"/>
+  <path d="M56 77 V87" stroke="#fff" stroke-width="1.6"/>
+  <!-- wordmark -->
+  <g font-family="'Inter','Segoe UI',Arial,Helvetica,sans-serif">
+    <text x="122" y="46" font-size="27" font-weight="800" fill="#4a2a72" letter-spacing="1">SS CLASSROOM</text>
+    <text x="122" y="76" font-size="27" font-weight="800" fill="url(#g)" letter-spacing="1">TRAINING</text>
+    <text x="123" y="98" font-size="14" font-style="italic" font-weight="500" fill="#7a5a9a">Skill 2 Success</text>
+  </g>
+</svg>

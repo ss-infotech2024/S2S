@@ -1,3 +1,4 @@
+import usePageMeta from "@/hooks/use-page-meta";
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/site/Layout";
@@ -8,6 +9,7 @@ const SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbzikXYaDkViNbbW0mJE421h401IrdjyRVUCctcqiDgVidrppGCnVkJzYm7D1Sd_CiM/exec";
 
 export default function Enroll() {
+  usePageMeta("Enroll Now", "Enroll in a course at Skill Training Center and start learning with expert trainers.");
   const { id } = useParams();
   const course = id ? getCourseById(id) : null;
   const navigate = useNavigate();

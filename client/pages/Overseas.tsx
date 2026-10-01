@@ -1,466 +1,269 @@
+import usePageMeta from "@/hooks/use-page-meta";
 // pages/Overseas.tsx
-import { useState } from "react";
-import Layout from "@/components/site/Layout";
 import { motion } from "framer-motion";
-import { fadeInUp, stagger } from "@/lib/animations";
 import {
-  GlobeAltIcon,
-  AcademicCapIcon,
-  UserGroupIcon,
-  PlayIcon,
-  SparklesIcon,
-  ChatBubbleLeftRightIcon,
-  ClockIcon,
-  CheckBadgeIcon,
-  ArrowRightIcon,
-  PresentationChartLineIcon,
-  PuzzlePieceIcon,
-} from "@heroicons/react/24/outline";
+  Globe2, Users, Clock, BadgeCheck, Briefcase, Play, ArrowRight, Sparkles, Gamepad2,
+  MessageCircle, CheckCircle2, ClipboardList, Mic2, Award, BookOpen,
+} from "lucide-react";
+import Layout from "@/components/site/Layout";
+import SectionHeading from "@/components/site/SectionHeading";
 
-// Import flag images
-import germanFlag from "/flags/germ.png";
-import japaneseFlag from "/flags/japan.png";
-import frenchFlag from "/flags/fran.png";
-import spanishFlag from "/flags/spain.png";
+const WHATSAPP = "919399345989";
+const wa = (msg: string) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
 
-// Language courses data
 const languageCourses = [
   {
-    id: "german",
-    name: "German",
-    flag: germanFlag,
-    flagEmoji: "🇩🇪",
-    level: "A1 to C2",
-    duration: "12 weeks",
-    batchSize: "10-15 students",
-    description: "Master German language from basics to advanced level with native speakers and interactive sessions.",
-    features: [
-      "Goethe Institute Curriculum",
-      "Exam Preparation (A1-C2)",
-      "Conversation Practice",
-      "Cultural Immersion"
-    ],
-    color: "from-red-500 to-orange-500",
-    bgColor: "from-red-500/10 to-orange-500/10",
-    gameAvailable: true,
-    gameUrl: "https://learn-gern-play.vercel.app/",
-    gameFeatures: ["Flip Cards", "Quiz", "Memory Game"]
+    id: "german", name: "German", native: "Deutsch", flag: "/flags/germ.png", level: "A1 to C2", duration: "12 weeks", batchSize: "10-15 students",
+    description: "Master German from basics to advanced level with native speakers and interactive sessions.",
+    features: ["Goethe Institute Curriculum", "Exam Preparation (A1-C2)", "Conversation Practice", "Cultural Immersion"],
+    accent: "from-red-500 to-orange-500", game: true,
   },
   {
-    id: "japanese",
-    name: "Japanese",
-    flag: japaneseFlag,
-    flagEmoji: "🇯🇵",
-    level: "N5 to N1",
-    duration: "14 weeks",
-    batchSize: "8-12 students",
-    description: "Learn Japanese language with focus on JLPT preparation, kanji mastery, and business communication.",
-    features: [
-      "JLPT Preparation (N5-N1)",
-      "Kanji Mastery Program",
-      "Business Japanese",
-      "Cultural Workshops"
-    ],
-    color: "from-pink-500 to-purple-500",
-    bgColor: "from-pink-500/10 to-purple-500/10",
-    gameAvailable: false
+    id: "japanese", name: "Japanese", native: "日本語", flag: "/flags/japan.png", level: "N5 to N1", duration: "14 weeks", batchSize: "8-12 students",
+    description: "Learn Japanese with a focus on JLPT preparation, kanji mastery and business communication.",
+    features: ["JLPT Preparation (N5-N1)", "Kanji Mastery Program", "Business Japanese", "Cultural Workshops"],
+    accent: "from-pink-500 to-purple-500", game: false,
   },
   {
-    id: "french",
-    name: "French",
-    flag: frenchFlag,
-    flagEmoji: "🇫🇷",
-    level: "A1 to C2",
-    duration: "12 weeks",
-    batchSize: "10-15 students",
-    description: "Parlez-vous français? Master the language of love, diplomacy, and culture with our comprehensive French program.",
-    features: [
-      "DELF/DALF Preparation",
-      "Pronunciation Excellence",
-      "French Literature",
-      "Cultural Immersion"
-    ],
-    color: "from-blue-500 to-indigo-500",
-    bgColor: "from-blue-500/10 to-indigo-500/10",
-    gameAvailable: false
+    id: "french", name: "French", native: "Français", flag: "/flags/fran.png", level: "A1 to C2", duration: "12 weeks", batchSize: "10-15 students",
+    description: "Master the language of diplomacy and culture with our comprehensive French program.",
+    features: ["DELF/DALF Preparation", "Pronunciation Excellence", "French Literature", "Cultural Immersion"],
+    accent: "from-blue-500 to-indigo-500", game: false,
   },
   {
-    id: "spanish",
-    name: "Spanish",
-    flag: spanishFlag,
-    flagEmoji: "🇪🇸",
-    level: "A1 to C2",
-    duration: "12 weeks",
-    batchSize: "12-18 students",
-    description: "Learn Spanish, the second most spoken language in the world, with our immersive and practical approach.",
-    features: [
-      "DELE Preparation",
-      "Conversation Mastery",
-      "Business Spanish",
-      "Hispanic Culture"
-    ],
-    color: "from-yellow-500 to-amber-500",
-    bgColor: "from-yellow-500/10 to-amber-500/10",
-    gameAvailable: false
-  }
+    id: "spanish", name: "Spanish", native: "Español", flag: "/flags/spain.png", level: "A1 to C2", duration: "12 weeks", batchSize: "12-18 students",
+    description: "Learn Spanish, one of the most spoken languages in the world, with an immersive and practical approach.",
+    features: ["DELE Preparation", "Conversation Mastery", "Business Spanish", "Hispanic Culture"],
+    accent: "from-yellow-500 to-amber-500", game: false,
+  },
 ];
 
-// Benefits of learning with us
+const gameUrl = "https://learn-gern-play.vercel.app/";
+const gameFeatures = ["Flip Cards", "Quiz", "Memory Game"];
+
+const highlights = [
+  { icon: Globe2, value: "4", label: "Languages" },
+  { icon: Award, value: "A1–C2", label: "Exam-aligned levels" },
+  { icon: Users, value: "8–18", label: "Students per batch" },
+  { icon: BadgeCheck, value: "Certified", label: "On completion" },
+];
+
 const benefits = [
-  {
-    icon: UserGroupIcon,
-    title: "Native Speakers",
-    description: "Learn from experienced native language instructors"
-  },
-  {
-    icon: ClockIcon,
-    title: "Flexible Batches",
-    description: "Weekday and weekend batches to suit your schedule"
-  },
-  {
-    icon: CheckBadgeIcon,
-    title: "Certification",
-    description: "Globally recognized certificates upon completion"
-  },
-  {
-    icon: PresentationChartLineIcon,
-    title: "Career Support",
-    description: "Job assistance and placement support"
-  }
+  { icon: Users, title: "Native Speakers", description: "Learn from experienced native language instructors." },
+  { icon: Clock, title: "Flexible Batches", description: "Weekday and weekend batches to suit your schedule." },
+  { icon: BadgeCheck, title: "Certification", description: "Globally recognized certificates upon completion." },
+  { icon: Briefcase, title: "Career Support", description: "Job assistance and placement support." },
 ];
 
-// Game Card Component
-const GameCard = ({ gameUrl, features }: { gameUrl: string; features: string[] }) => {
+const path = [
+  { icon: ClipboardList, title: "Level Assessment", text: "We place you in the right batch for your current level." },
+  { icon: BookOpen, title: "Structured Learning", text: "Exam-aligned curriculum with regular practice material." },
+  { icon: Mic2, title: "Speaking Practice", text: "Conversation sessions to build real-world confidence." },
+  { icon: Award, title: "Certification", text: "Prepare for and clear your international exam." },
+];
+
+const fadeUp = (i = 0) => ({
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-40px" },
+  transition: { duration: 0.5, delay: i * 0.08 },
+});
+
+export default function Overseas() {
+  usePageMeta("Overseas Education: German, Japanese, French & Spanish", "Learn German, Japanese, French and Spanish from native speakers and prepare for international certification exams.");
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: 0.2 }}
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-purple-600/10 to-pink-500/10 border border-primary/20 p-6 backdrop-blur-sm"
-    >
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/20 to-purple-600/20 rounded-full blur-2xl" />
-      
-      <div className="relative">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-3 rounded-xl bg-gradient-to-r from-primary to-purple-600">
-            <PuzzlePieceIcon className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-foreground">Learn & Play German</h3>
-            <p className="text-sm text-muted-foreground">Interactive Vocabulary Games</p>
-          </div>
+    <Layout>
+      {/* HERO */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-white to-indigo-50 text-slate-900">
+        <div className="pointer-events-none absolute -left-24 -top-24 h-[380px] w-[380px] rounded-full bg-sky-300/30 blur-3xl" />
+        <div className="pointer-events-none absolute -right-24 top-10 h-[360px] w-[360px] rounded-full bg-violet-300/30 blur-3xl" />
+        <div className="pointer-events-none absolute inset-0 opacity-50" style={{ backgroundImage: "radial-gradient(rgba(99,102,241,.22) 1px, transparent 1px)", backgroundSize: "28px 28px", maskImage: "linear-gradient(to bottom, black 40%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent)" }} />
+        <div className="container relative grid items-center gap-10 py-14 lg:grid-cols-2 lg:py-16">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+            <span className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-indigo-700 shadow-sm backdrop-blur">
+              <Globe2 className="h-3.5 w-3.5" /> Overseas Education
+            </span>
+            <h1 className="mt-5 text-2xl font-bold leading-tight tracking-tight text-slate-900 md:text-3xl lg:text-4xl">
+              Speak the world's languages with{" "}
+              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">expert guidance</span>
+            </h1>
+            <p className="mt-4 max-w-xl text-base text-slate-600">
+              Learn German, Japanese, French and Spanish from native speakers, and prepare for international certifications that unlock global opportunities.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="#languages" className="inline-flex h-10 items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition hover:-translate-y-0.5 hover:shadow-xl">
+                Explore Languages <ArrowRight className="h-4 w-4" />
+              </a>
+              <a href={wa("Hi, I'd like to book a free demo class for a foreign language course.")} target="_blank" rel="noopener noreferrer"
+                className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white/80 px-5 text-sm font-semibold text-slate-800 shadow-sm backdrop-blur transition hover:bg-white hover:shadow-md">
+                <MessageCircle className="h-4 w-4" /> Book Free Demo
+              </a>
+            </div>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15 }}
+            className="grid grid-cols-2 gap-3">
+            {languageCourses.map((l, i) => (
+              <a key={l.id} href={`#${l.id}`}
+                className={`group rounded-xl border border-white bg-white/80 p-4 shadow-[0_10px_40px_-15px_rgba(79,70,229,0.3)] ring-1 ring-indigo-100 backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white ${i % 2 ? "translate-y-3" : ""}`}>
+                <img src={l.flag} alt={`${l.name} flag`} className="h-9 w-9 rounded-full object-cover ring-2 ring-slate-100" />
+                <div className="mt-3 text-base font-bold text-slate-900">{l.name}</div>
+                <div className="text-xs text-slate-500">{l.native} · {l.level}</div>
+              </a>
+            ))}
+          </motion.div>
         </div>
-        
-        <p className="text-foreground/70 mb-4">
-          Master German vocabulary through fun and engaging games. Perfect for beginners and intermediate learners.
-        </p>
-        
-        {/* Game Features */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          {features.map((feature) => (
-            <div
-              key={feature}
-              className="text-center p-3 rounded-lg bg-white/10 backdrop-blur-sm"
-            >
-              <span className="text-sm font-medium text-foreground">{feature}</span>
+      </section>
+
+      {/* HIGHLIGHTS */}
+      <section className="relative z-10 -mt-px border-b border-slate-200 bg-white">
+        <div className="container grid grid-cols-2 gap-y-4 py-6 lg:grid-cols-4">
+          {highlights.map((h) => (
+            <div key={h.label} className="flex items-center justify-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary"><h.icon className="h-4 w-4" /></div>
+              <div>
+                <div className="text-lg font-bold leading-none text-slate-900">{h.value}</div>
+                <div className="mt-1 text-xs text-slate-500">{h.label}</div>
+              </div>
             </div>
           ))}
         </div>
-        
-        {/* Play Button */}
-        <motion.a
-          href={gameUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 bg-gradient-to-r from-primary to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary/30 transition-all duration-300"
-        >
-          <PlayIcon className="w-5 h-5" />
-          <span>Play Now</span>
-          <ArrowRightIcon className="w-4 h-4" />
-        </motion.a>
-      </div>
-    </motion.div>
-  );
-};
+      </section>
 
-// Language Card Component
-const LanguageCard = ({ course, index }: { course: any; index: number }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  return (
-    <motion.div
-      variants={fadeInUp(index * 0.1)}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true }}
-      className="group relative h-full"
-    >
-      <div className={`h-full relative rounded-2xl bg-gradient-to-br from-background to-muted/20 p-6 border border-border/50 overflow-hidden backdrop-blur-sm transition-all duration-500 hover:shadow-xl ${course.bgColor}`}>
-        {/* Animated Background */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${course.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-        
-        <div className="relative z-10 h-full flex flex-col">
-          {/* Header with Flag Image */}
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-lg overflow-hidden shadow-md">
-                <img 
-                  src={course.flag} 
-                  alt={`${course.name} Flag`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-foreground">{course.name}</h3>
-                <p className="text-sm text-muted-foreground">{course.level}</p>
-              </div>
-            </div>
-            <div className="text-3xl">{course.flagEmoji}</div>
-          </div>
-          
-          {/* Description */}
-          <p className="text-foreground/70 text-sm mb-4 line-clamp-3">
-            {course.description}
-          </p>
-          
-          {/* Course Info */}
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="flex items-center gap-2">
-              <ClockIcon className="w-4 h-4 text-primary" />
-              <span className="text-sm text-foreground/70">{course.duration}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <UserGroupIcon className="w-4 h-4 text-primary" />
-              <span className="text-sm text-foreground/70">{course.batchSize}</span>
-            </div>
-          </div>
-          
-          {/* Features */}
-          <div className="space-y-2 mb-4 flex-grow">
-            {course.features.slice(0, isExpanded ? undefined : 3).map((feature: string) => (
-              <div key={feature} className="flex items-center gap-2">
-                <CheckBadgeIcon className="w-4 h-4 text-green-500 flex-shrink-0" />
-                <span className="text-sm text-foreground/70">{feature}</span>
-              </div>
+      {/* LANGUAGES */}
+      <section id="languages" className="bg-slate-50 py-14">
+        <div className="container">
+          <SectionHeading compact eyebrow="Programs" title="Choose your language" subtitle="Comprehensive programs designed to help you reach fluency and certification." />
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {languageCourses.map((c, i) => (
+              <motion.article key={c.id} id={c.id} {...fadeUp(i)}
+                className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                <div className={`h-1 bg-gradient-to-r ${c.accent}`} />
+                <div className="flex flex-1 flex-col p-4">
+                  <div className="flex items-center gap-3">
+                    <img loading="lazy" src={c.flag} alt={`${c.name} flag`} className="h-10 w-10 rounded-full object-cover shadow ring-2 ring-slate-100" />
+                    <div>
+                      <h3 className="text-base font-bold text-slate-900">{c.name}</h3>
+                      <p className="text-xs font-medium text-slate-500">{c.native} · {c.level}</p>
+                    </div>
+                  </div>
+                  <p className="mt-3 text-xs text-slate-600 sm:text-sm">{c.description}</p>
+                  <div className="mt-3 flex flex-wrap gap-1.5 text-[11px] font-medium text-slate-600">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5"><Clock className="h-3 w-3" />{c.duration}</span>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5"><Users className="h-3 w-3" />{c.batchSize}</span>
+                  </div>
+                  <ul className="mt-4 flex-1 space-y-1.5">
+                    {c.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-xs text-slate-700 sm:text-sm">
+                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500" /> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  {c.game && (
+                    <a href={gameUrl} target="_blank" rel="noopener noreferrer"
+                      className="mt-4 inline-flex items-center gap-1.5 self-start rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-100">
+                      <Sparkles className="h-3.5 w-3.5" /> Interactive games available
+                    </a>
+                  )}
+                  <a href={wa(`Hi, I'd like to enroll in the ${c.name} language course.`)} target="_blank" rel="noopener noreferrer"
+                    className={`mt-4 inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-gradient-to-r ${c.accent} text-sm font-semibold text-white shadow-md transition hover:shadow-lg hover:brightness-105`}>
+                    Enroll Now <ArrowRight className="h-4 w-4" />
+                  </a>
+                </div>
+              </motion.article>
             ))}
           </div>
-          
-          {/* Expand Button */}
-          {course.features.length > 3 && (
-            <button
-              onClick={() => setIsExpanded(!isExpanded)} 
-              className="text-sm text-primary hover:text-primary/80 transition-colors mb-4 text-left"
-            >
-              {isExpanded ? "Show Less" : `+${course.features.length - 3} More Features`}
-            </button>
-          )}
-          
-          {/* Game Available Badge */}
-          {course.gameAvailable && (
-            <div className="mb-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/30 rounded-full">
-                <SparklesIcon className="w-4 h-4 text-green-500" />
-                <span className="text-xs font-medium text-green-600">Interactive Games Available</span>
-              </div>
-            </div>
-          )}
-          
-          {/* CTA Button */}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className={`w-full px-4 py-2.5 rounded-xl bg-gradient-to-r ${course.color} text-white font-semibold hover:shadow-lg transition-all duration-300 mt-auto`}
-          >
-            Enroll Now
-          </motion.button>
         </div>
-      </div>
-    </motion.div>
-  );
-};
+      </section>
 
-export default function Overseas() {
-  const germanCourse = languageCourses.find(c => c.id === "german");
-
-  return (
-    <Layout>
-      <div className="bg-white">
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-primary/5 via-purple-600/5 to-pink-500/5 py-20">
-          <div className="container">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="mx-auto max-w-4xl text-center"
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2, type: "spring" }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6"
-              >
-                <GlobeAltIcon className="w-4 h-4 text-primary" />
-                <span className="text-sm font-semibold text-primary">Overseas Education</span>
-              </motion.div>
-
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent mb-6">
-                Master Foreign Languages with
-                <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent"> Expert Guidance</span>
-              </h1>
-              
-              <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
-                Learn German, Japanese, French, Spanish and more from native speakers. 
-                Prepare for international certifications and unlock global opportunities.
-              </p>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Interactive Game Section */}
-        {germanCourse && (
-          <section className="py-16 bg-gradient-to-b from-white to-primary/5">
-            <div className="container">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="text-center mb-12"
-              >
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/30 mb-6">
-                  <SparklesIcon className="w-4 h-4 text-green-500" />
-                  <span className="text-sm font-semibold text-green-600">Featured Game</span>
-                </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                  Learn German Through Play
-                </h2>
-                <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
-                  Make vocabulary learning fun with our interactive games. Perfect for beginners!
+      {/* GAME */}
+      <section className="bg-white py-14">
+        <div className="container">
+          <motion.div {...fadeUp()} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 p-6 text-white shadow-xl md:p-8">
+            <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+            <div className="absolute -bottom-20 left-10 h-64 w-64 rounded-full bg-purple-400/20 blur-3xl" />
+            <div className="relative grid items-center gap-8 lg:grid-cols-2">
+              <div>
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-blue-100">
+                  <Gamepad2 className="h-3.5 w-3.5" /> Featured Game
+                </span>
+                <h2 className="mt-3 text-xl font-bold tracking-tight md:text-2xl">Learn & Play German</h2>
+                <p className="mt-2 max-w-md text-sm text-blue-100">
+                  Make vocabulary learning fun with interactive games. Perfect for beginners and intermediate learners.
                 </p>
-              </motion.div>
-
-              <div className="max-w-4xl mx-auto">
-                <GameCard 
-                  gameUrl={germanCourse.gameUrl!} 
-                  features={germanCourse.gameFeatures!} 
-                />
+                <a href={gameUrl} target="_blank" rel="noopener noreferrer"
+                  className="mt-5 inline-flex h-10 items-center gap-2 rounded-lg bg-white px-5 text-sm font-semibold text-blue-900 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+                  <Play className="h-4 w-4" /> Play Now <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+              <div className="grid grid-cols-3 gap-2.5">
+                {gameFeatures.map((g) => (
+                  <div key={g} className="rounded-xl border border-white/15 bg-white/10 p-3.5 text-center backdrop-blur">
+                    <Sparkles className="mx-auto h-5 w-5 text-blue-200" />
+                    <div className="mt-2 text-xs font-semibold">{g}</div>
+                  </div>
+                ))}
               </div>
             </div>
-          </section>
-        )}
+          </motion.div>
+        </div>
+      </section>
 
-        {/* Language Courses Section */}
-        <section className="py-20">
-          <div className="container">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Choose Your Language
-              </h2>
-              <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
-                Comprehensive language programs designed to help you achieve fluency and certification
-              </p>
-            </motion.div>
-
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
-            >
-              {languageCourses.map((course, index) => (
-                <LanguageCard key={course.id} course={course} index={index} />
-              ))}
-            </motion.div>
+      {/* LEARNING PATH */}
+      <section className="bg-slate-50 py-14">
+        <div className="container">
+          <SectionHeading compact eyebrow="Your Journey" title="From first class to certification" />
+          <div className="relative grid gap-5 md:grid-cols-4">
+            <div className="absolute left-[12%] right-[12%] top-6 hidden h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent md:block" />
+            {path.map((p, i) => (
+              <motion.div key={p.title} {...fadeUp(i)} className="relative text-center">
+                <div className="relative mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg ring-8 ring-slate-50">
+                  <p.icon className="h-5 w-5" />
+                </div>
+                <div className="mt-3 text-[11px] font-bold uppercase tracking-widest text-primary">Step {i + 1}</div>
+                <h3 className="mt-1 text-sm font-bold text-slate-900">{p.title}</h3>
+                <p className="mx-auto mt-1 max-w-[200px] text-xs text-slate-600">{p.text}</p>
+              </motion.div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Benefits Section */}
-        <section className="py-20 bg-gradient-to-b from-primary/5 to-transparent">
-          <div className="container">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Why Learn With Us?
-              </h2>
-              <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
-                Experience world-class language education with unique advantages
-              </p>
-            </motion.div>
-
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
-            >
-              {benefits.map((benefit, index) => {
-                const IconComponent = benefit.icon;
-                return (
-                  <motion.div
-                    key={benefit.title}
-                    variants={fadeInUp(index * 0.1)}
-                    className="text-center p-6 rounded-2xl bg-white border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <div className="inline-flex p-3 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white mb-4">
-                      <IconComponent className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-lg font-bold text-foreground mb-2">{benefit.title}</h3>
-                    <p className="text-sm text-foreground/70">{benefit.description}</p>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
+      {/* BENEFITS */}
+      <section className="bg-white py-14">
+        <div className="container">
+          <SectionHeading compact eyebrow="Why Us" title="Why learn with us?" subtitle="World-class language education with real advantages." />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {benefits.map((b, i) => (
+              <motion.div key={b.title} {...fadeUp(i)}
+                className="rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md">
+                  <b.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-3 text-sm font-bold text-slate-900">{b.title}</h3>
+                <p className="mt-1 text-xs text-slate-600">{b.description}</p>
+              </motion.div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* CTA Section */}
-        <section className="py-20">
-          <div className="container">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary to-purple-600 p-12 text-center"
-            >
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-3xl" />
-              <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/20 rounded-full blur-3xl" />
-              
-              <div className="relative z-10">
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                  Ready to Start Your Language Journey?
-                </h2>
-                <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-                  Join thousands of students who have successfully learned a new language with us
-                </p>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-white text-primary font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  Book Free Demo Class
-                </motion.button>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      </div>
+      {/* CTA */}
+      <section className="bg-white pb-14">
+        <div className="container">
+          <motion.div {...fadeUp()} className="relative overflow-hidden rounded-2xl bg-slate-950 px-6 py-10 text-center text-white shadow-xl md:px-10">
+            <div className="absolute inset-0 opacity-70" style={{ backgroundImage: "radial-gradient(50% 80% at 50% 0%, rgba(99,102,241,.45), transparent)" }} />
+            <div className="relative">
+              <h2 className="text-xl font-bold tracking-tight md:text-2xl">Ready to start your language journey?</h2>
+              <p className="mx-auto mt-2 max-w-xl text-sm text-slate-300">Book a free demo class and meet your trainer before you commit.</p>
+              <a href={wa("Hi, I'd like to book a free demo class for a foreign language course.")} target="_blank" rel="noopener noreferrer"
+                className="mt-6 inline-flex h-10 items-center gap-2 rounded-lg bg-white px-6 text-sm font-semibold text-slate-900 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+                <MessageCircle className="h-4 w-4" /> Book Free Demo Class
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
     </Layout>
   );
 }

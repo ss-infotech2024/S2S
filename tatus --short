@@ -1,0 +1,72 @@
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/App.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/components/site/AboutSection.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/components/site/CourseCard.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/components/site/Footer.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/components/site/GallerySection.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/components/site/Header.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/components/site/HeroSlider.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/components/site/HorizontalSlider.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/components/site/Stats.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/components/site/TopCourses.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/data/courses.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/About.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/Blog.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/ClassroomTraining.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/Contact.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/CorporateTraining.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/CourseDetails.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/Courses.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/Enroll.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/Index.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/OnlineTraining.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/Overseas.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/pages/Placements.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'public/robots.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tailwind.config.ts', LF will be replaced by CRLF the next time Git touches it
+ .gitignore                                         |   42 [32m+[m[31m-[m
+ client/App.tsx                                     |    5 [32m+[m[31m-[m
+ client/components/site/AboutSection.tsx            |  313 [32m++[m[31m--[m
+ client/components/site/CourseCard.tsx              |  100 [32m+[m[31m-[m
+ client/components/site/Footer.tsx                  |    2 [32m+[m[31m-[m
+ client/components/site/GallerySection.jsx          |  374 [32m+++[m[31m--[m
+ client/components/site/Header.tsx                  |   14 [32m+[m[31m-[m
+ client/components/site/HeroSlider.tsx              |  300 [32m++[m[31m--[m
+ client/components/site/HorizontalSlider.tsx        |  390 [32m+++[m[31m--[m
+ client/components/site/Stats.tsx                   |   47 [32m+[m[31m-[m
+ client/components/site/TopCourses.tsx              |   65 [32m+[m[31m-[m
+ client/data/courses.ts                             |   36 [32m+[m[31m-[m
+ client/pages/About.tsx                             | 1052 [32m+++++++++[m[31m----[m
+ client/pages/Blog.tsx                              | 1552 [32m+++++++++++++++[m[31m-----[m
+ client/pages/ClassroomTraining.tsx                 |  275 [32m+++[m[31m-[m
+ client/pages/Contact.tsx                           |  123 [32m+[m[31m-[m
+ client/pages/CorporateTraining.tsx                 |  718 [32m+++[m[31m------[m
+ client/pages/CourseDetails.tsx                     |  154 [32m+[m[31m-[m
+ client/pages/Courses.tsx                           |  103 [32m+[m[31m-[m
+ client/pages/Enroll.tsx                            |    2 [32m+[m
+ client/pages/Index.tsx                             |  256 [32m+[m[31m---[m
+ client/pages/OnlineTraining.tsx                    |  420 [32m+++[m[31m---[m
+ client/pages/Overseas.tsx                          |  655 [32m+++[m[31m------[m
+ client/pages/Placements.tsx                        |  232 [32m++[m[31m-[m
+ index.html                                         |    9 [32m+[m
+ public/AIdata.png                                  |  Bin [31m2108264[m -> [32m0[m bytes
+ public/DA.png                                      |  Bin [31m2118590[m -> [32m0[m bytes
+ public/img/Manan Agrawal Mindcan Inc 20 Lpa.jpeg   |  Bin [31m574260[m -> [32m0[m bytes
+ .../img/Shradha Alewar Tech Mahindra 3.65 LPA.JPG  |  Bin [31m1031137[m -> [32m0[m bytes
+ public/img/gd.jpeg                                 |  Bin [31m1392688[m -> [32m307329[m bytes
+ public/img/live.png                                |  Bin [31m1706812[m -> [32m0[m bytes
+ ...atsApp Image 2025-10-01 at 11.23.01 AM (1).jpeg |  Bin [31m147739[m -> [32m0[m bytes
+ .../WhatsApp Image 2025-10-01 at 11.23.01 AM.jpeg  |  Bin [31m141222[m -> [32m0[m bytes
+ .../WhatsApp Image 2025-10-01 at 11.23.02 AM.jpeg  |  Bin [31m146473[m -> [32m0[m bytes
+ .../WhatsApp Image 2025-10-01 at 11.29.59 AM.jpeg  |  Bin [31m1392688[m -> [32m0[m bytes
+ .../WhatsApp Image 2025-10-01 at 11.30.23 AM.jpeg  |  Bin [31m990610[m -> [32m0[m bytes
+ public/img/rufe/group.jpeg                         |  Bin [31m123328[m -> [32m0[m bytes
+ public/img/rufe/workshop.jpeg                      |  Bin [31m80846[m -> [32m0[m bytes
+ public/pt.png                                      |  Bin [31m2317422[m -> [32m0[m bytes
+ public/py1.png                                     |  Bin [31m2317422[m -> [32m0[m bytes
+ public/robots.txt                                  |   15 [32m+[m[31m-[m
+ public/v1.mp4                                      |  Bin [31m4691437[m -> [32m0[m bytes
+ public/videos/DAPreview.mp4                        |  Bin [31m34531765[m -> [32m0[m bytes
+ tailwind.config.ts                                 |    2 [32m+[m[31m-[m
+ 44 files changed, 4362 insertions(+), 2894 deletions(-)

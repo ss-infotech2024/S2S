@@ -1,3 +1,4 @@
+import usePageMeta from "@/hooks/use-page-meta";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -224,6 +225,27 @@ const successStories = [
   }
 ];
 
+// Placed students (photo = 4:5 portrait). Add more entries here and cards appear automatically.
+// NOTE: reviews are short placeholder messages — replace with each student's own words.
+const placedStudents = [
+  {
+    name: "Manan Agrawal",
+    company: "Mindcan Inc",
+    package: "₹20 LPA",
+    photo: "/img/students/manan-agrawal.jpg",
+    rating: 5,
+    review: "Practical training and real projects helped me crack my dream job.",
+  },
+  {
+    name: "Shradha Alewar",
+    company: "Tech Mahindra",
+    package: "₹3.65 LPA",
+    photo: "/img/students/shradha-alewar.jpg",
+    rating: 5,
+    review: "Great mentors and interview prep gave me the confidence to get placed.",
+  },
+];
+
 const placementStats = [
   { label: "Placement Success Rate", value: "85%", icon: Target },
   { label: "Average Package", value: "₹6.2 LPA", icon: IndianRupee },
@@ -370,7 +392,7 @@ function JobApplicationModal({ job, isOpen, onClose }) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh] border border-gray-200">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-blue-900 to-indigo-900 bg-clip-text text-transparent">
+          <DialogTitle className="text-xl font-bold text-gray-900 bg-gradient-to-r from-blue-900 to-indigo-900 bg-clip-text text-transparent">
             {job ? `Apply for ${job.title} at ${job.company}` : "Job Application"}
           </DialogTitle>
         </DialogHeader>
@@ -547,6 +569,7 @@ function JobApplicationModal({ job, isOpen, onClose }) {
 }
 
 export default function Placements() {
+  usePageMeta("Placements", "Meet our placed students, explore current job openings and read reviews from our alumni.");
   const registrationRef = useRef(null);
   const [selectedJob, setSelectedJob] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -618,44 +641,56 @@ export default function Placements() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative py-24 bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden">
+      <section className="relative py-12 bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-600/20 via-transparent to-transparent"></div>
+        <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl"></div>
+        <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-indigo-400/20 blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center space-y-6">
-            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+          <div className="text-center space-y-4">
+            <span className="inline-block rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold backdrop-blur">
+              Placements
+            </span>
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
               Launch Your Career
             </h1>
-            <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg text-blue-100 max-w-2xl mx-auto leading-relaxed">
               Join 2500+ students who transformed their careers with our placement program
             </p>
+            <div className="flex flex-wrap justify-center gap-3 pt-2">
+              <a href="#placed-students" className="inline-flex h-10 items-center rounded-lg bg-white px-5 text-sm font-semibold text-blue-900 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+                Meet Our Placed Students
+              </a>
+              <a href="#student-voices" className="inline-flex h-10 items-center rounded-lg border border-white/40 bg-white/10 px-5 text-sm font-semibold text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20">
+                Read Reviews
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Placement Statistics */}
-      <section className="py-20 relative">
+      <section className="py-10 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/5 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center space-y-4 mb-16">
-            <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-1 text-sm font-semibold mb-4 rounded-full">
+          <div className="text-center space-y-1.5 mb-6">
+            <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-3 py-0.5 text-xs font-semibold rounded-full">
               Placement Excellence
             </Badge>
-            <h2 className="text-4xl font-bold text-gray-900">Proven Track Record</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900">Proven Track Record</h2>
+            <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
               Our results speak volumes about our commitment to student success
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
             {placementStats.map((stat, index) => (
-              <Card key={index} className="text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white/80 backdrop-blur-sm rounded-2xl">
-                <CardContent className="p-6 space-y-4">
-                  <div className="bg-gradient-to-br from-blue-600 to-indigo-700 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
-                    <stat.icon className="h-7 w-7 text-white" />
+              <Card key={index} className="text-center border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white rounded-xl">
+                <CardContent className="p-3 space-y-1.5">
+                  <div className="bg-gradient-to-br from-blue-600 to-indigo-700 w-8 h-8 rounded-lg flex items-center justify-center mx-auto">
+                    <stat.icon className="h-3.5 w-3.5 text-white" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-                    <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+                    <div className="text-base font-bold text-gray-900">{stat.value}</div>
+                    <div className="text-[11px] text-gray-600 font-medium leading-tight">{stat.label}</div>
                   </div>
                 </CardContent>
               </Card>
@@ -664,15 +699,67 @@ export default function Placements() {
         </div>
       </section>
 
+      {/* Placed Students with photo + review */}
+      <section id="placed-students" className="py-10 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-1.5 mb-6">
+            <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-200 px-3 py-0.5 text-xs font-semibold rounded-full">
+              Success Stories
+            </Badge>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900">Our Placed Students</h2>
+            <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
+              Real students, real offers — meet some of the learners who landed their dream jobs
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-4">
+            {placedStudents.map((st) => (
+              <article
+                key={st.name}
+                className="group w-[140px] sm:w-[160px] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br from-blue-100 to-indigo-100">
+                  <img
+                    src={st.photo}
+                    alt={`${st.name}, placed at ${st.company}`}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 shadow-sm">
+                    <CheckCircle className="h-3 w-3" /> Placed
+                  </span>
+                  <span className="absolute bottom-2 right-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-2.5 py-0.5 text-xs font-bold text-white shadow">
+                    {st.package}
+                  </span>
+                </div>
+                <div className="space-y-1 p-2.5">
+                  <div className="flex gap-0.5">
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <Star key={i} className={`h-3 w-3 ${i < st.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
+                    ))}
+                  </div>
+                  <p className="text-[11px] italic leading-snug text-gray-600 line-clamp-3 min-h-[3.1em]">“{st.review}”</p>
+                  <div>
+                    <h3 className="text-xs font-bold text-gray-900 line-clamp-1">{st.name}</h3>
+                    <p className="flex items-center gap-1 text-[11px] text-gray-500 line-clamp-1">
+                      <Briefcase className="h-3 w-3 shrink-0" /> {st.company}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Jobs Section with Integrated JobSearch Functionality */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      <section className="py-10 bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-4 mb-16">
-            <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-1 text-sm font-semibold mb-4 rounded-full">
+          <div className="text-center space-y-1.5 mb-6">
+            <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-3 py-0.5 text-xs font-semibold rounded-full">
               Current Openings
             </Badge>
-            <h2 className="text-4xl font-bold text-gray-900">Explore Job Opportunities</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900">Explore Job Opportunities</h2>
+            <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
               Discover the latest job openings and take the next step in your career
             </p>
           </div>
@@ -718,14 +805,14 @@ export default function Placements() {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
             {/* Sidebar with Filters */}
             <aside className="space-y-4">
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm rounded-2xl">
-                <CardHeader>
-                  <CardTitle className="text-lg font-bold text-gray-900">Filters</CardTitle>
+              <Card className="border border-slate-200 shadow-sm bg-white rounded-xl">
+                <CardHeader className="p-4 pb-2">
+                  <CardTitle className="text-base font-bold text-gray-900">Filters</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4 p-4 pt-0">
                   <div className="space-y-2">
                     <Label className="text-gray-700 font-semibold">Category</Label>
                     <Select onValueChange={(e) => setCategory(e === "__any" ? undefined : e)}>
@@ -829,12 +916,12 @@ export default function Placements() {
                   </div>
                 </CardContent>
               </Card>
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm rounded-2xl">
-                <CardHeader>
-                  <CardTitle className="text-lg font-bold text-gray-900">Tips</CardTitle>
+              <Card className="border border-slate-200 shadow-sm bg-white rounded-xl">
+                <CardHeader className="p-4 pb-2">
+                  <CardTitle className="text-base font-bold text-gray-900">Tips</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <ul className="list-disc ml-5 text-sm text-gray-600 space-y-2">
+                <CardContent className="p-4 pt-0">
+                  <ul className="list-disc ml-5 text-xs text-gray-600 space-y-1.5">
                     <li>Use specific keywords (e.g., nurse, accountant) to narrow results.</li>
                     <li>Apply quickly to new listings — save them for later review.</li>
                     <li>Filter by category and salary to find the best fit.</li>
@@ -846,7 +933,7 @@ export default function Placements() {
             {/* Job Listings */}
             <section className="lg:col-span-3 space-y-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Job Opportunities</h3>
+                <h3 className="text-sm font-semibold text-gray-800 mb-2">Job Opportunities</h3>
                 <div className="flex items-center justify-between mb-4">
                   <p className="text-sm text-gray-500">
                     Showing <strong>{filtered.length}</strong> results
@@ -855,16 +942,16 @@ export default function Placements() {
                     Sorted by <strong>Relevance</strong>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {filtered.slice(0, visible).map((job) => (
                     <Card
                       key={job.id}
-                      className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white/80 backdrop-blur-sm overflow-hidden rounded-2xl ${job.urgent ? 'ring-2 ring-red-500' : ''}`}
+                      className={`border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white overflow-hidden rounded-lg ${job.urgent ? 'ring-1 ring-red-400' : ''}`}
                     >
-                      <CardContent className="p-6 space-y-4">
+                      <CardContent className="p-3 space-y-2">
                         {job.urgent && (
                           <div className="flex justify-between items-center mb-2">
-                            <Badge className="bg-red-500 text-white hover:bg-red-600">
+                            <Badge className="bg-red-500 text-white hover:bg-red-600 text-[10px] px-2 py-0">
                               Urgent Hiring
                             </Badge>
                             <div className="flex items-center space-x-2 text-sm text-gray-500">
@@ -873,20 +960,20 @@ export default function Placements() {
                             </div>
                           </div>
                         )}
-                        <div className="flex items-start justify-between">
+                        <div className="flex flex-col gap-3">
                           <div className="flex-1">
                             <div className="flex items-center space-x-3">
-                              <div className="bg-blue-100 rounded-md p-3">
-                                <Briefcase className="h-5 w-5 text-blue-600" />
+                              <div className="bg-blue-100 rounded-lg p-1.5">
+                                <Briefcase className="h-3.5 w-3.5 text-blue-600" />
                               </div>
                               <div>
-                                <h3 className="text-lg font-semibold text-gray-800">{job.title}</h3>
-                                <p className="text-sm text-gray-500">
+                                <h3 className="text-[13px] font-semibold text-gray-800 leading-tight">{job.title}</h3>
+                                <p className="text-xs text-gray-500">
                                   {job.company} • {job.location}
                                 </p>
                               </div>
                             </div>
-                            <div className="mt-3 flex items-center gap-2 flex-wrap">
+                            <div className="mt-2.5 flex items-center gap-1.5 flex-wrap [&>div]:text-[10px] [&>div]:px-2 [&>div]:py-0">
                               <Badge variant="outline" className="border-gray-300 text-gray-600">
                                 {job.experience}
                               </Badge>
@@ -902,7 +989,7 @@ export default function Placements() {
                                 </Badge>
                               ))}
                             </div>
-                            <div className="mt-4 text-sm text-gray-500 flex items-center gap-4">
+                            <div className="mt-2.5 text-xs text-gray-500 flex items-center gap-4">
                               <span className="flex items-center gap-1">
                                 <Clock className="h-4 w-4" />
                                 {timeAgo(job.postedAt)}
@@ -914,13 +1001,13 @@ export default function Placements() {
                                 </span>
                               )}
                             </div>
-                            <div className="mt-4">
-                              <p className="text-sm text-gray-600 line-clamp-3">{job.description}</p>
+                            <div className="mt-2">
+                              <p className="text-xs text-gray-600 line-clamp-2">{job.description}</p>
                             </div>
 
                             {/* Additional job details for urgent jobs */}
                             {job.urgent && (
-                              <div className="mt-4 space-y-2">
+                              <div className="mt-2 space-y-1 [&_div]:text-xs">
                                 {job.contact && (
                                   <div className="flex items-center space-x-2 text-sm">
                                     <Phone className="h-4 w-4 text-green-600" />
@@ -945,17 +1032,17 @@ export default function Placements() {
                               </div>
                             )}
                           </div>
-                          <div className="flex flex-col items-end space-y-2">
+                          <div className="flex items-center gap-2">
                             <Button
                               onClick={() => handleViewApply(job)}
-                              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white rounded-xl font-medium text-sm shadow-lg hover:shadow-xl transition-all duration-300"
+                              className="h-8 px-3 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white rounded-lg font-medium text-xs shadow-sm transition-all duration-300"
                             >
                               View & Apply
                             </Button>
                             <Button
                               onClick={() => toggleSave(job.id)}
                               variant="ghost"
-                              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl font-medium text-sm transition-colors"
+                              className="h-8 px-3 text-gray-600 hover:bg-gray-100 rounded-lg font-medium text-xs transition-colors"
                             >
                               {saved[job.id] ? "Saved" : "Save"}
                             </Button>
@@ -1085,43 +1172,50 @@ export default function Placements() {
       </section> */}
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gradient-to-br from-slate-50 via-white to-blue-100">
+      <section id="student-voices" className="py-10 bg-gradient-to-br from-slate-50 via-white to-blue-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-4 mb-16">
-            <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-200 px-4 py-1 text-sm font-semibold mb-4 rounded-full">
+          <div className="text-center space-y-1.5 mb-6">
+            <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-200 px-3 py-0.5 text-xs font-semibold rounded-full">
               Student Voices
             </Badge>
-            <h2 className="text-4xl font-bold text-gray-900">What Our Students Say</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900">What Our Students Say</h2>
+            <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
               Hear from our successful alumni about their transformative learning experiences
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
             {testimonials.map((testimonial) => (
-              <Card key={testimonial.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white/80 backdrop-blur-sm overflow-hidden rounded-2xl">
-                <CardContent className="p-6 space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                      {testimonial.author.split(' ').map(n => n[0]).join('')}
+              <Card key={testimonial.id} className="border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white overflow-hidden rounded-lg">
+                <CardContent className="p-3 space-y-2">
+                  <div className="flex items-center space-x-3">
+                    <div className="relative w-9 h-9 shrink-0 overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow ring-2 ring-white">
+                      <span>{testimonial.author.split(' ').map(n => n[0]).join('')}</span>
+                      <img
+                        src={testimonial.avatar}
+                        alt={testimonial.author}
+                        loading="lazy"
+                        onError={(e) => { e.currentTarget.style.display = "none"; }}
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
                     </div>
                     <div>
-                      <h3 className="font-bold text-gray-900 text-lg">{testimonial.author}</h3>
+                      <h3 className="font-bold text-gray-900 text-[13px] leading-tight">{testimonial.author}</h3>
                       {/* <p className="text-sm text-gray-600">{testimonial.role}  {testimonial.company}</p> */}
                       <div className="flex space-x-1">
                         {Array.from({ length: 5 }, (_, i) => (
-                          <Star key={i} className={`h-4 w-4 ${i < testimonial.rating ? "text-yellow-400" : "text-gray-300"}`} />
+                          <Star key={i} className={`h-3 w-3 ${i < testimonial.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
                         ))}
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600 italic leading-relaxed border-l-4 border-blue-400 pl-4 py-2 bg-blue-50/50 rounded-r-lg">
+                  <p className="text-[11px] text-gray-600 italic leading-relaxed border-l-2 border-blue-400 pl-3 py-1 bg-blue-50/50 rounded-r-md line-clamp-4">
                     "{testimonial.quote}"
                   </p>
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-700 font-medium">Course: {testimonial.course}</p>
-                    <div className="flex flex-wrap gap-2">
+                  <div className="space-y-1.5">
+                    <p className="text-xs text-gray-700 font-medium">Course: {testimonial.course}</p>
+                    <div className="flex flex-wrap gap-1">
                       {testimonial.achievements.map((achievement, idx) => (
-                        <Badge key={idx} className="bg-green-100 text-green-800 hover:bg-green-200 font-medium rounded-full">
+                        <Badge key={idx} className="bg-green-100 text-green-800 hover:bg-green-200 font-medium rounded-full text-[10px] px-2 py-0">
                           {achievement}
                         </Badge>
                       ))}

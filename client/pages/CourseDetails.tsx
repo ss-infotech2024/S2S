@@ -1,3 +1,4 @@
+import usePageMeta from "@/hooks/use-page-meta";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence, easeOut } from "framer-motion";
@@ -24,17 +25,17 @@ const COLORS = {
 };
 
 const SPACING = {
-  section: "py-10 sm:py-16 md:py-20",
-  card: "p-6 sm:p-8 md:p-10",
-  inner: "p-4 sm:p-5",
+  section: "py-6 sm:py-8 md:py-10",
+  card: "p-4 sm:p-5 md:p-6",
+  inner: "p-3 sm:p-4",
 } as const;
 
 const TYPOGRAPHY = {
-  h1: "text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter",
-  h2: "text-2xl sm:text-3xl font-semibold",
-  h3: "text-xl sm:text-2xl font-semibold",
-  body: "text-base sm:text-lg",
-  small: "text-sm",
+  h1: "text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tighter",
+  h2: "text-lg sm:text-xl font-semibold",
+  h3: "text-base sm:text-lg font-semibold",
+  body: "text-sm sm:text-base",
+  small: "text-xs",
 } as const;
 
 // Framer Motion Variants
@@ -58,11 +59,13 @@ const itemVariant = {
 interface HeadingProps {
   children: React.ReactNode;
   icon?: React.ReactNode;
+  compact?: boolean;
+  tight?: boolean;
 }
 
-const Heading = ({ children, icon }: HeadingProps) => (
-  <div className="flex items-center gap-3 mb-6">
-    {icon && <div className="text-violet-400">{icon}</div>}
+const Heading = ({ children, icon, compact = false, tight = false }: HeadingProps) => (
+  <div className={`flex items-center ${tight ? "gap-1.5 mb-2" : `gap-2 ${compact ? "mb-2.5" : "mb-3.5"}`}`}>
+    {icon && <div className="text-violet-400 text-sm">{icon}</div>}
     <h3 className={TYPOGRAPHY.h2}>{children}</h3>
   </div>
 );
@@ -75,7 +78,7 @@ interface CardProps {
 const Card = ({ children, className = "" }: CardProps) => (
   <div
     className={`
-      rounded-3xl ${COLORS.card} shadow-xl shadow-violet-500/5 
+      rounded-2xl ${COLORS.card} shadow-lg shadow-violet-500/5 
       ${COLORS.hoverCard} transition-all duration-300 ${className}
     `}
   >
@@ -87,20 +90,22 @@ interface ButtonProps {
   children: React.ReactNode;
   href?: string;
   className?: string;
+  compact?: boolean;
 }
 
-const Button = ({ children, href, className = "" }: ButtonProps) => {
+const Button = ({ children, href, className = "", compact = false }: ButtonProps) => {
   const Component = href ? Link : "button";
   return (
     <Component
       to={href}
       className={`
-        w-full flex items-center justify-center gap-3 
+        w-full flex items-center justify-center 
         bg-gradient-to-r ${COLORS.primary} text-white 
-        font-semibold text-lg py-4 px-8 rounded-2xl 
-        shadow-lg shadow-pink-500/30 hover:shadow-xl 
+        font-semibold shadow-lg shadow-pink-500/30 hover:shadow-xl 
         hover:scale-[1.02] active:scale-[0.98] 
-        transition-all duration-300 ${className}
+        transition-all duration-300 
+        ${compact ? "gap-1.5 text-xs py-2 px-4 rounded-lg" : "gap-2 text-base py-3 px-6 rounded-xl"} 
+        ${className}
       `}
     >
       {children}
@@ -116,15 +121,15 @@ interface InfoPillProps {
 
 const InfoPill = ({ icon, label, value }: InfoPillProps) => (
   <motion.div
-    whileHover={{ scale: 1.03, y: -3 }}
-    className="flex items-center gap-4 bg-white/70 dark:bg-zinc-800/70 p-5 rounded-2xl border border-violet-100 dark:border-violet-800"
+    whileHover={{ scale: 1.02, y: -2 }}
+    className="flex items-center gap-2.5 bg-white/70 dark:bg-zinc-800/70 p-2.5 rounded-xl border border-violet-100 dark:border-violet-800"
   >
-    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-100 to-pink-100 dark:from-violet-900/50 dark:to-pink-900/50 flex items-center justify-center text-2xl">
+    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-100 to-pink-100 dark:from-violet-900/50 dark:to-pink-900/50 flex items-center justify-center text-base shrink-0">
       {icon}
     </div>
     <div>
-      <p className="text-xs uppercase tracking-widest text-violet-500 dark:text-violet-400 font-medium">{label}</p>
-      <p className="text-xl font-semibold mt-0.5">{value}</p>
+      <p className="text-[10px] uppercase tracking-widest text-violet-500 dark:text-violet-400 font-medium">{label}</p>
+      <p className="text-sm font-semibold mt-0.5">{value}</p>
     </div>
   </motion.div>
 );
@@ -134,9 +139,9 @@ interface ListItemProps {
 }
 
 const ListItem = ({ children }: ListItemProps) => (
-  <div className="flex items-start gap-4 group">
-    <div className="mt-1.5 w-2 h-2 rounded-full bg-gradient-to-r from-pink-400 to-violet-400 flex-shrink-0 group-hover:scale-125 transition-transform" />
-    <span className="text-foreground/80 leading-relaxed">{children}</span>
+  <div className="flex items-start gap-2.5 group">
+    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-gradient-to-r from-pink-400 to-violet-400 flex-shrink-0 group-hover:scale-125 transition-transform" />
+    <span className="text-foreground/80 leading-relaxed text-sm">{children}</span>
   </div>
 );
 
@@ -150,7 +155,7 @@ interface ModuleCardProps {
 
 const ModuleCard = ({ module, index, isActive, onToggle }: ModuleCardProps) => (
   <div
-    className={`rounded-3xl border-2 transition-all duration-300 overflow-hidden ${
+    className={`rounded-2xl border-2 transition-all duration-300 overflow-hidden ${
       isActive
         ? "border-violet-400 bg-gradient-to-br from-violet-50 to-pink-50 dark:from-violet-950/30 dark:to-pink-950/30"
         : "border-violet-200/70 dark:border-violet-800/70 hover:border-pink-300"
@@ -158,11 +163,11 @@ const ModuleCard = ({ module, index, isActive, onToggle }: ModuleCardProps) => (
   >
     <button
       onClick={() => onToggle(index)}
-      className="w-full p-7 text-left flex items-center justify-between group"
+      className="w-full p-3 sm:p-3.5 text-left flex items-center justify-between group"
     >
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-3">
         <div
-          className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold transition-all ${
+          className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm font-bold transition-all shrink-0 ${
             isActive
               ? "bg-gradient-to-br from-violet-400 to-pink-400 text-white"
               : "bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-300"
@@ -171,10 +176,10 @@ const ModuleCard = ({ module, index, isActive, onToggle }: ModuleCardProps) => (
           {index + 1}
         </div>
         <div>
-          <h4 className="font-semibold text-xl group-hover:text-pink-500 transition-colors">
+          <h4 className="font-semibold text-sm sm:text-base group-hover:text-pink-500 transition-colors">
             {module.title}
           </h4>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-xs text-muted-foreground mt-0.5">
             {module.topics.length} engaging topics
           </p>
         </div>
@@ -185,7 +190,7 @@ const ModuleCard = ({ module, index, isActive, onToggle }: ModuleCardProps) => (
         transition={{ duration: 0.4 }}
         className="text-violet-400"
       >
-        <ChevronDownIcon className="w-6 h-6" />
+        <ChevronDownIcon className="w-4 h-4" />
       </motion.div>
     </button>
 
@@ -196,18 +201,18 @@ const ModuleCard = ({ module, index, isActive, onToggle }: ModuleCardProps) => (
           animate={{ height: "auto", opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.4 }}
-          className="px-7 pb-7"
+          className="px-3 sm:px-3.5 pb-3.5"
         >
-          <div className="pl-2 border-l-2 border-dashed border-pink-300 space-y-4">
+          <div className="pl-2 border-l-2 border-dashed border-pink-300 space-y-2">
             {module.topics.map((topic: string, i: number) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="flex items-start gap-3 text-foreground/80"
+                className="flex items-start gap-2 text-foreground/80 text-sm"
               >
-                <PlayIcon className="w-5 h-5 mt-0.5 text-pink-400 flex-shrink-0" />
+                <PlayIcon className="w-3.5 h-3.5 mt-0.5 text-pink-400 flex-shrink-0" />
                 <span>{topic}</span>
               </motion.div>
             ))}
@@ -227,7 +232,7 @@ interface FaqItemProps {
 
 const FaqItem = ({ faq, index, isExpanded, onToggle }: FaqItemProps) => (
   <div
-    className={`rounded-3xl border-2 transition-all duration-300 overflow-hidden ${
+    className={`rounded-2xl border-2 transition-all duration-300 overflow-hidden ${
       isExpanded
         ? "border-pink-400 bg-gradient-to-br from-pink-50/80 to-violet-50/80 dark:from-pink-950/30 dark:to-violet-950/30"
         : "border-violet-200/60 dark:border-violet-800/60 hover:border-pink-300"
@@ -235,14 +240,14 @@ const FaqItem = ({ faq, index, isExpanded, onToggle }: FaqItemProps) => (
   >
     <button
       onClick={() => onToggle(index)}
-      className="w-full px-7 py-6 text-left flex items-center justify-between"
+      className="w-full px-4 py-3 text-left flex items-center justify-between"
     >
-      <span className="font-medium text-lg pr-8 leading-tight">{faq.question}</span>
+      <span className="font-medium text-sm pr-4 leading-tight">{faq.question}</span>
       <motion.div
         animate={{ rotate: isExpanded ? 180 : 0 }}
-        className="text-pink-400"
+        className="text-pink-400 shrink-0"
       >
-        <ChevronDownIcon className="w-6 h-6" />
+        <ChevronDownIcon className="w-4 h-4" />
       </motion.div>
     </button>
 
@@ -253,7 +258,7 @@ const FaqItem = ({ faq, index, isExpanded, onToggle }: FaqItemProps) => (
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.4 }}
-          className="px-7 pb-7 text-foreground/70"
+          className="px-4 pb-4 text-foreground/70 text-xs"
         >
           {faq.answer}
         </motion.div>
@@ -265,6 +270,7 @@ const FaqItem = ({ faq, index, isExpanded, onToggle }: FaqItemProps) => (
 // ==================== MAIN COMPONENT ====================
 
 export default function CourseDetails() {
+  usePageMeta("Course Details", "Syllabus, duration, fees and demo for this course at Skill Training Center.");
   const { id } = useParams();
   const course = id ? getCourseById(id) : null;
 
@@ -357,22 +363,22 @@ export default function CourseDetails() {
           variants={staggerContainer}
           initial="initial"
           animate="animate"
-          className="grid gap-10 lg:gap-14 md:grid-cols-12"
+          className="grid gap-6 lg:gap-8 md:grid-cols-12"
         >
           {/* Main Content */}
-          <div className="md:col-span-8 space-y-12">
+          <div className="md:col-span-8 space-y-6">
             {/* Hero */}
             <motion.div variants={itemVariant}>
-              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-3xl bg-gradient-to-r from-violet-100 to-pink-100 dark:from-violet-900/50 dark:to-pink-900/50 border border-violet-200 dark:border-violet-700 mb-6">
-                <SparklesIcon className="w-5 h-5 text-pink-500" />
-                <span className="font-medium text-violet-600 dark:text-violet-300">Premium AI Learning Experience</span>
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-gradient-to-r from-violet-100 to-pink-100 dark:from-violet-900/50 dark:to-pink-900/50 border border-violet-200 dark:border-violet-700 mb-3">
+                <SparklesIcon className="w-4 h-4 text-pink-500" />
+                <span className="font-medium text-xs sm:text-sm text-violet-600 dark:text-violet-300">Premium AI Learning Experience</span>
               </div>
 
-              <h1 className={`${TYPOGRAPHY.h1} leading-none bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500 bg-clip-text text-transparent`}>
+              <h1 className={`${TYPOGRAPHY.h1} leading-tight bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500 bg-clip-text text-transparent`}>
                 {course.title}
               </h1>
 
-              <p className="mt-8 text-xl text-foreground/80 max-w-3xl leading-relaxed">
+              <p className="mt-3 text-sm sm:text-base text-foreground/80 max-w-3xl leading-relaxed">
                 {course.description}
               </p>
             </motion.div>
@@ -380,17 +386,17 @@ export default function CourseDetails() {
             {/* Info Pills */}
             <motion.div variants={itemVariant}>
               <Card className={SPACING.card}>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   <InfoPill icon="⏱️" label="Duration" value={course.duration} />
                   <InfoPill icon="📚" label="Level" value={course.level || "All Levels"} />
                   <InfoPill icon="🏆" label="Certificate" value="Included" />
                 </div>
 
                 {/* Outcomes & Syllabus */}
-                <div className="grid md:grid-cols-2 gap-12 mt-12 pt-12 border-t border-violet-100 dark:border-violet-800">
+                <div className="grid md:grid-cols-2 gap-4 sm:gap-5 mt-4 pt-4 border-t border-violet-100 dark:border-violet-800">
                   <div>
-                    <Heading icon="✨">What You'll Learn</Heading>
-                    <div className="space-y-5">
+                    <Heading icon="✨" compact>What You'll Learn</Heading>
+                    <div className="space-y-2">
                       {course.outcomes.map((item: string, i: number) => (
                         <ListItem key={i}>{item}</ListItem>
                       ))}
@@ -398,8 +404,8 @@ export default function CourseDetails() {
                   </div>
 
                   <div>
-                    <Heading icon="📋">Course Syllabus</Heading>
-                    <div className="space-y-5">
+                    <Heading icon="📋" compact>Course Syllabus</Heading>
+                    <div className="space-y-2">
                       {course.syllabus.map((item: string, i: number) => (
                         <ListItem key={i}>{item}</ListItem>
                       ))}
@@ -412,8 +418,8 @@ export default function CourseDetails() {
             {/* Curriculum */}
             <motion.div variants={itemVariant}>
               <Card className={SPACING.card}>
-                <Heading icon="🎓">Course Curriculum</Heading>
-                <div className="space-y-5">
+                <Heading icon="🎓" compact>Course Curriculum</Heading>
+                <div className="space-y-2.5">
                   {course.modules?.map((module: any, index: number) => (
                     <ModuleCard
                       key={index}
@@ -431,10 +437,10 @@ export default function CourseDetails() {
             {course.demoVideo && (
               <motion.div variants={itemVariant}>
                 <Card className={SPACING.card}>
-                  <Heading icon={<PlayIcon className="w-7 h-7 text-pink-400" />}>
+                  <Heading icon={<PlayIcon className="w-4 h-4 text-pink-400" />} compact>
                     Course Preview
                   </Heading>
-                  <div className="rounded-3xl overflow-hidden border border-violet-100 dark:border-violet-800 shadow-inner">
+                  <div className="rounded-2xl overflow-hidden border border-violet-100 dark:border-violet-800 shadow-inner max-w-xl mx-auto">
                     <video controls poster={course.image} className="w-full aspect-video">
                       <source src={course.demoVideo} type="video/mp4" />
                     </video>
@@ -446,8 +452,8 @@ export default function CourseDetails() {
             {/* FAQ */}
             <motion.div variants={itemVariant}>
               <Card className={SPACING.card}>
-                <h2 className={TYPOGRAPHY.h2 + " mb-8"}>Frequently Asked Questions</h2>
-                <div className="space-y-5">
+                <h2 className={TYPOGRAPHY.h2 + " mb-3"}>Frequently Asked Questions</h2>
+                <div className="space-y-2">
                   {faqs.map((faq, index) => (
                     <FaqItem
                       key={index}
@@ -463,23 +469,23 @@ export default function CourseDetails() {
           </div>
 
           {/* Sidebar */}
-          <div className="md:col-span-4 space-y-8 lg:sticky lg:top-10 self-start">
+          <div className="md:col-span-4 w-full lg:max-w-[220px] lg:ml-auto space-y-3.5 lg:sticky lg:top-10 self-start">
             {/* Enrollment Card */}
             <motion.div variants={itemVariant}>
-              <div className="rounded-3xl bg-gradient-to-br from-violet-50 to-pink-50 dark:from-violet-950 dark:to-pink-950 p-9 border border-violet-200 dark:border-violet-800 shadow-2xl shadow-pink-500/10">
+              <div className="rounded-2xl bg-gradient-to-br from-violet-50 to-pink-50 dark:from-violet-950 dark:to-pink-950 p-3.5 border border-violet-200 dark:border-violet-800 shadow-xl shadow-pink-500/10">
                 <div className="text-center">
-                  <div className="text-5xl font-bold text-violet-600 dark:text-violet-300 tracking-tighter">
+                  <div className="text-xl font-bold text-violet-600 dark:text-violet-300 tracking-tighter">
                     {course.fees}
                   </div>
-                  <p className="text-sm text-muted-foreground mt-2">One-time investment • Lifetime access</p>
+                  <p className="text-xs text-muted-foreground mt-1">One-time investment • Lifetime access</p>
                 </div>
 
-                <Button href={`/enroll/${course.id}`} className="mt-10 text-xl">
-                  <SparklesIcon className="w-6 h-6" />
+                <Button href={`/enroll/${course.id}`} compact className="mt-3.5">
+                  <SparklesIcon className="w-3.5 h-3.5" />
                   Enquire Now
                 </Button>
 
-                <div className="mt-10 pt-8 border-t border-violet-200 dark:border-violet-800 space-y-5 text-sm">
+                <div className="mt-3.5 pt-3.5 border-t border-violet-200 dark:border-violet-800 space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Duration</span>
                     <span className="font-medium">{course.duration}</span>
@@ -498,18 +504,18 @@ export default function CourseDetails() {
 
             {/* Batch & Instructors */}
             <motion.div variants={itemVariant}>
-              <Card className="p-8">
-                <Heading icon="🗓️">Upcoming Batches</Heading>
-                <p className="text-foreground/70 leading-relaxed">
+              <Card className="p-3.5">
+                <Heading icon="🗓️" tight>Upcoming Batches</Heading>
+                <p className="text-foreground/70 leading-relaxed text-xs">
                   {course.schedule || "Next batch starts soon. Contact us for personalized batch information."}
                 </p>
               </Card>
             </motion.div>
 
             <motion.div variants={itemVariant}>
-              <Card className="p-8">
-                <Heading icon="👩‍🏫">Expert Instructors</Heading>
-                <p className="text-foreground/70 leading-relaxed">
+              <Card className="p-3.5">
+                <Heading icon="👩‍🏫" tight>Expert Instructors</Heading>
+                <p className="text-foreground/70 leading-relaxed text-xs">
                   Learn from passionate industry leaders and AI researchers with years of real-world experience.
                 </p>
               </Card>
