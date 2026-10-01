@@ -1,0 +1,215 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Explore Course button: arrow "launches" like a rocket on click, then eases back in */
+@keyframes rocket-launch {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  18% {
+    /* wind-up: tiny dip back before ignition, like a rocket settling on the pad */
+    transform: translate(-1.5px, 1px) rotate(-8deg) scale(0.9);
+    opacity: 1;
+  }
+  55% {
+    /* main ascent: accelerating up and to the right, nose tilting into the climb */
+    transform: translate(5px, -5px) rotate(38deg) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    /* clears the frame */
+    transform: translate(14px, -13px) rotate(50deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Small ignition burst behind the arrow at liftoff */
+@keyframes rocket-thrust {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  25% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* Replacement arrow eases back into place after the launch, like it re-entering the slot */
+@keyframes rocket-reenter {
+  0% {
+    transform: translate(-8px, 8px) rotate(-20deg) scale(0.6);
+    opacity: 0;
+  }
+  65% {
+    transform: translate(1px, -1px) rotate(4deg) scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-rocket-launch {
+  animation: rocket-launch 520ms cubic-bezier(0.34, 0, 0.2, 1) forwards;
+}
+
+.animate-rocket-thrust {
+  animation: rocket-thrust 420ms ease-out forwards;
+}
+
+.animate-rocket-reenter {
+  animation: rocket-reenter 300ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@layer base {
+  :root {
+    /* Brand palette in HSL */
+    --brand-aqua: 166 100% 93%;
+    /* #DDFFF7 */
+    --brand-pink: 304 100% 91%;
+    /* #FFD2FC */
+    --brand-magenta: 214 100% 37%;
+    /* #0052BB */
+    --brand-purple: 290 47% 60%;
+    /* #B96AC9 */
+    --brand-dark: 0 13% 12%;
+    /* #231B1B */
+    /* Additional colors from original Placements component */
+    --success: 120 50% 45%;
+    /* Green for success badges */
+    --warning: 35 100% 50%;
+    /* Orange for warning badges, aligned with brand-accent */
+    --info: 210 85% 35%;
+    /* Blue for info, similar to original brand-blue */
+
+    /* App theme mapping */
+    --background: var(--brand-aqua);
+    --foreground: var(--brand-dark);
+
+    --card: var(--brand-aqua);
+    --card-foreground: var(--brand-dark);
+
+    --popover: var(--brand-aqua);
+    --popover-foreground: var(--brand-dark);
+
+    --primary: var(--brand-magenta);
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: var(--brand-purple);
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: var(--brand-pink);
+    --muted-foreground: 0 0% 25%;
+
+    --accent: var(--brand-pink);
+    --accent-foreground: var(--brand-dark);
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 290 35% 82%;
+    --input: 290 35% 82%;
+    --ring: var(--brand-magenta);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: var(--brand-aqua);
+    --sidebar-foreground: var(--brand-dark);
+    --sidebar-primary: var(--brand-magenta);
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: var(--brand-pink);
+    --sidebar-accent-foreground: var(--brand-dark);
+    --sidebar-border: 290 35% 82%;
+    --sidebar-ring: var(--brand-magenta);
+  }
+
+  .dark {
+    /* Brand palette in HSL */
+    --brand-aqua: 166 100% 93%;
+    /* Keep same for simplicity, or adjust if needed */
+    --brand-pink: 304 100% 91%;
+    --brand-magenta: 214 100% 47%;
+    /* Lighter for dark mode: #0066E5 */
+    --brand-purple: 290 47% 70%;
+    /* Lighter purple: #C17ED9 */
+    --brand-dark: 0 13% 12%;
+    --success: 120 50% 55%;
+    /* Brighter green for dark mode */
+    --warning: 35 100% 60%;
+    /* Brighter orange for dark mode */
+    --info: 210 85% 45%;
+    /* Brighter blue for dark mode */
+
+    /* App theme mapping */
+    --background: var(--brand-dark);
+    --foreground: 0 0% 98%;
+
+    --card: var(--brand-dark);
+    --card-foreground: 0 0% 98%;
+
+    --popover: var(--brand-dark);
+    --popover-foreground: 0 0% 98%;
+
+    --primary: var(--brand-magenta);
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: var(--brand-purple);
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 290 20% 20%;
+    --muted-foreground: 0 0% 85%;
+
+    --accent: 290 22% 16%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62% 31%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 290 22% 20%;
+    --input: 290 22% 20%;
+    --ring: var(--brand-magenta);
+
+    --sidebar-background: 0 13% 12%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: var(--brand-magenta);
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 290 22% 16%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 290 22% 16%;
+    --sidebar-ring: var(--brand-magenta);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
