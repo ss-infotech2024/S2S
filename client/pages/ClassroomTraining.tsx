@@ -529,13 +529,9 @@ export default function ClassroomTraining() {
                 whileHover={{ y: -4 }}
                 className={`group relative isolate overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm transition-colors duration-300 hover:border-transparent hover:shadow-xl ${b.glow}`}
               >
-                <motion.div
+                <div
                   aria-hidden="true"
-                  initial={{ scaleY: 0 }}
-                  whileHover={{ scaleY: 1 }}
-                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ originY: 1 }}
-                  className={`pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br ${b.fill}`}
+                  className={`pointer-events-none absolute inset-0 -z-10 origin-bottom scale-y-0 bg-gradient-to-br transition-transform duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100 ${b.fill}`}
                 />
 
                 <div className="flex items-start justify-between gap-3">
@@ -657,7 +653,7 @@ export default function ClassroomTraining() {
                   <div className="relative z-10 mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/25 mb-4">
                     <s.icon className="w-7 h-7 text-white" />
                   </div>
-                  <div className="text-xs font-bold text-pink-500 mb-1">STEP {s.step}</div>
+                  <div className="text-xs font-bold text-purple-600 mb-1">STEP {s.step}</div>
                   <h3 className="text-lg font-bold text-[#171034]">{s.title}</h3>
                   <p className="text-sm text-slate-600 mt-1.5 max-w-[180px] mx-auto leading-relaxed">
                     {s.desc}

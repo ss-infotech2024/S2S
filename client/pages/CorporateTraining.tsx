@@ -510,7 +510,7 @@
 //                   </div>
 //                   <div>
 //                     <div className="font-semibold">Email Us</div>
-//                     <div className="text-foreground/70">corporate@ailearning.com</div>
+//                     <div className="text-foreground/70">hr@ssinfotech.co</div>
 //                   </div>
 //                 </div>
 
@@ -711,7 +711,7 @@ const programs = [
 
 const contactDetails = [
   { icon: PhoneIcon, label: "Call us", value: "+91 93993 45989", href: "tel:+919399345989" },
-  { icon: EnvelopeIcon, label: "Email us", value: "corporate@ailearning.com", href: "mailto:corporate@ailearning.com" },
+  { icon: EnvelopeIcon, label: "Email us", value: "hr@ssinfotech.co", href: "mailto:hr@ssinfotech.co" },
   { icon: ClockIcon, label: "Response time", value: "Within 24 hours" },
 ];
 
