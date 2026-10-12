@@ -20,11 +20,18 @@ import {
   VideoCameraIcon,
   ChatBubbleLeftRightIcon,
   MapPinIcon,
+  WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon as CheckBadgeSolid } from "@heroicons/react/24/solid";
 
 import Layout from "@/components/site/Layout";
 import { getCourseById } from "@/data/courses";
+import { getCourseExtras } from "@/data/courseExtras";
+import { Card, SectionHeading, scrollToSection } from "@/components/course-details/shared";
+import CourseHero from "@/components/course-details/CourseHero";
+import SectionTabs from "@/components/course-details/SectionTabs";
+import VideoLessons from "@/components/course-details/VideoLessons";
+import LearningMaterials from "@/components/course-details/LearningMaterials";
 
 // ==================== DESIGN SYSTEM — blue / indigo / purple, subtle pink accent ====================
 
@@ -68,37 +75,6 @@ const itemVariant = {
 };
 
 // ==================== SMALL REUSABLE PIECES ====================
-
-interface SectionHeadingProps {
-  icon: React.ReactNode;
-  title: string;
-  subtitle?: string;
-}
-
-const SectionHeading = ({ icon, title, subtitle }: SectionHeadingProps) => (
-  <div className="mb-6 flex items-start gap-3">
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-sm">
-      {icon}
-    </div>
-    <div>
-      <h2 className={`${TYPOGRAPHY.h2} text-[#171034]`}>{title}</h2>
-      {subtitle && <p className="mt-0.5 text-sm text-slate-500">{subtitle}</p>}
-    </div>
-  </div>
-);
-
-interface CardProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-const Card = ({ children, className = "" }: CardProps) => (
-  <div
-    className={`rounded-[20px] ${COLORS.card} shadow-sm ${COLORS.hoverCard} transition-colors duration-300 ${className}`}
-  >
-    {children}
-  </div>
-);
 
 interface PrimaryButtonProps {
   children: React.ReactNode;
@@ -159,9 +135,10 @@ interface ModuleCardProps {
   index: number;
   isActive: boolean;
   onToggle: (index: number) => void;
+  onWatch: (index: number) => void;
 }
 
-const ModuleCard = ({ module, index, isActive, onToggle }: ModuleCardProps) => (
+const ModuleCard = ({ module, index, isActive, onToggle, onWatch }: ModuleCardProps) => (
   <div
     className={`overflow-hidden rounded-2xl border-2 transition-all duration-300 ${
       isActive ? "border-blue-300 bg-blue-50/40" : "border-slate-200 hover:border-indigo-200"
@@ -169,6 +146,7 @@ const ModuleCard = ({ module, index, isActive, onToggle }: ModuleCardProps) => (
   >
     <button
       onClick={() => onToggle(index)}
+      aria-expanded={isActive}
       className="flex w-full items-center justify-between gap-4 p-5 text-left sm:p-6"
     >
       <div className="flex items-center gap-4">
@@ -183,7 +161,9 @@ const ModuleCard = ({ module, index, isActive, onToggle }: ModuleCardProps) => (
         </div>
         <div>
           <h4 className="font-semibold text-[#171034]">{module.title}</h4>
-          <p className="mt-0.5 text-xs text-slate-400">{module.topics.length} topics</p>
+          <p className="mt-0.5 text-xs text-slate-400">
+            Module {String(index + 1).padStart(2, "0")} · {module.topics.length} topics
+          </p>
         </div>
       </div>
       <motion.div animate={{ rotate: isActive ? 180 : 0 }} transition={{ duration: 0.3 }} className="shrink-0 text-slate-400">
@@ -207,12 +187,22 @@ const ModuleCard = ({ module, index, isActive, onToggle }: ModuleCardProps) => (
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="flex items-start gap-2.5 text-sm text-slate-600"
+                className="flex items-center gap-3 text-sm text-slate-600"
               >
-                <PlayIcon className="mt-0.5 h-4 w-4 shrink-0 text-purple-500" aria-hidden="true" />
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-purple-100 text-[10px] font-bold text-purple-700">
+                  {i + 1}
+                </span>
                 <span>{topic}</span>
               </motion.div>
             ))}
+            <button
+              type="button"
+              onClick={() => onWatch(index)}
+              className="mt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700"
+            >
+              <PlayIcon className="h-3.5 w-3.5" aria-hidden="true" />
+              Watch video lessons for this module
+            </button>
           </div>
         </motion.div>
       )}
@@ -360,7 +350,7 @@ export default function CourseDetails() {
   const { id } = useParams();
   const course = id ? getCourseById(id) : null;
 
-  const [activeModule, setActiveModule] = useState<number>(-1);
+  const [activeModule, setActiveModule] = useState<number>(0);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedBatch, setSelectedBatch] = useState<BatchOption["id"] | null>(null);
@@ -369,6 +359,13 @@ export default function CourseDetails() {
     const timer = setTimeout(() => setIsLoading(false), 400);
     return () => clearTimeout(timer);
   }, []);
+
+  const [activeVideo, setActiveVideo] = useState(0);
+
+  const watchModule = (moduleIndex: number) => {
+    setActiveVideo(moduleIndex + 1); // index 0 is the course preview
+    scrollToSection("video-lessons");
+  };
 
   const toggleModule = (index: number) => {
     setActiveModule(activeModule === index ? -1 : index);
@@ -415,6 +412,16 @@ export default function CourseDetails() {
 
   const level = LEVEL_STYLES[course.level] ?? { dot: "bg-blue-500", text: "text-blue-700", bg: "bg-blue-50" };
   const selectedBatchDetails = batchOptions.find((b) => b.id === selectedBatch) || null;
+  const extras = getCourseExtras(course.id);
+
+  const tabs = [
+    { id: "overview", label: "Overview" },
+    ...(course.modules?.length ? [{ id: "curriculum", label: "Curriculum" }] : []),
+    { id: "video-lessons", label: "Video Lessons" },
+    ...(extras.materials.length ? [{ id: "learning-materials", label: "Learning Materials" }] : []),
+    ...(course.projects?.length ? [{ id: "projects", label: "Projects" }] : []),
+    { id: "faq", label: "FAQ" },
+  ];
 
   const whyLearnWithUs = [
     { icon: UserGroupIcon, title: "Expert Mentors", desc: "Learn from industry professionals with real-world experience." },
@@ -479,38 +486,21 @@ export default function CourseDetails() {
             className="min-w-0 flex-1 space-y-10"
           >
             {/* Hero */}
-            <motion.div variants={itemVariant}>
-              {/* <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white px-4 py-1.5">
-                <SparklesIcon className="h-4 w-4 text-purple-500" aria-hidden="true" />
-                <span className="text-xs font-semibold tracking-wide text-indigo-700">PREMIUM LEARNING EXPERIENCE</span>
-              </div> */}
-
-              <h1 className={`${TYPOGRAPHY.h1} mt-4 text-[#171034] dark:text-white`}>
-                {course.title}
-              </h1>
-
-              <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-500 sm:text-lg">
-                {course.description}
-              </p>
-
-              {/* Meta strip */}
-              <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <motion.div variants={itemVariant} className="space-y-4">
+              <CourseHero course={course} />
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 <MetaChip icon={<ClockIcon className="h-5 w-5" />} label="Duration" value={course.duration} />
                 <MetaChip icon={<AcademicCapIcon className="h-5 w-5" />} label="Level" value={course.level} />
                 <MetaChip icon={<CheckBadgeIcon className="h-5 w-5" />} label="Certificate" value="Included" />
                 <MetaChip icon={<MapPinIcon className="h-5 w-5" />} label="Mode" value="Live Online" />
               </div>
-
-              <div className="mt-6 hidden sm:block">
-                <PrimaryButton href={`/enroll/${course.id}`} className="max-w-xs">
-                  {/* <SparklesIcon className="h-5 w-5" aria-hidden="true" /> */}
-                  Enquire Now
-                </PrimaryButton>
-              </div>
             </motion.div>
 
-            {/* What You'll Learn + Syllabus */}
-            <motion.div variants={itemVariant}>
+            {/* Section tabs — direct child so sticky works */}
+            <SectionTabs tabs={tabs} />
+
+            {/* Overview */}
+            <motion.div id="overview" variants={itemVariant} className="scroll-mt-44 space-y-6">
               <Card className={SPACING.card}>
                 <div className="grid gap-10 md:grid-cols-2">
                   <div>
@@ -531,16 +521,62 @@ export default function CourseDetails() {
                   </div>
                 </div>
               </Card>
+
+              {(extras.tools.length > 0 || extras.careerRoles.length > 0) && (
+                <Card className={SPACING.card}>
+                  <div className="grid gap-10 md:grid-cols-2">
+                    {extras.tools.length > 0 && (
+                      <div>
+                        <SectionHeading
+                          icon={<WrenchScrewdriverIcon className="h-5 w-5" aria-hidden="true" />}
+                          title="Tools & Technologies"
+                          subtitle="What you'll work with hands-on"
+                        />
+                        <div className="flex flex-wrap gap-2">
+                          {extras.tools.map((tool) => (
+                            <span
+                              key={tool}
+                              className="rounded-lg border border-indigo-100 bg-indigo-50/60 px-3 py-1.5 text-xs font-medium text-indigo-700"
+                            >
+                              {tool}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {extras.careerRoles.length > 0 && (
+                      <div>
+                        <SectionHeading
+                          icon={<BriefcaseIcon className="h-5 w-5" aria-hidden="true" />}
+                          title="Career Roles"
+                          subtitle="Jobs this course prepares you for"
+                        />
+                        <div className="space-y-2.5">
+                          {extras.careerRoles.map((role) => (
+                            <div
+                              key={role}
+                              className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-[#171034]"
+                            >
+                              <BriefcaseIcon className="h-4 w-4 shrink-0 text-purple-500" aria-hidden="true" />
+                              {role}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              )}
             </motion.div>
 
             {/* Curriculum */}
             {course.modules && course.modules.length > 0 && (
-              <motion.div variants={itemVariant}>
+              <motion.div id="curriculum" variants={itemVariant} className="scroll-mt-44">
                 <Card className={SPACING.card}>
                   <SectionHeading
                     icon={<AcademicCapIcon className="h-5 w-5" aria-hidden="true" />}
                     title="Course Curriculum"
-                    subtitle="Click a module to see what's covered"
+                    subtitle={`${course.modules.length} modules · ${course.modules.reduce((n, m) => n + m.topics.length, 0)} topics — click a module to see what's covered`}
                   />
                   <div className="space-y-4">
                     {course.modules.map((module: any, index: number) => (
@@ -550,12 +586,51 @@ export default function CourseDetails() {
                         index={index}
                         isActive={activeModule === index}
                         onToggle={toggleModule}
+                        onWatch={watchModule}
                       />
                     ))}
                   </div>
                 </Card>
               </motion.div>
             )}
+
+            {/* Video Lessons */}
+            <motion.div id="video-lessons" variants={itemVariant} className="scroll-mt-44">
+              <VideoLessons course={course} extras={extras} selected={activeVideo} onSelect={setActiveVideo} />
+            </motion.div>
+
+            {/* Learning Materials */}
+            {extras.materials.length > 0 && (
+              <motion.div id="learning-materials" variants={itemVariant} className="scroll-mt-44">
+                <LearningMaterials materials={extras.materials} />
+              </motion.div>
+            )}
+
+            {/* Prerequisites + Career Outcomes */}
+            <motion.div variants={itemVariant}>
+              <Card className={SPACING.card}>
+                <div className="grid gap-10 md:grid-cols-2">
+                  <div>
+                    <SectionHeading icon={<ClipboardDocumentCheckIcon className="h-5 w-5" aria-hidden="true" />} title="Prerequisites" />
+                    <div className="space-y-4">
+                      {course.prerequisites?.length ? (
+                        course.prerequisites.map((item: string, i: number) => <OutcomeItem key={i}>{item}</OutcomeItem>)
+                      ) : (
+                        <OutcomeItem>No prior experience required</OutcomeItem>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <SectionHeading icon={<BriefcaseIcon className="h-5 w-5" aria-hidden="true" />} title="Career Outcomes" />
+                    <div className="space-y-4">
+                      {course.outcomes.map((item: string, i: number) => (
+                        <OutcomeItem key={i}>{item}</OutcomeItem>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
 
             {/* Choose Your Batch */}
             <motion.div id="choose-batch" variants={itemVariant} className="scroll-mt-24">
@@ -580,7 +655,7 @@ export default function CourseDetails() {
 
             {/* Key Projects */}
             {course.projects && course.projects.length > 0 && (
-              <motion.div variants={itemVariant}>
+              <motion.div id="projects" variants={itemVariant} className="scroll-mt-44">
                 <Card className={SPACING.card}>
                   <SectionHeading icon={<CodeBracketIcon className="h-5 w-5" aria-hidden="true" />} title="Key Projects You'll Build" />
                   <div className="grid gap-4 sm:grid-cols-2">
@@ -648,22 +723,8 @@ export default function CourseDetails() {
               </Card>
             </motion.div>
 
-            {/* Demo Video */}
-            {course.demoVideo && (
-              <motion.div variants={itemVariant}>
-                <Card className={SPACING.card}>
-                  <SectionHeading icon={<PlayIcon className="h-5 w-5" aria-hidden="true" />} title="Course Preview" />
-                  <div className="overflow-hidden rounded-2xl border border-slate-200">
-                    <video controls poster={course.image} className="aspect-video w-full">
-                      <source src={course.demoVideo} type="video/mp4" />
-                    </video>
-                  </div>
-                </Card>
-              </motion.div>
-            )}
-
             {/* FAQ */}
-            <motion.div variants={itemVariant}>
+            <motion.div id="faq" variants={itemVariant} className="scroll-mt-44">
               <Card className={SPACING.card}>
                 <SectionHeading icon={<ChatBubbleLeftRightIcon className="h-5 w-5" aria-hidden="true" />} title="Frequently Asked Questions" />
                 <div className="space-y-4">

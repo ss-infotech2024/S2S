@@ -1,6 +1,7 @@
 // pages/Placements.tsx
 import { useEffect, useMemo, useState } from "react";
 import Layout from "@/components/site/Layout";
+import PersonAvatar from "@/components/site/PersonAvatar";
 import { MotionConfig, motion } from "framer-motion";
 import { fadeInUp, stagger } from "@/lib/animations";
 import {
@@ -115,17 +116,18 @@ const testimonials = [
     id: 1,
     quote:
       "The instructors are top-notch and the curriculum is very practical. I landed a job just two months after completing the course!",
-    author: "Niharika Sharma",
+    author: "Saniya Gajbe",
+    photo: "/img/reviews/saniya-gajbe.jpg",
     rating: 5,
     course: "Python + DSA",
     achievements: ["Got 3 job offers", "Salary increased by 200%", "Placed in 2 months"],
-    // photo: "/img/reviews/niharika.jpg",
   },
   {
     id: 2,
     quote:
       "Skill Training Center's course gave me the skills and confidence I needed to switch my career. The projects were invaluable for my portfolio.",
-    author: "Prateek Kumar",
+    author: "Shruti Hinge",
+    photo: "/img/reviews/shruti-hinge.jpg",
     rating: 5,
     course: "Full Stack Development",
     achievements: ["Career switch successful", "Built 5+ real projects", "Mentorship support"],
@@ -134,7 +136,8 @@ const testimonials = [
     id: 3,
     quote:
       "Hands-on learning and personalized attention made all the difference. Highly recommend this course to anyone serious about data analysis.",
-    author: "Raj Borkar",
+    author: "Aastha Dadure",
+    photo: "/img/reviews/aastha-dadure.jpg",
     rating: 5,
     course: "Data Analytics",
     achievements: ["Mastered ML algorithms", "Real-world case studies", "Industry ready skills"],
@@ -143,7 +146,8 @@ const testimonials = [
     id: 4,
     quote:
       "The projects were hands-on and very practical. I gained confidence in real-world data analysis and visualization techniques.",
-    author: "Saloni Patel",
+    author: "Riya Karunde",
+    photo: "/img/reviews/riya-karunde.jpg",
     rating: 5,
     course: "Data Science",
     achievements: ["Data visualization expert", "Business insights skills", "Client project experience"],
@@ -152,7 +156,8 @@ const testimonials = [
     id: 5,
     quote:
       "The mentorship and guidance from Skill Training Center helped me grow faster than I expected. The career support was exceptional.",
-    author: "Ajay Singh",
+    author: "Tejaswini Bhoyar",
+    photo: "/img/reviews/tejaswini-bhoyar.jpg",
     rating: 5,
     course: "Machine Learning",
     achievements: ["Advanced ML concepts", "Model deployment", "Research opportunities"],
@@ -161,7 +166,8 @@ const testimonials = [
     id: 6,
     quote:
       "The projects and real-life case studies really boosted my confidence. The interview preparation sessions were incredibly helpful.",
-    author: "Meenal Gupta",
+    author: "Harshada Wadhankar",
+    photo: "/img/reviews/harshada-wadhankar.jpg",
     rating: 5,
     course: "Data Analytics",
     achievements: ["Multiple job offers", "Confident in interviews", "Practical experience"],
@@ -199,6 +205,8 @@ const placedStudents: PlacedStudent[] = [
   { name: "Zeba Sheikh", company: "Expleo", package: "4.5 LPA", photo: "/img/placements/zeba-sheikh.jpg" },
   { name: "Mrunal Umredkar", company: "Capgemini", package: "3.8 LPA", photo: "/img/placements/mrunal-umredkar.jpg" },
   { name: "Vaishnavi Khoware", company: "Stetig", package: "4.8 LPA", photo: "/img/placements/vaishnavi-khoware.jpg" },
+  { name: "Shradha Alewar", company: "Tech Mahindra", package: "3.65 LPA", photo: "/img/Shradha%20Alewar%20Tech%20Mahindra%203.65%20LPA.JPG" },
+  { name: "Manan Agrawal", company: "Mindcan Inc", package: "20 LPA", photo: "/img/Manan%20Agrawal%20Mindcan%20Inc%2020%20Lpa.jpeg" },
 ];
 
 interface Job {
@@ -336,9 +344,30 @@ const marqueeCss = `
 .pl-marquee-track{display:flex;width:max-content;gap:1.25rem;animation:pl-marquee 60s linear infinite}
 .pl-marquee-wrap:hover .pl-marquee-track,.pl-marquee-wrap:focus-within .pl-marquee-track{animation-play-state:paused}
 @keyframes pl-marquee{from{transform:translateX(0)}to{transform:translateX(calc(-50% - .625rem))}}
+.pl-wall{display:flex;flex-direction:column;gap:1.25rem}
+.pl-wall .pl-marquee-wrap{padding:.75rem 0}
+.pl-wall .pl-marquee-track{gap:1rem;animation-name:pl-wall-scroll;animation-duration:55s}
+.pl-wall .pl-marquee-rev{animation-direction:reverse;animation-duration:63s}
+@keyframes pl-wall-scroll{from{transform:translateX(0)}to{transform:translateX(calc(-50% - .5rem))}}
+.pl-sc{position:relative;flex:0 0 auto;width:176px;height:224px;margin:0;overflow:hidden;border-radius:1.25rem;background:linear-gradient(160deg,#ede9fe,#c4b5fd);border:1px solid rgba(255,255,255,.7);box-shadow:0 10px 24px -10px rgba(76,29,149,.45);transition:transform .35s,box-shadow .35s}
+@media (min-width:768px){.pl-sc{width:210px;height:262px}}
+.pl-sc:hover{transform:translateY(-6px);box-shadow:0 22px 40px -14px rgba(76,29,149,.55)}
+.pl-sc-init{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#6d28d9;font-size:3.5rem;font-weight:800}
+.pl-sc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.pl-sc:hover img{transform:scale(1.07)}
+.pl-sc::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(30,10,70,.92) 0%,rgba(46,16,101,.45) 38%,transparent 62%);pointer-events:none}
+.pl-sc-placed{position:absolute;top:.625rem;left:.625rem;z-index:2;display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .6rem;border-radius:9999px;background:rgba(255,255,255,.92);color:#047857;font-size:.625rem;font-weight:800;letter-spacing:.06em;box-shadow:0 2px 6px rgba(15,23,42,.15)}
+.pl-sc-placed i{display:block;width:6px;height:6px;border-radius:9999px;background:#10b981}
+.pl-sc-pkg{position:absolute;top:.625rem;right:.625rem;z-index:2;padding:.2rem .6rem;border-radius:9999px;background:linear-gradient(90deg,#2563eb,#7c3aed);color:#fff;font-size:.6875rem;font-weight:800;box-shadow:0 4px 10px rgba(91,33,182,.4)}
+.pl-sc-info{position:absolute;left:.625rem;right:.625rem;bottom:.625rem;z-index:2;padding:.625rem .75rem;border-radius:.875rem;background:rgba(46,16,101,.55);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff}
+.pl-sc-name{display:block;font-size:.9375rem;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-sc-co{display:flex;align-items:center;gap:.3rem;margin-top:.2rem;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-sc-co svg{flex:0 0 auto;width:12px;height:12px}
 @media (prefers-reduced-motion:reduce){
   .pl-marquee-track{animation:none}
   .pl-marquee-wrap{overflow-x:auto;-webkit-mask-image:none;mask-image:none}
+  .pl-sc,.pl-sc img{transition:none}
+  .pl-sc:hover,.pl-sc:hover img{transform:none}
 }
 `;
 
@@ -418,53 +447,38 @@ function SectionHeading({
   );
 }
 
-/** One placed student: circular photo on a soft gradient, name, company, package badge. */
-function PlacedStudentCard({ student, theme }: { student: PlacedStudent; theme: Theme }) {
+/** One placed student: full photo, PLACED badge, package pill and a glass name/company panel. */
+function PlacedStudentCard({ student, hidden = false }: { student: PlacedStudent; hidden?: boolean }) {
   const [imageFailed, setImageFailed] = useState(false);
 
   return (
-    <motion.figure
-      variants={fadeInUp()}
-      whileHover={{ y: -6 }}
-      className={`group relative flex flex-col items-center overflow-hidden rounded-2xl border bg-white px-4 pb-5 pt-6 text-center shadow-sm transition-shadow duration-300 hover:shadow-xl ${theme.cardHover} ${theme.surface.split(" ").pop()}`}
-    >
-      {/* Soft coloured header band behind the photo */}
-      <span
-        aria-hidden="true"
-        className={`absolute inset-x-0 top-0 h-[76px] ${theme.surface.split(" ").slice(0, 3).join(" ")}`}
-      />
-
-      <span
-        className={`relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-white text-4xl font-extrabold shadow-lg ring-1 ring-black/5 transition-transform duration-300 group-hover:scale-105 ${theme.accent}`}
-      >
+    <figure className="pl-sc" aria-hidden={hidden ? true : undefined}>
+      <span className="pl-sc-init" aria-hidden="true">
         {initials(student.name)}
-        {student.photo && !imageFailed && (
-          <img
-            src={student.photo}
-            alt={`${student.name}, placed at ${student.company}`}
-            loading="lazy"
-            decoding="async"
-            onError={() => setImageFailed(true)}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        )}
       </span>
-
-      <figcaption className="relative mt-3.5">
-        <p className="text-base font-bold leading-tight text-[#171034]">{student.name}</p>
-        {student.role && <p className="mt-0.5 text-sm text-slate-500">{student.role}</p>}
-        <span className={`mt-2.5 inline-block rounded-full px-3 py-1 text-xs font-bold ${theme.chip}`}>
+      {student.photo && !imageFailed && (
+        <img
+          src={student.photo}
+          alt={hidden ? "" : `${student.name}, placed at ${student.company}`}
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          onError={() => setImageFailed(true)}
+        />
+      )}
+      <span className="pl-sc-placed">
+        <i aria-hidden="true" />
+        PLACED
+      </span>
+      {student.package && <span className="pl-sc-pkg">{student.package}</span>}
+      <figcaption className="pl-sc-info">
+        <span className="pl-sc-name">{student.name}</span>
+        <span className="pl-sc-co">
+          <BriefcaseIcon aria-hidden="true" />
           {student.company}
         </span>
-        {student.package && (
-          <p className="mt-2">
-            <span className="inline-block rounded-full bg-gradient-to-r from-emerald-600 to-teal-500 px-3 py-1 text-xs font-extrabold text-white shadow-md shadow-emerald-600/25">
-              {student.package}
-            </span>
-          </p>
-        )}
       </figcaption>
-    </motion.figure>
+    </figure>
   );
 }
 
@@ -481,7 +495,7 @@ function ReviewCard({ item, theme, hidden = false }: { item: Testimonial; theme:
         <span
           className={`relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white text-sm font-extrabold shadow-sm ring-1 ring-black/5 ${theme.accent}`}
         >
-          {initials(item.author)}
+          <PersonAvatar name={item.author} className="absolute inset-0 h-full w-full" />
           {item.photo && !imageFailed && (
             <img
               src={item.photo}
@@ -1029,21 +1043,33 @@ export default function Placements() {
                   center
                 />
 
-                <motion.div
-                  variants={stagger}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, margin: "-60px" }}
-                  className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5"
-                >
-                  {placedStudents.map((student, i) => (
-                    <PlacedStudentCard
-                      key={`${student.name}-${i}`}
-                      student={student}
-                      theme={paletteCycle[i % paletteCycle.length]}
-                    />
-                  ))}
-                </motion.div>
+                {(() => {
+                  // Two rows moving in opposite directions; repeat each row so the loop never shows a gap
+                  const rowA = placedStudents.filter((_, i) => i % 2 === 0);
+                  const rowB = placedStudents.filter((_, i) => i % 2 === 1);
+                  const fill = (row: PlacedStudent[]) =>
+                    Array.from({ length: Math.ceil(8 / Math.max(row.length, 1)) }, () => row).flat();
+                  const wallA = fill(rowA.length ? rowA : placedStudents);
+                  const wallB = fill(rowB.length ? rowB : placedStudents);
+                  return (
+                    <div className="pl-wall" role="region" aria-label="Our placed students">
+                      <div className="pl-marquee-wrap">
+                        <div className="pl-marquee-track">
+                          {[...wallA, ...wallA].map((student, i) => (
+                            <PlacedStudentCard key={`r1-${student.name}-${i}`} student={student} hidden={i >= wallA.length} />
+                          ))}
+                        </div>
+                      </div>
+                      <div className="pl-marquee-wrap" aria-hidden="true">
+                        <div className="pl-marquee-track pl-marquee-rev">
+                          {[...wallB, ...wallB].map((student, i) => (
+                            <PlacedStudentCard key={`r2-${student.name}-${i}`} student={student} hidden />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             </section>
           )}

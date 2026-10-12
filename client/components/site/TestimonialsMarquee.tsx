@@ -1,6 +1,8 @@
 // components/site/TestimonialsMarquee.tsx
 import { StarIcon as StarSolid } from "@heroicons/react/24/solid";
 import { StarIcon as StarOutline } from "@heroicons/react/24/outline";
+import { useState } from "react";
+import PersonAvatar from "./PersonAvatar";
 
 export interface Testimonial {
   id: number | string;
@@ -9,6 +11,7 @@ export interface Testimonial {
   course: string;
   rating: number;
   postedAt: string;
+  photo?: string; // e.g. "/img/reviews/name.jpg" — falls back to a girl/boy avatar if missing
 }
 
 const defaultTestimonials: Testimonial[] = [
@@ -16,7 +19,8 @@ const defaultTestimonials: Testimonial[] = [
     id: 1,
     quote:
       "The instructors are top-notch and the curriculum is very practical. I landed a job just two months after completing the course!",
-    author: "Niharika Sharma",
+    author: "Saniya Gajbe",
+    photo: "/img/reviews/saniya-gajbe.jpg",
     course: "Python + DSA",
     rating: 5,
     postedAt: "5 days ago",
@@ -25,7 +29,8 @@ const defaultTestimonials: Testimonial[] = [
     id: 2,
     quote:
       "Skill Training Center's course gave me the skills and confidence I needed to switch my career. The projects were invaluable for my portfolio.",
-    author: "Prateek Kumar",
+    author: "Shruti Hinge",
+    photo: "/img/reviews/shruti-hinge.jpg",
     course: "Full Stack Development",
     rating: 5,
     postedAt: "1 week ago",
@@ -34,7 +39,8 @@ const defaultTestimonials: Testimonial[] = [
     id: 3,
     quote:
       "Hands-on learning and personalized attention made all the difference. Highly recommend this course to anyone serious about data analysis.",
-    author: "Raj Borkar",
+    author: "Aastha Dadure",
+    photo: "/img/reviews/aastha-dadure.jpg",
     course: "Data Analytics",
     rating: 4,
     postedAt: "10 days ago",
@@ -43,7 +49,8 @@ const defaultTestimonials: Testimonial[] = [
     id: 4,
     quote:
       "The projects were hands-on and very practical. I gained confidence in real-world data analysis and visualization techniques.",
-    author: "Saloni Patel",
+    author: "Riya Karunde",
+    photo: "/img/reviews/riya-karunde.jpg",
     course: "Data Science",
     rating: 5,
     postedAt: "2 weeks ago",
@@ -52,7 +59,8 @@ const defaultTestimonials: Testimonial[] = [
     id: 5,
     quote:
       "The mentorship and guidance from Skill Training Center helped me grow faster than I expected. The career support was exceptional.",
-    author: "Ajay Singh",
+    author: "Tejaswini Bhoyar",
+    photo: "/img/reviews/tejaswini-bhoyar.jpg",
     course: "Machine Learning",
     rating: 5,
     postedAt: "3 days ago",
@@ -61,7 +69,8 @@ const defaultTestimonials: Testimonial[] = [
     id: 6,
     quote:
       "The projects and real-life case studies really boosted my confidence. The interview preparation sessions were incredibly helpful.",
-    author: "Meenal Gupta",
+    author: "Harshada Wadhankar",
+    photo: "/img/reviews/harshada-wadhankar.jpg",
     course: "Data Analytics",
     rating: 5,
     postedAt: "1 week ago",
@@ -74,13 +83,6 @@ const avatarAccents = [
   "from-teal-500 to-emerald-500",
   "from-rose-500 to-orange-500",
 ];
-
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("");
-}
 
 function Row({
   items,
@@ -112,6 +114,7 @@ function Row({
 }
 
 function TestimonialMiniCard({ testimonial, accent }: { testimonial: Testimonial; accent: string }) {
+  const [photoFailed, setPhotoFailed] = useState(false);
   return (
     <figure className="relative w-[300px] shrink-0 overflow-hidden rounded-2xl border border-brand-aqua/40 bg-white/90 backdrop-blur-sm p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-lg hover:shadow-gray-900/5 sm:w-[320px]">
       {/* Decorative quote mark */}
@@ -139,9 +142,19 @@ function TestimonialMiniCard({ testimonial, accent }: { testimonial: Testimonial
 
       <figcaption className="relative mt-6 flex items-center gap-3">
         <div
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accent} text-sm font-bold text-white shadow-sm ring-2 ring-white`}
+          className={`relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br ${accent} shadow-sm ring-2 ring-white`}
         >
-          {initials(testimonial.author)}
+          <PersonAvatar name={testimonial.author} />
+          {testimonial.photo && !photoFailed && (
+            <img
+              src={testimonial.photo}
+              alt={testimonial.author}
+              loading="lazy"
+              decoding="async"
+              onError={() => setPhotoFailed(true)}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          )}
         </div>
         <div className="min-w-0">
           <div className="truncate text-sm font-bold text-gray-900">{testimonial.author}</div>

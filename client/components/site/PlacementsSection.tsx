@@ -10,6 +10,7 @@ import {
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/24/solid";
+import PersonAvatar from "./PersonAvatar";
 
 /* ------------------------------------------------------------------ *
  *  EDIT THE DATA BELOW — the section renders automatically from it.  *
@@ -77,48 +78,56 @@ const placedStudents: PlacedStudent[] = [
   { name: "Zeba Sheikh", company: "Expleo", package: "4.5 LPA", photo: "/img/placements/zeba-sheikh.jpg" },
   { name: "Mrunal Umredkar", company: "Capgemini", package: "3.8 LPA", photo: "/img/placements/mrunal-umredkar.jpg" },
   { name: "Vaishnavi Khoware", company: "Stetig", package: "4.8 LPA", photo: "/img/placements/vaishnavi-khoware.jpg" },
+  { name: "Shradha Alewar", company: "Tech Mahindra", package: "3.65 LPA", photo: "/img/Shradha%20Alewar%20Tech%20Mahindra%203.65%20LPA.JPG" },
+  { name: "Manan Agrawal", company: "Mindcan Inc", package: "20 LPA", photo: "/img/Manan%20Agrawal%20Mindcan%20Inc%2020%20Lpa.jpeg" },
 ];
 
 // Student reviews — shown as a moving (auto-scrolling) strip.
 // Same reviews as your Placements page. Add `photo: "/img/reviews/name.jpg"` to show a photo.
 const reviews: Review[] = [
   {
-    name: "Niharika Sharma",
+    name: "Saniya Gajbe",
+    photo: "/img/reviews/saniya-gajbe.jpg",
     course: "Python + DSA",
     rating: 5,
     review:
       "The instructors are top-notch and the curriculum is very practical. I landed a job just two months after completing the course!",
   },
   {
-    name: "Prateek Kumar",
+    name: "Shruti Hinge",
+    photo: "/img/reviews/shruti-hinge.jpg",
     course: "Full Stack Development",
     rating: 5,
     review:
       "Skill Training Center's course gave me the skills and confidence I needed to switch my career. The projects were invaluable for my portfolio.",
   },
   {
-    name: "Raj Borkar",
+    name: "Aastha Dadure",
+    photo: "/img/reviews/aastha-dadure.jpg",
     course: "Data Analytics",
     rating: 5,
     review:
       "Hands-on learning and personalized attention made all the difference. Highly recommend this course to anyone serious about data analysis.",
   },
   {
-    name: "Saloni Patel",
+    name: "Riya Karunde",
+    photo: "/img/reviews/riya-karunde.jpg",
     course: "Data Science",
     rating: 5,
     review:
       "The projects were hands-on and very practical. I gained confidence in real-world data analysis and visualization techniques.",
   },
   {
-    name: "Ajay Singh",
+    name: "Tejaswini Bhoyar",
+    photo: "/img/reviews/tejaswini-bhoyar.jpg",
     course: "Machine Learning",
     rating: 5,
     review:
       "The mentorship and guidance from Skill Training Center helped me grow faster than I expected. The career support was exceptional.",
   },
   {
-    name: "Meenal Gupta",
+    name: "Harshada Wadhankar",
+    photo: "/img/reviews/harshada-wadhankar.jpg",
     course: "Data Analytics",
     rating: 5,
     review:
@@ -173,18 +182,24 @@ const css = `
 .pl-chip img{max-height:42px;max-width:140px;object-fit:contain;filter:grayscale(1);opacity:.8;transition:filter .25s,opacity .25s}
 .pl-chip:hover img{filter:none;opacity:1}
 .pl-track-rev{animation-direction:reverse}
-.pl-students{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
-@media (min-width:768px){.pl-students{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem}}
-.pl-card{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;overflow:hidden;padding:1.5rem 1rem 1.25rem;border-radius:1.25rem;background:#fff;border:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(15,23,42,.06);transition:transform .3s,box-shadow .3s,border-color .3s}
-.pl-card::before{content:"";position:absolute;left:0;right:0;top:0;height:76px;background:linear-gradient(135deg,#dbeafe,#ede9fe 55%,#fce7f3)}
-.pl-card:hover{transform:translateY(-6px);border-color:#c4b5fd;box-shadow:0 18px 36px rgba(124,58,237,.2)}
-.pl-photo{position:relative;display:flex;align-items:center;justify-content:center;width:112px;height:112px;border-radius:9999px;overflow:hidden;background:#ede9fe;color:#7c3aed;font-size:2.5rem;font-weight:800;border:4px solid #fff;box-shadow:0 8px 20px rgba(76,29,149,.28);transition:transform .4s}
-.pl-card:hover .pl-photo{transform:scale(1.06)}
-.pl-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.pl-name{position:relative;margin-top:.875rem;font-size:1.05rem;font-weight:700;line-height:1.25;color:#0f172a}
-.pl-role{position:relative;margin-top:.125rem;font-size:.85rem;color:#64748b}
-.pl-company{position:relative;display:inline-flex;align-items:center;gap:.375rem;margin-top:.625rem;padding:.3rem .8rem;border-radius:9999px;background:#eff6ff;color:#1d4ed8;font-size:.8rem;font-weight:700}
-.pl-package{position:relative;margin-top:.5rem;padding:.25rem .8rem;border-radius:9999px;background:linear-gradient(90deg,#059669,#14b8a6);color:#fff;font-size:.8rem;font-weight:800;letter-spacing:.01em;box-shadow:0 4px 10px rgba(5,150,105,.3)}
+.pl-wall{display:flex;flex-direction:column;gap:1.25rem}
+.pl-wall .pl-marquee{margin-bottom:0;padding:.75rem 0}
+.pl-wall .pl-track{gap:1rem;animation-duration:50s}
+.pl-wall .pl-track-rev{animation-duration:58s}
+.pl-sc{position:relative;flex:0 0 auto;width:176px;height:224px;overflow:hidden;border-radius:1.25rem;background:linear-gradient(160deg,#ede9fe,#c4b5fd);border:1px solid rgba(255,255,255,.7);box-shadow:0 10px 24px -10px rgba(76,29,149,.45);transition:transform .35s,box-shadow .35s}
+@media (min-width:768px){.pl-sc{width:210px;height:262px}}
+.pl-sc:hover{transform:translateY(-6px);box-shadow:0 22px 40px -14px rgba(76,29,149,.55)}
+.pl-sc-init{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#6d28d9;font-size:3.5rem;font-weight:800}
+.pl-sc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.pl-sc:hover img{transform:scale(1.07)}
+.pl-sc::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(30,10,70,.92) 0%,rgba(46,16,101,.45) 38%,transparent 62%);pointer-events:none}
+.pl-sc-placed{position:absolute;top:.625rem;left:.625rem;z-index:2;display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .6rem;border-radius:9999px;background:rgba(255,255,255,.92);color:#047857;font-size:.625rem;font-weight:800;letter-spacing:.06em;box-shadow:0 2px 6px rgba(15,23,42,.15)}
+.pl-sc-placed i{display:block;width:6px;height:6px;border-radius:9999px;background:#10b981}
+.pl-sc-pkg{position:absolute;top:.625rem;right:.625rem;z-index:2;padding:.2rem .6rem;border-radius:9999px;background:linear-gradient(90deg,#2563eb,#7c3aed);color:#fff;font-size:.6875rem;font-weight:800;box-shadow:0 4px 10px rgba(91,33,182,.4)}
+.pl-sc-info{position:absolute;left:.625rem;right:.625rem;bottom:.625rem;z-index:2;padding:.625rem .75rem;border-radius:.875rem;background:rgba(46,16,101,.55);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff}
+.pl-sc-name{display:block;font-size:.9375rem;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-sc-co{display:flex;align-items:center;gap:.3rem;margin-top:.2rem;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-sc-co svg{flex:0 0 auto;width:12px;height:12px}
 
 .pl-spaced{margin-top:2.75rem}
 .pl-reviews{position:relative;overflow:hidden;padding:.5rem 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
@@ -198,7 +213,7 @@ const css = `
 .pl-quote{flex:1;margin:.75rem 0 1rem;font-size:.9rem;line-height:1.6;color:#334155}
 .pl-rauthor{display:flex;align-items:center;gap:.75rem}
 .pl-ravatar{position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0;width:44px;height:44px;border-radius:9999px;overflow:hidden;background:linear-gradient(135deg,#dbeafe,#ede9fe);color:#6d28d9;font-weight:800}
-.pl-ravatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pl-ravatar img,.pl-ravatar svg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .pl-rname{font-size:.95rem;font-weight:700;color:#0f172a;line-height:1.2}
 .pl-rmeta{font-size:.8rem;color:#64748b}
 
@@ -210,9 +225,9 @@ const css = `
 @media (prefers-reduced-motion:reduce){
   .pl-track,.pl-rtrack{animation:none}
   .pl-marquee,.pl-reviews{overflow-x:auto;-webkit-mask-image:none;mask-image:none}
-  .pl-stat,.pl-card,.pl-card img,.pl-btn{transition:none}
-  .pl-stat:hover,.pl-card:hover,.pl-btn:hover{transform:none}
-  .pl-card:hover img{transform:none}
+  .pl-stat,.pl-sc,.pl-sc img,.pl-btn{transition:none}
+  .pl-stat:hover,.pl-sc:hover,.pl-btn:hover{transform:none}
+  .pl-sc:hover img{transform:none}
 }
 `;
 
@@ -263,6 +278,41 @@ function RecruiterChip({
   );
 }
 
+/** One placed student: full photo, PLACED badge, package pill and a glass name/company panel. */
+function StudentCard({ student, hidden = false }: { student: PlacedStudent; hidden?: boolean }) {
+  return (
+    <figure className="pl-sc" aria-hidden={hidden ? true : undefined}>
+      <span className="pl-sc-init" aria-hidden="true">
+        {student.name.charAt(0)}
+      </span>
+      {student.photo && (
+        <img
+          src={student.photo}
+          alt={hidden ? "" : `${student.name}, placed at ${student.company}`}
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
+        />
+      )}
+      <span className="pl-sc-placed">
+        <i aria-hidden="true" />
+        PLACED
+      </span>
+      {student.package && <span className="pl-sc-pkg">{student.package}</span>}
+      <figcaption className="pl-sc-info">
+        <span className="pl-sc-name">{student.name}</span>
+        <span className="pl-sc-co">
+          <BriefcaseIcon aria-hidden="true" />
+          {student.company}
+        </span>
+      </figcaption>
+    </figure>
+  );
+}
+
 export default function PlacementsSection() {
   // Duplicate the list so the marquee loops seamlessly
   // Repeat the list until one "half" of the track is wider than a big screen, so the loop never shows a gap
@@ -270,6 +320,14 @@ export default function PlacementsSection() {
   const rowOne = [...half, ...half];
   const rowTwo = [...[...half].reverse(), ...[...half].reverse()];
   const reviewItems = [...reviews, ...reviews];
+
+  // Placed students: two rows moving in opposite directions (same look as the Placements page)
+  const rowA = placedStudents.filter((_, i) => i % 2 === 0);
+  const rowB = placedStudents.filter((_, i) => i % 2 === 1);
+  const loopHalf = (row: PlacedStudent[]) =>
+    Array.from({ length: Math.ceil(8 / Math.max(row.length, 1)) }, () => row).flat();
+  const wallA = loopHalf(rowA.length ? rowA : placedStudents);
+  const wallB = loopHalf(rowB.length ? rowB : placedStudents);
 
   return (
     <section className="pl-section" aria-labelledby="placements-heading">
@@ -366,36 +424,21 @@ export default function PlacementsSection() {
         <TrophyIcon aria-hidden="true" />
         Our Placed Students
       </h3>
-      <div className="pl-students">
-        {placedStudents.map((student, i) => (
-          <motion.div
-            key={`${student.name}-${i}`}
-            className="pl-card"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
-          >
-            <div className="pl-photo">
-              {student.name.charAt(0)}
-              {student.photo && (
-                <img
-                  src={student.photo}
-                  alt={`${student.name}, placed at ${student.company}`}
-                  loading="lazy"
-                  decoding="async"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              )}
-            </div>
-            <div className="pl-name">{student.name}</div>
-            {student.role && <div className="pl-role">{student.role}</div>}
-            <div className="pl-company">{student.company}</div>
-            {student.package && <div className="pl-package">{student.package}</div>}
-          </motion.div>
-        ))}
+      <div className="pl-wall" role="region" aria-label="Our placed students">
+        <div className="pl-marquee">
+          <div className="pl-track">
+            {[...wallA, ...wallA].map((student, i) => (
+              <StudentCard key={`r1-${student.name}-${i}`} student={student} hidden={i >= wallA.length} />
+            ))}
+          </div>
+        </div>
+        <div className="pl-marquee" aria-hidden="true">
+          <div className="pl-track pl-track-rev">
+            {[...wallB, ...wallB].map((student, i) => (
+              <StudentCard key={`r2-${student.name}-${i}`} student={student} hidden />
+            ))}
+          </div>
+        </div>
       </div>
         </>
       )}
@@ -431,7 +474,7 @@ export default function PlacementsSection() {
                   <blockquote className="pl-quote">“{r.review}”</blockquote>
                   <figcaption className="pl-rauthor">
                     <span className="pl-ravatar">
-                      {r.name.charAt(0)}
+                      <PersonAvatar name={r.name} />
                       {r.photo && (
                         <img
                           src={r.photo}

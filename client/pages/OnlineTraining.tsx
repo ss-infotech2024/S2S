@@ -717,7 +717,7 @@ export default function OnlineTraining() {
 
           <div className="relative grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
             {/* Connector line (desktop) */}
-            <div className="hidden md:block absolute top-8 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300" />
+            <div className="hidden md:block absolute top-8 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-blue-300 via-violet-300 to-violet-300" />
 
             {howItWorks.map((s, i) => (
               <motion.div
@@ -731,7 +731,7 @@ export default function OnlineTraining() {
                 <div className="relative z-10 mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/25 mb-4">
                   <s.icon className="w-7 h-7 text-white" />
                 </div>
-                <div className="text-xs font-bold text-pink-500 mb-1">STEP {s.step}</div>
+                <div className="text-xs font-bold text-violet-600 mb-1">STEP {s.step}</div>
                 <h3 className="text-lg font-bold text-[#171034]">{s.title}</h3>
                 <p className="text-sm text-slate-600 mt-1.5 max-w-[180px] mx-auto leading-relaxed">
                   {s.desc}
