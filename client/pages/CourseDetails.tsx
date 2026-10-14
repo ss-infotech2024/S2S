@@ -32,6 +32,7 @@ import CourseHero from "@/components/course-details/CourseHero";
 import SectionTabs from "@/components/course-details/SectionTabs";
 import VideoLessons from "@/components/course-details/VideoLessons";
 import LearningMaterials from "@/components/course-details/LearningMaterials";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // ==================== DESIGN SYSTEM — blue / indigo / purple, subtle pink accent ====================
 
@@ -344,6 +345,180 @@ const BatchCard = ({ batch, isSelected, onSelect }: BatchCardProps) => {
   );
 };
 
+// ==================== PAGE BACKGROUND (shared by skeleton + content so it never flickers) ====================
+
+const PageBackground = () => (
+  <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 bg-[radial-gradient(#c7d2fe_0.6px,transparent_1px)] dark:bg-[radial-gradient(#4338ca_0.6px,transparent_1px)] [background-size:44px_44px] opacity-20" />
+    <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/50 via-white to-white dark:from-indigo-950/30 dark:via-background dark:to-background" />
+    <div className="absolute -top-32 -right-32 h-[480px] w-[480px] rounded-full bg-blue-200/25 blur-[110px] dark:bg-blue-600/10" />
+    <div className="absolute -bottom-32 -left-32 h-[420px] w-[420px] rounded-full bg-pink-200/20 blur-[100px] dark:bg-pink-600/10" />
+  </div>
+);
+
+// ==================== SKELETON LOADER ====================
+// Mirrors the real page structure (same container, spacing, card radii and
+// two-column layout) so that swapping to real content causes no layout shift.
+
+const SkeletonBar = ({ className = "" }: { className?: string }) => (
+  <Skeleton className={`bg-slate-200/80 ${className}`} />
+);
+
+const SkeletonCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <div className={`rounded-[20px] border border-slate-200 bg-white shadow-sm ${SPACING.card} ${className}`}>
+    {children}
+  </div>
+);
+
+const SkeletonSectionHeading = () => (
+  <div className="mb-6 flex items-start gap-3">
+    <SkeletonBar className="h-10 w-10 shrink-0 rounded-xl" />
+    <div className="flex-1 space-y-2 pt-1">
+      <SkeletonBar className="h-5 w-48 max-w-full" />
+      <SkeletonBar className="h-3.5 w-64 max-w-full" />
+    </div>
+  </div>
+);
+
+const SkeletonList = ({ rows = 4 }: { rows?: number }) => (
+  <div className="space-y-4">
+    {Array.from({ length: rows }).map((_, i) => (
+      <div key={i} className="flex items-start gap-3">
+        <SkeletonBar className="mt-0.5 h-5 w-5 shrink-0 rounded-full" />
+        <SkeletonBar className="h-4 flex-1" />
+      </div>
+    ))}
+  </div>
+);
+
+const CourseDetailsSkeleton = () => (
+  <section
+    className={`container ${SPACING.section} relative min-h-screen`}
+    aria-busy="true"
+    aria-live="polite"
+  >
+    <span className="sr-only">Loading course details…</span>
+
+    {/* Breadcrumb */}
+    <div className="mb-6 flex h-4 items-center gap-2">
+      <SkeletonBar className="h-3 w-14" />
+      <SkeletonBar className="h-3 w-2" />
+      <SkeletonBar className="h-3 w-40" />
+    </div>
+
+    <div className="lg:flex lg:items-start lg:gap-8 xl:gap-10">
+      {/* Main column */}
+      <div className="min-w-0 flex-1 space-y-10">
+        {/* Hero + meta chips */}
+        <div className="space-y-4">
+          <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm sm:p-9">
+            <SkeletonBar className="h-7 w-44 rounded-full" />
+            <SkeletonBar className="mt-4 h-10 w-3/4 sm:h-12" />
+            <div className="mt-4 max-w-2xl space-y-2.5">
+              <SkeletonBar className="h-4 w-full" />
+              <SkeletonBar className="h-4 w-5/6" />
+            </div>
+            <div className="mt-6 flex flex-wrap gap-x-8 gap-y-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <SkeletonBar className="h-7 w-12" />
+                  <SkeletonBar className="h-3 w-16" />
+                </div>
+              ))}
+            </div>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <SkeletonBar className="h-12 w-36 rounded-xl" />
+              <SkeletonBar className="h-12 w-44 rounded-xl" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                <SkeletonBar className="h-9 w-9 shrink-0 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <SkeletonBar className="h-2.5 w-14" />
+                  <SkeletonBar className="h-3.5 w-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Section tabs */}
+        <div className="flex gap-1 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <SkeletonBar key={i} className="h-9 w-24 shrink-0 rounded-xl" />
+          ))}
+        </div>
+
+        {/* Overview */}
+        <SkeletonCard>
+          <div className="grid gap-10 md:grid-cols-2">
+            <div>
+              <SkeletonSectionHeading />
+              <SkeletonList rows={5} />
+            </div>
+            <div>
+              <SkeletonSectionHeading />
+              <SkeletonList rows={5} />
+            </div>
+          </div>
+        </SkeletonCard>
+
+        {/* Curriculum */}
+        <SkeletonCard>
+          <SkeletonSectionHeading />
+          <div className="space-y-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-4 rounded-2xl border-2 border-slate-100 p-5 sm:p-6">
+                <SkeletonBar className="h-11 w-11 shrink-0 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <SkeletonBar className="h-4 w-2/3" />
+                  <SkeletonBar className="h-3 w-28" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </SkeletonCard>
+
+        {/* Video lessons */}
+        <SkeletonCard>
+          <SkeletonSectionHeading />
+          <SkeletonBar className="aspect-video w-full rounded-2xl" />
+        </SkeletonCard>
+      </div>
+
+      {/* Sidebar */}
+      <aside className="mt-10 shrink-0 space-y-6 lg:mt-0 lg:w-[300px] xl:w-[340px]">
+        <div className="rounded-[20px] border border-indigo-100 bg-white p-6 shadow-lg shadow-indigo-500/10 sm:p-7">
+          <div className="flex flex-col items-center gap-2">
+            <SkeletonBar className="h-9 w-32" />
+            <SkeletonBar className="h-3 w-48 max-w-full" />
+          </div>
+          <SkeletonBar className="mt-5 h-12 w-full rounded-xl" />
+          <SkeletonBar className="mt-5 h-14 w-full rounded-2xl" />
+          <div className="mt-6 space-y-3 border-t border-indigo-100 pt-5">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex items-center justify-between">
+                <SkeletonBar className="h-4 w-20" />
+                <SkeletonBar className="h-4 w-24" />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="rounded-[20px] border border-slate-200 bg-white p-6 shadow-sm">
+          <SkeletonSectionHeading />
+          <div className="space-y-2.5">
+            <SkeletonBar className="h-3.5 w-full" />
+            <SkeletonBar className="h-3.5 w-11/12" />
+            <SkeletonBar className="h-3.5 w-4/5" />
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+);
+
 // ==================== MAIN COMPONENT ====================
 
 export default function CourseDetails() {
@@ -352,15 +527,23 @@ export default function CourseDetails() {
 
   const [activeModule, setActiveModule] = useState<number>(0);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Loading is tracked per course id, so navigating from one course to another
+  // always shows the skeleton again (no stale content, no half-reset state).
+  const [loadedId, setLoadedId] = useState<string | null>(null);
+  const isLoading = loadedId !== (id ?? null);
   const [selectedBatch, setSelectedBatch] = useState<BatchOption["id"] | null>(null);
+  const [activeVideo, setActiveVideo] = useState(0);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 400);
-    return () => clearTimeout(timer);
-  }, []);
+    // Reset per-course UI state while the skeleton is showing.
+    setActiveModule(0);
+    setExpandedFaq(null);
+    setSelectedBatch(null);
+    setActiveVideo(0);
 
-  const [activeVideo, setActiveVideo] = useState(0);
+    const timer = setTimeout(() => setLoadedId(id ?? null), 400);
+    return () => clearTimeout(timer);
+  }, [id]);
 
   const watchModule = (moduleIndex: number) => {
     setActiveVideo(moduleIndex + 1); // index 0 is the course preview
@@ -399,13 +582,8 @@ export default function CourseDetails() {
   if (isLoading) {
     return (
       <Layout>
-        <div className="flex min-h-[70vh] items-center justify-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 1.1, ease: "linear" }}
-            className="h-14 w-14 rounded-full border-4 border-indigo-100 border-t-indigo-500"
-          />
-        </div>
+        <PageBackground />
+        <CourseDetailsSkeleton />
       </Layout>
     );
   }
@@ -461,13 +639,7 @@ export default function CourseDetails() {
 
   return (
     <Layout>
-      {/* Subtle background — light lavender, not overdone */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(#c7d2fe_0.6px,transparent_1px)] dark:bg-[radial-gradient(#4338ca_0.6px,transparent_1px)] [background-size:44px_44px] opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/50 via-white to-white dark:from-indigo-950/30 dark:via-background dark:to-background" />
-        <div className="absolute -top-32 -right-32 h-[480px] w-[480px] rounded-full bg-blue-200/25 blur-[110px] dark:bg-blue-600/10" />
-        <div className="absolute -bottom-32 -left-32 h-[420px] w-[420px] rounded-full bg-pink-200/20 blur-[100px] dark:bg-pink-600/10" />
-      </div>
+      <PageBackground />
 
       <section className={`container ${SPACING.section} relative min-h-screen`}>
         {/* Breadcrumb */}
