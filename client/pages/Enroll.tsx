@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import type { Course } from "@/data/courses";
+import {
+  courses as staticCourses,
+  getCourseById,
+} from "@/data/courses";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Layout from "@/components/site/Layout";
-import { getCourseById } from "@/data/courses";
 import {
   UserIcon,
   EnvelopeIcon,
@@ -156,13 +160,182 @@ const TRUST_INDICATORS = [
   { icon: UserGroupIcon, label: "Trusted training partner" },
 ];
 
+
+
 export default function Enroll() {
   const { id } = useParams();
-  const course = id ? getCourseById(id) : null;
   const navigate = useNavigate();
 
+  const [course, setCourse] = useState<Course | null>(
+    () => (id ? getCourseById(id) : null)
+  );
+  const [courseLoading, setCourseLoading] = useState(true);
+
+  useEffect(() => {
+    const apiUrl = import.meta.env.VITE_ADMIN_API_URL;
+    let cancelled = false;
+
+    async function loadCourse() {
+      setCourseLoading(true);
+
+      const fallback = id ? getCourseById(id) : null;
+      setCourse(fallback);
+
+      if (!id || !apiUrl) {
+        setCourseLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${apiUrl.replace(/\/$/, "")}/api/courses`
+        );
+
+        if (!response.ok) {
+          throw new Error(`Courses API error: ${response.status}`);
+        }
+
+        const result: unknown = await response.json();
+
+        const records: unknown[] | null = Array.isArray(result)
+          ? result
+          : typeof result === "object" &&
+              result !== null &&
+              "value" in result &&
+              Array.isArray(result.value)
+            ? result.value
+            : null;
+
+        if (!records) {
+          throw new Error("Invalid courses API response");
+        }
+
+        const record = records.find((item) => {
+          if (typeof item !== "object" || item === null) {
+            return false;
+          }
+
+          const data = item as Record<string, unknown>;
+          return data.slug === id || data.id === id;
+        }) as Record<string, unknown> | undefined;
+
+        if (cancelled) return;
+
+        if (!record || record.published === false) {
+          setCourse(null);
+          return;
+        }
+
+        const original = staticCourses.find((item) => item.id === id);
+
+        const toStringArray = (
+          value: unknown,
+          fallbackValue: string[] = []
+        ): string[] =>
+          Array.isArray(value)
+            ? value.filter(
+                (item): item is string => typeof item === "string"
+              )
+            : fallbackValue;
+
+        const modules = Array.isArray(record.modules)
+          ? record.modules
+              .filter(
+                (item): item is Record<string, unknown> =>
+                  typeof item === "object" && item !== null
+              )
+              .map((module) => ({
+                title:
+                  typeof module.title === "string"
+                    ? module.title
+                    : "Course Module",
+                topics: toStringArray(module.topics),
+              }))
+          : original?.modules;
+
+        const updatedCourse: Course = {
+          ...(original ?? {}),
+          id,
+          title:
+            typeof record.title === "string"
+              ? record.title
+              : original?.title ?? id,
+          short:
+            typeof record.short === "string"
+              ? record.short
+              : original?.short ?? "",
+          description:
+            typeof record.description === "string"
+              ? record.description
+              : original?.description ?? "",
+          duration:
+            typeof record.duration === "string"
+              ? record.duration
+              : original?.duration ?? "",
+          fees:
+            typeof record.fees === "string" ||
+            typeof record.fees === "number"
+              ? String(record.fees)
+              : original?.fees ?? "",
+          level:
+            record.level === "Beginner" ||
+            record.level === "Intermediate" ||
+            record.level === "Advanced"
+              ? record.level
+              : original?.level ?? "Beginner",
+          category:
+            typeof record.category === "string"
+              ? record.category
+              : original?.category ?? "Other",
+          syllabus: toStringArray(
+            record.syllabus,
+            original?.syllabus ?? []
+          ),
+          outcomes: toStringArray(
+            record.outcomes,
+            original?.outcomes ?? []
+          ),
+          projects: toStringArray(
+            record.projects,
+            original?.projects ?? []
+          ),
+          prerequisites: toStringArray(
+            record.prerequisites,
+            original?.prerequisites ?? []
+          ),
+          modules,
+          schedule:
+            typeof record.schedule === "string"
+              ? record.schedule
+              : original?.schedule,
+          image:
+            typeof record.image === "string"
+              ? record.image
+              : original?.image,
+        };
+
+        setCourse(updatedCourse);
+      } catch (error) {
+        if (cancelled) return;
+
+        console.error("Unable to load enrollment course:", error);
+        setCourse(fallback);
+      } finally {
+        if (!cancelled) {
+          setCourseLoading(false);
+        }
+      }
+    }
+
+    void loadCourse();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+
   const initialFormState = {
-    course: course?.title || "",
+    course: "",
     name: "",
     email: "",
     phone: "",
@@ -172,15 +345,36 @@ export default function Enroll() {
   };
 
   const [form, setForm] = useState(initialFormState);
-  const [selectedBatch, setSelectedBatch] = useState<BatchOption["id"] | null>(null);
+  const [selectedBatch, setSelectedBatch] =
+    useState<BatchOption["id"] | null>(null);
   const [batchError, setBatchError] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [enrollmentId, setEnrollmentId] = useState("");
+  const [trackingToken, setTrackingToken] = useState("");
+  useEffect(() => {
+    if (course) {
+      setForm((previous) => ({
+        ...previous,
+        course: course.title,
+      }));
+    }
+  }, [course]);
 
-  const selectedBatchDetails = batchOptions.find((b) => b.id === selectedBatch) || null;
-  const level = course ? LEVEL_STYLES[course.level] ?? { dot: "bg-blue-500", text: "text-blue-700", bg: "bg-blue-50" } : null;
+  const selectedBatchDetails =
+    batchOptions.find((batch) => batch.id === selectedBatch) || null;
+
+  const level = course
+    ? LEVEL_STYLES[course.level] ?? {
+        dot: "bg-blue-500",
+        text: "text-blue-700",
+        bg: "bg-blue-50",
+      }
+    : null;
+
+  // Keep your existing handleChange, handleSelectBatch,
+  // handleSubmit and all existing JSX below.
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -205,37 +399,56 @@ export default function Enroll() {
     setStatusMessage(null);
 
     try {
-      const payload = new URLSearchParams();
-      const submission = { ...form, batch: selectedBatchDetails?.title || "" };
-      Object.entries(submission).forEach(([key, value]) =>
-        payload.append(key, (value ?? "").toString())
-      );
+      
+const apiUrl = (import.meta.env.VITE_ADMIN_API_URL || "http://localhost:8787").replace(/\/$/, "");
 
-      const response = await fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-          Accept: "application/json",
-        },
-        body: payload.toString(),
-      });
+const submission = {
+  ...form,
+  batch: selectedBatchDetails?.title || "",
+};
 
-      const rawText = await response.text();
-      let json: any;
+const response = await fetch(`${apiUrl}/api/enrollments`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+  body: JSON.stringify(submission),
+});
 
-      try {
-        json = JSON.parse(rawText || "{}");
-      } catch {
-        json = { status: response.ok ? "success" : "error", message: rawText };
-      }
+const json = await response.json();
 
-      if (response.ok && json.status === "success") {
-        setEnrollmentId(json.enrollmentId || generateEnrollmentId());
-        setSubmitted(true);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        throw new Error(json.message || "Unknown server error");
-      }
+if (response.ok && json.id && json.trackingToken) {
+  setEnrollmentId(json.id);
+  setTrackingToken(json.trackingToken);
+
+  const saved = JSON.parse(
+    localStorage.getItem("s2s_my_enrollments") || "[]"
+  );
+
+  const enrollments = Array.isArray(saved) ? saved : [];
+
+  enrollments.push({
+    id: json.id,
+    trackingToken: json.trackingToken,
+    course: json.course || course.title,
+    batch: json.batch || selectedBatchDetails?.title || "",
+    created_at: json.created_at || new Date().toISOString(),
+  });
+
+  localStorage.setItem(
+    "s2s_my_enrollments",
+    JSON.stringify(enrollments)
+  );
+
+  setSubmitted(true);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+} else {
+  throw new Error(
+    json.error || "Enrollment submitted, but tracking details were not returned."
+  );
+} 
+
     } catch (err) {
       console.error("Form submission error:", err);
       setStatusMessage(
@@ -245,6 +458,23 @@ export default function Enroll() {
       setLoading(false);
     }
   };
+  if (courseLoading) {
+  return (
+    <Layout>
+      <div className="flex min-h-[70vh] items-center justify-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{
+            repeat: Infinity,
+            duration: 1.1,
+            ease: "linear",
+          }}
+          className="h-14 w-14 rounded-full border-4 border-indigo-100 border-t-indigo-500"
+        />
+      </div>
+    </Layout>
+  );
+}
 
   // ==================== Course not found ====================
   if (!course) {

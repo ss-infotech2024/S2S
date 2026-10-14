@@ -320,7 +320,7 @@ export default function CourseCard({ course }: { course: Course }) {
       <div className="h-1 w-full overflow-hidden bg-slate-100">
         <motion.div
           initial={{ width: 0 }}
-          whileInView={{ width: `${accentWidth(course.id)}%` }}
+          animate={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className={`h-full bg-gradient-to-r ${accent}`}

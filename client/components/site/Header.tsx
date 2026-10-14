@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { to: "/", label: "Home" },
   { to: "/courses", label: "Courses" },
+  { to: "/my-enrollments", label: "My Enrollments" },
   { to: "/online-training", label: "Online Training" },
   { to: "/classroom-training", label: "Classroom" },
   { to: "/corporate-training", label: "Corporate" },

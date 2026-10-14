@@ -1,0 +1,1245 @@
+{
+  "courses": [
+    {
+      "slug": "fullstack-java",
+      "title": "Full-Stack Java Developer",
+      "category": "Fullstack",
+      "level": "Advanced",
+      "duration": "5 Months",
+      "fees": "",
+      "short": "Enterprise Java, Spring Boot & Microservices",
+      "description": "Become a backend & full-stack Java developer with hands-on projects, REST APIs, Microservices, and deployment workflows.",
+      "syllabus": [
+        "Core Java & OOPs",
+        "Collections & Generics",
+        "Spring & Spring Boot",
+        "REST APIs & Microservices",
+        "Hibernate/JPA",
+        "SQL & NoSQL Databases",
+        "Testing & CI/CD",
+        "Cloud Basics (AWS/GCP)"
+      ],
+      "outcomes": [
+        "Build production-ready backend services",
+        "Understand microservice architecture",
+        "Prepare for interviews and placements"
+      ],
+      "projects": [
+        "E-commerce REST API with Spring Boot",
+        "Microservice-based Order Processing System"
+      ],
+      "prerequisites": [
+        "Basic programming knowledge",
+        "Familiarity with Linux/CLI"
+      ],
+      "schedule": "Weekday / Weekend batches available",
+      "image": "https://tse3.mm.bing.net/th/id/OIP.IkSoB9ESfIus0n79LuW1GwHaE7?r=0&pid=Api&h=220&P=0",
+      "modules": [
+        {
+          "title": "Java Core",
+          "topics": [
+            "OOPs",
+            "Collections",
+            "Concurrency"
+          ]
+        },
+        {
+          "title": "Spring Ecosystem",
+          "topics": [
+            "Spring Core",
+            "Spring Boot",
+            "Spring Security"
+          ]
+        },
+        {
+          "title": "Data & Persistence",
+          "topics": [
+            "JPA/Hibernate",
+            "SQL",
+            "MongoDB"
+          ]
+        },
+        {
+          "title": "Microservices",
+          "topics": [
+            "Design",
+            "Gateway",
+            "Service Discovery"
+          ]
+        }
+      ],
+      "published": true
+    },
+    {
+      "slug": "python-dsa",
+      "title": "Python & DSA",
+      "category": "Programming",
+      "level": "Beginner",
+      "duration": "3 Months",
+      "fees": "",
+      "short": "Master Data Structures & Algorithms with Python",
+      "description": "Learn problem-solving and coding fundamentals through Python, focusing on Data Structures & Algorithms (DSA). Build strong foundations for interviews, competitive programming, and real-world applications.",
+      "syllabus": [
+        "Python Basics & OOP",
+        "Arrays & Strings",
+        "Linked Lists",
+        "Stacks & Queues",
+        "Recursion & Backtracking",
+        "Trees & Graphs",
+        "Sorting & Searching Algorithms",
+        "Dynamic Programming",
+        "Problem-Solving & Interview Prep"
+      ],
+      "outcomes": [
+        "Write efficient algorithms",
+        "Crack coding interviews",
+        "Build strong problem-solving mindset"
+      ],
+      "projects": [
+        "Mini Coding Challenges",
+        "Algorithm Visualizer",
+        "Problem-Solving Portfolio"
+      ],
+      "prerequisites": [
+        "Basic knowledge of Python programming"
+      ],
+      "schedule": "Weekday & Weekend batches",
+      "image": "https://www.vagdevitechnologies.com/wp-content/uploads/2026/03/DSA-with-python-images.webp",
+      "modules": [
+        {
+          "title": "Python Foundations",
+          "topics": [
+            "Syntax",
+            "Loops",
+            "Functions",
+            "OOP"
+          ]
+        },
+        {
+          "title": "Core DSA",
+          "topics": [
+            "Arrays",
+            "Strings",
+            "Linked Lists",
+            "Stacks",
+            "Queues"
+          ]
+        },
+        {
+          "title": "Advanced DSA",
+          "topics": [
+            "Trees",
+            "Graphs",
+            "Dynamic Programming",
+            "Greedy Algorithms"
+          ]
+        }
+      ],
+      "published": true
+    },
+    {
+      "slug": "cyber-security",
+      "title": "Cyber Security",
+      "category": "Cybersecurity",
+      "level": "Intermediate",
+      "duration": "3 Months",
+      "fees": "",
+      "short": "Cutting-edge Cybersecurity Training",
+      "description": "Enroll in our cutting-edge cybersecurity training program, expertly crafted to combat the ever-changing landscape of digital threats. No matter your level of experience, our all-inclusive curriculum empowers you with the most current techniques and information to safeguard against cyber attacks. Don't lag behind – take part in our program and remain ahead of the game in the world of cybersecurity!",
+      "syllabus": [
+        "Network Security Fundamentals",
+        "Cryptography Techniques",
+        "Threat Detection & Prevention",
+        "Incident Response & Recovery",
+        "Ethical Hacking Basics",
+        "Security Compliance & Standards"
+      ],
+      "outcomes": [
+        "Protect systems from digital threats",
+        "Apply current cybersecurity techniques",
+        "Stay ahead in the cybersecurity field"
+      ],
+      "projects": [
+        "Network Security Audit",
+        "Simulated Cyber Attack Defense"
+      ],
+      "prerequisites": [
+        "Basic IT knowledge",
+        "Interest in security"
+      ],
+      "schedule": "Weekday / Weekend batches available",
+      "image": "https://img.freepik.com/premium-vector/abstract-cyber-security-logo-line-blue-light-shield_740796-861.jpg",
+      "modules": [
+        {
+          "title": "Network Security",
+          "topics": [
+            "Fundamentals",
+            "Firewalls",
+            "VPNs"
+          ]
+        },
+        {
+          "title": "Cryptography",
+          "topics": [
+            "Encryption",
+            "Key Management"
+          ]
+        },
+        {
+          "title": "Threat Management",
+          "topics": [
+            "Detection",
+            "Prevention",
+            "Response"
+          ]
+        }
+      ],
+      "published": true
+    },
+    {
+      "slug": "digital-marketing",
+      "title": "Digital Marketing",
+      "category": "Digital Marketing",
+      "level": "Beginner",
+      "duration": "2.5 Months",
+      "fees": "",
+      "short": "Expert-Led Digital Marketing Training",
+      "description": "Join our expert-led training program covering vital topics like SEO, PPC advertising, social media strategies, email campaigns, and web analytics. Gain actionable knowledge through practical exercises and real-world examples to excel in the digital landscape. Whether you're a beginner or experienced marketer, our program equips you to thrive in the digital world. Enroll today!",
+      "syllabus": [
+        "Search Engine Optimization (SEO)",
+        "Pay-Per-Click (PPC) Advertising",
+        "Social Media Strategies",
+        "Email Campaign Management",
+        "Web Analytics & Reporting"
+      ],
+      "outcomes": [
+        "Master digital marketing techniques",
+        "Apply skills in real-world scenarios",
+        "Thrive in the digital marketing field"
+      ],
+      "projects": [
+        "SEO Optimization Project",
+        "Social Media Marketing Campaign"
+      ],
+      "prerequisites": [
+        "Basic computer skills"
+      ],
+      "schedule": "Evening & Weekend batches",
+      "image": "https://seamerk.com/wp-content/uploads/2026/02/Training-Center-Digital-Marketing-In-Mumbai-1024x683.webp",
+      "modules": [
+        {
+          "title": "SEO & PPC",
+          "topics": [
+            "SEO Basics",
+            "PPC Campaigns"
+          ]
+        },
+        {
+          "title": "Social Media",
+          "topics": [
+            "Strategy",
+            "Advertising"
+          ]
+        },
+        {
+          "title": "Email & Analytics",
+          "topics": [
+            "Campaigns",
+            "Web Analytics"
+          ]
+        }
+      ],
+      "published": true
+    },
+    {
+      "slug": "microsoft-azure",
+      "title": "Microsoft Azure",
+      "category": "Cloud Computing",
+      "level": "Intermediate",
+      "duration": "3 Months",
+      "fees": "",
+      "short": "Mastery in Microsoft Azure",
+      "description": "Gain mastery of Microsoft Azure through our dynamic training program. Our experienced instructors will guide you through key services such as cloud computing, virtual machines, and storage, allowing you to apply your knowledge through hands-on projects. Take your career in cloud solutions to the next level - enroll with us now!",
+      "syllabus": [
+        "Cloud Computing Basics",
+        "Virtual Machines",
+        "Storage Solutions"
+      ],
+      "outcomes": [
+        "Master Azure cloud services",
+        "Apply skills in hands-on projects",
+        "Elevate your cloud career"
+      ],
+      "projects": [
+        "Azure Virtual Machine Setup",
+        "Cloud Storage Solution"
+      ],
+      "prerequisites": [
+        "Basic IT knowledge",
+        "Interest in cloud"
+      ],
+      "schedule": "Evening batches",
+      "image": "https://www.stationx.net/wp-content/uploads/2025/03/Introduction-to-Microsoft-Azure-Security-Training-1500x844.jpg",
+      "modules": [
+        {
+          "title": "Cloud Fundamentals",
+          "topics": [
+            "Basics",
+            "Services"
+          ]
+        },
+        {
+          "title": "Virtual Machines",
+          "topics": [
+            "Setup",
+            "Management"
+          ]
+        },
+        {
+          "title": "Storage",
+          "topics": [
+            "Blob",
+            "File Storage"
+          ]
+        }
+      ],
+      "published": true
+    },
+    {
+      "slug": "salesforce",
+      "title": "Salesforce",
+      "category": "CRM",
+      "level": "Intermediate",
+      "duration": "3 Months",
+      "fees": "",
+      "short": "Comprehensive Salesforce Training",
+      "description": "Embrace the full potential of Salesforce with our all-inclusive training program. From administration and customization to automation, our program covers it all. Put your skills into action and elevate your career with hands-on experience. Don't wait, unleash the power of Salesforce by joining us today!",
+      "syllabus": [
+        "Salesforce Administration",
+        "Customization",
+        "Automation"
+      ],
+      "outcomes": [
+        "Master Salesforce administration",
+        "Implement customizations and automation",
+        "Elevate your career with hands-on skills"
+      ],
+      "projects": [
+        "Salesforce CRM Customization",
+        "Automation Workflow"
+      ],
+      "prerequisites": [
+        "Basic CRM knowledge"
+      ],
+      "schedule": "Weekend batches",
+      "image": "https://wallpapers.com/images/hd/salesforce-background-fbkrxqtfk2eu67b4.jpg",
+      "modules": [
+        {
+          "title": "Administration",
+          "topics": [
+            "Setup",
+            "Users"
+          ]
+        },
+        {
+          "title": "Customization",
+          "topics": [
+            "Fields",
+            "Page Layouts"
+          ]
+        },
+        {
+          "title": "Automation",
+          "topics": [
+            "Workflows",
+            "Process Builder"
+          ]
+        }
+      ],
+      "published": true
+    },
+    {
+      "slug": "itil",
+      "title": "ITIL",
+      "category": "IT Service Management",
+      "level": "Intermediate",
+      "duration": "2.5 Months",
+      "fees": "",
+      "short": "Mastery in ITIL Training",
+      "description": "Unlock your mastery of ITIL through our immersive training program. Immerse yourself in key concepts and best practices of IT service management. Develop practical skills for streamlined service delivery that aligns with business goals. Enroll now and elevate your understanding and application of ITIL!",
+      "syllabus": [
+        "ITIL Foundations",
+        "Service Strategy",
+        "Service Design",
+        "Service Transition",
+        "Service Operation",
+        "Continual Service Improvement"
+      ],
+      "outcomes": [
+        "Understand ITIL best practices",
+        "Streamline service delivery",
+        "Align IT services with business goals"
+      ],
+      "projects": [
+        "IT Service Management Plan",
+        "Service Improvement Proposal"
+      ],
+      "prerequisites": [
+        "Basic IT service knowledge"
+      ],
+      "schedule": "Evening batches",
+      "image": "https://blog.masterofproject.com/wp-content/uploads/2017/04/ITIL-Training3.jpg",
+      "modules": [
+        {
+          "title": "Foundations",
+          "topics": [
+            "Basics",
+            "Key Concepts"
+          ]
+        },
+        {
+          "title": "Service Lifecycle",
+          "topics": [
+            "Strategy",
+            "Design",
+            "Transition",
+            "Operation",
+            "Improvement"
+          ]
+        }
+      ],
+      "published": true
+    },
+    {
+      "slug": "databricks",
+      "title": "Databricks",
+      "category": "Big Data",
+      "level": "Intermediate",
+      "duration": "3 Months",
+      "fees": "",
+      "short": "Master Big Data with Databricks",
+      "description": "Master big data processing and analytics with our comprehensive Databricks training program. Learn to leverage Databricks for data engineering, machine learning, and real-time analytics. Gain hands-on experience with Spark, Delta Lake, and cloud integration through real-world projects.",
+      "syllabus": [
+        "Introduction to Databricks",
+        "Apache Spark Fundamentals",
+        "Data Engineering with Delta Lake",
+        "Machine Learning with MLflow",
+        "Real-Time Analytics",
+        "Cloud Integration (AWS/Azure/GCP)",
+        "Data Visualization in Databricks",
+        "Performance Optimization"
+      ],
+      "outcomes": [
+        "Build scalable data pipelines",
+        "Develop and deploy machine learning models",
+        "Master big data analytics with Databricks"
+      ],
+      "projects": [
+        "Real-Time Data Pipeline with Delta Lake",
+        "Machine Learning Model Deployment with MLflow"
+      ],
+      "prerequisites": [
+        "Basic programming knowledge (Python/Scala)",
+        "Familiarity with SQL"
+      ],
+      "schedule": "Weekday / Weekend batches available",
+      "image": "https://vectorseek.com/wp-content/uploads/2023/04/Databricks-Logo-Vector-768x768.jpg",
+      "modules": [
+        {
+          "title": "Databricks Basics",
+          "topics": [
+            "Platform Overview",
+            "Workspace Setup",
+            "Notebooks"
+          ]
+        },
+        {
+          "title": "Spark & Data Engineering",
+          "topics": [
+            "Spark SQL",
+            "DataFrames",
+            "Delta Lake"
+          ]
+        },
+        {
+          "title": "Machine Learning",
+          "topics": [
+            "MLflow",
+            "Model Training",
+            "Hyperparameter Tuning"
+          ]
+        },
+        {
+          "title": "Advanced Analytics",
+          "topics": [
+            "Streaming",
+            "Visualization",
+            "Optimization"
+          ]
+        }
+      ],
+      "published": true
+    },
+    {
+      "slug": "data-analytics",
+      "title": "Data Analytics",
+      "category": "Data Science",
+      "level": "Intermediate",
+      "duration": "3.5 Months",
+      "fees": "",
+      "short": "Master Data-Driven Analysis",
+      "description": "Learn to analyze and interpret complex datasets using modern, industry-standard tools. This course covers machine learning, data visualization, and predictive analytics, empowering you to derive actionable insights from data.",
+      "syllabus": [
+        "Introduction to Data Analytics",
+        "Python for Data Analysis",
+        "Machine Learning Fundamentals",
+        "Predictive Analytics",
+        "Data Visualization with Tableau",
+        "Analytics Frameworks (TensorFlow, PyTorch)",
+        "Big Data Integration",
+        "Real-World Case Studies"
+      ],
+      "outcomes": [
+        "Analyze complex datasets to surface business insights",
+        "Create predictive models for business applications",
+        "Visualize data effectively with modern tools"
+      ],
+      "projects": [
+        "Predictive Sales Forecasting Model",
+        "Customer Segmentation Analysis"
+      ],
+      "prerequisites": [
+        "Basic Python programming",
+        "Familiarity with statistics"
+      ],
+      "schedule": "Weekday / Weekend batches available",
+      "image": "https://img.freepik.com/premium-vector/data-analytics-logo-design-business-finance-logotype_969485-208.jpg?w=2000",
+      "modules": [
+        {
+          "title": "Data Analytics Basics",
+          "topics": [
+            "Data Types",
+            "Statistics",
+            "Data Cleaning"
+          ]
+        },
+        {
+          "title": "Machine Learning",
+          "topics": [
+            "Supervised Learning",
+            "Unsupervised Learning",
+            "Model Evaluation"
+          ]
+        },
+        {
+          "title": "Visualization & Analytics",
+          "topics": [
+            "Tableau",
+            "TensorFlow",
+            "PyTorch"
+          ]
+        },
+        {
+          "title": "Advanced Analytics",
+          "topics": [
+            "Predictive Models",
+            "Big Data",
+            "Case Studies"
+          ]
+        }
+      ],
+      "published": true
+    }
+  ],
+  "placements": [
+    {
+      "name": "Nitisha Borkar",
+      "role": "",
+      "company": "X-Duce",
+      "package": "4.2 LPA",
+      "photo_url": "/img/placements/nitisha-borkar.jpg",
+      "published": true
+    },
+    {
+      "name": "Manthan Borkar",
+      "role": "",
+      "company": "ABM",
+      "package": "13 LPA",
+      "photo_url": "/img/placements/manthan-borkar.jpg",
+      "published": true
+    },
+    {
+      "name": "Prajakta Dhengre",
+      "role": "",
+      "company": "PWC",
+      "package": "6.4 LPA",
+      "photo_url": "/img/placements/prajakta-dhengre.jpg",
+      "published": true
+    },
+    {
+      "name": "Tanmay Agnihotri",
+      "role": "",
+      "company": "IDFC",
+      "package": "13 LPA",
+      "photo_url": "/img/placements/tanmay-agnihotri.jpg",
+      "published": true
+    },
+    {
+      "name": "Shiv Das",
+      "role": "",
+      "company": "X-Duce",
+      "package": "4.2 LPA",
+      "photo_url": "/img/placements/shiv-das.jpg",
+      "published": true
+    },
+    {
+      "name": "Asit Sahu",
+      "role": "",
+      "company": "Jade Global",
+      "package": "12 LPA",
+      "photo_url": "/img/placements/asit-sahu.jpg",
+      "published": true
+    },
+    {
+      "name": "Zeba Sheikh",
+      "role": "",
+      "company": "Expleo",
+      "package": "4.5 LPA",
+      "photo_url": "/img/placements/zeba-sheikh.jpg",
+      "published": true
+    },
+    {
+      "name": "Mrunal Umredkar",
+      "role": "",
+      "company": "Capgemini",
+      "package": "3.8 LPA",
+      "photo_url": "/img/placements/mrunal-umredkar.jpg",
+      "published": true
+    },
+    {
+      "name": "Vaishnavi Khoware",
+      "role": "",
+      "company": "Stetig",
+      "package": "4.8 LPA",
+      "photo_url": "/img/placements/vaishnavi-khoware.jpg",
+      "published": true
+    }
+  ],
+  "posts": [
+    {
+      "title": "How to Prepare for Coding Interviews in 2025",
+      "slug": "how-to-prepare-for-coding-interviews-in-2025",
+      "category": "Interview Prep",
+      "author": "Arjun Patel",
+      "day": "",
+      "excerpt": "Master the art of technical interviews with our comprehensive guide covering data structures, system design, and behavioral questions.",
+      "image": "",
+      "published": true
+    },
+    {
+      "title": "Top Frontend Tools and Libraries Shaping 2025",
+      "slug": "top-frontend-tools-and-libraries-shaping-2025",
+      "category": "Frontend",
+      "author": "Priya Sharma",
+      "day": "",
+      "excerpt": "Explore the cutting-edge tools and frameworks that are revolutionizing frontend development this year.",
+      "image": "",
+      "published": true
+    },
+    {
+      "title": "The Rise of Personalized Learning in Education",
+      "slug": "the-rise-of-personalized-learning-in-education",
+      "category": "EdTech",
+      "author": "Dr. Rajesh Kumar",
+      "day": "",
+      "excerpt": "Discover how personalized learning technology is transforming the education sector.",
+      "image": "",
+      "published": true
+    },
+    {
+      "title": "Mastering Python for Data Science",
+      "slug": "mastering-python-for-data-science",
+      "category": "Data Science",
+      "author": "Neha Gupta",
+      "day": "",
+      "excerpt": "Comprehensive guide to Python libraries and techniques for effective data analysis and machine learning.",
+      "image": "",
+      "published": true
+    },
+    {
+      "title": "Building a Portfolio That Gets You Hired",
+      "slug": "building-a-portfolio-that-gets-you-hired",
+      "category": "Career Growth",
+      "author": "Priya Sharma",
+      "day": "",
+      "excerpt": "Learn which projects to showcase, how to present them, and what recruiters actually look for in a fresher's portfolio.",
+      "image": "",
+      "published": true
+    },
+    {
+      "title": "Cloud Computing Roadmap for Beginners",
+      "slug": "cloud-computing-roadmap-for-beginners",
+      "category": "Cloud",
+      "author": "Arjun Patel",
+      "day": "",
+      "excerpt": "A practical, step-by-step path from cloud fundamentals to deploying your first scalable application.",
+      "image": "",
+      "published": true
+    },
+    {
+      "title": "7 Habits to Learn Programming Faster",
+      "slug": "7-habits-to-learn-programming-faster",
+      "category": "Programming",
+      "author": "Neha Gupta",
+      "day": "",
+      "excerpt": "Small, consistent habits that help beginners move from tutorials to writing confident, working code.",
+      "image": "",
+      "published": true
+    }
+  ],
+  "gallery": [],
+  "enrollments": [
+    {
+      "enrollment_id": "SS-100001",
+      "name": "Sample Student",
+      "phone": "9876543210",
+      "email": "student@example.com",
+      "city": "Nagpur",
+      "course": "Full-Stack Java Developer",
+      "qualification": "B.Tech / B.E",
+      "batch": "Weekday",
+      "message": "",
+      "status": "pending"
+    },
+    {
+      "enrollment_id": "SS-100198",
+      "name": "Rohan Deshmukh",
+      "phone": "9822011234",
+      "email": "rohan.d@example.com",
+      "city": "Nagpur",
+      "course": "Full-Stack Java Developer",
+      "mode": "Classroom",
+      "batch": "Weekday",
+      "qualification": "B.Tech / B.E",
+      "status": "joined",
+      "batch_id": "b-cls-1",
+      "batch_name": "Java Weekday — Morning",
+      "_ago": 12
+    },
+    {
+      "enrollment_id": "SS-100177",
+      "name": "Priya Wankhede",
+      "phone": "9970123456",
+      "email": "",
+      "city": "Nagpur",
+      "course": "Full-Stack Java Developer",
+      "mode": "Classroom",
+      "batch": "Weekday",
+      "qualification": "B.Tech / B.E",
+      "status": "confirmed",
+      "batch_id": "b-cls-1",
+      "batch_name": "Java Weekday — Morning",
+      "_ago": 9
+    },
+    {
+      "enrollment_id": "SS-100139",
+      "name": "Aman Sharma",
+      "phone": "8888012345",
+      "email": "aman.sharma@example.com",
+      "city": "Nagpur",
+      "course": "Full-Stack Java Developer",
+      "mode": "Classroom",
+      "batch": "Weekday",
+      "qualification": "B.Tech / B.E",
+      "status": "pending",
+      "batch_id": "b-cls-1",
+      "batch_name": "Java Weekday — Morning",
+      "_ago": 4
+    },
+    {
+      "enrollment_id": "SS-100153",
+      "name": "Sneha Patil",
+      "phone": "9423456789",
+      "email": "",
+      "city": "Nagpur",
+      "course": "Full-Stack Java Developer",
+      "mode": "Classroom",
+      "batch": "Weekday",
+      "qualification": "B.Tech / B.E",
+      "status": "confirmed",
+      "batch_id": "b-cls-2",
+      "batch_name": "Java Weekend — Batch 2",
+      "_ago": 6
+    },
+    {
+      "enrollment_id": "SS-100147",
+      "name": "Vikram Joshi",
+      "phone": "7020345678",
+      "email": "",
+      "city": "Nagpur",
+      "course": "Full-Stack Java Developer",
+      "mode": "Classroom",
+      "batch": "Weekday",
+      "qualification": "B.Tech / B.E",
+      "status": "confirmed",
+      "batch_id": "b-cls-2",
+      "batch_name": "Java Weekend — Batch 2",
+      "_ago": 5
+    },
+    {
+      "enrollment_id": "SS-100145",
+      "name": "Neha Gupta",
+      "phone": "9096123456",
+      "email": "neha.gupta@example.com",
+      "city": "Nagpur",
+      "course": "Full-Stack Java Developer",
+      "mode": "Classroom",
+      "batch": "Weekday",
+      "qualification": "B.Tech / B.E",
+      "status": "joined",
+      "batch_id": "b-cls-2",
+      "batch_name": "Java Weekend — Batch 2",
+      "_ago": 5
+    },
+    {
+      "enrollment_id": "SS-100143",
+      "name": "Aditya Kulkarni",
+      "phone": "9356789012",
+      "email": "",
+      "city": "Nagpur",
+      "course": "Full-Stack Java Developer",
+      "mode": "Classroom",
+      "batch": "Weekday",
+      "qualification": "B.Tech / B.E",
+      "status": "cancelled",
+      "batch_id": "b-cls-2",
+      "batch_name": "Java Weekend — Batch 2",
+      "_ago": 4
+    },
+    {
+      "enrollment_id": "SS-100134",
+      "name": "Pooja Meshram",
+      "phone": "8605123456",
+      "email": "",
+      "city": "Nagpur",
+      "course": "Full-Stack Java Developer",
+      "mode": "Online",
+      "batch": "Weekday",
+      "qualification": "B.Tech / B.E",
+      "status": "confirmed",
+      "batch_id": "b-onl-1",
+      "batch_name": "Java Online — Evening",
+      "_ago": 3
+    },
+    {
+      "enrollment_id": "SS-100320",
+      "name": "Mohit Raut",
+      "phone": "9373123456",
+      "email": "mohit.raut@example.com",
+      "city": "Nagpur",
+      "course": "Full-Stack Java Developer",
+      "mode": "Online",
+      "batch": "Weekday",
+      "qualification": "B.Tech / B.E",
+      "status": "joined",
+      "batch_id": "b-onl-2",
+      "batch_name": "Java Online — Weekend",
+      "_ago": 30
+    },
+    {
+      "enrollment_id": "SS-100308",
+      "name": "Anjali Dhote",
+      "phone": "9923123456",
+      "email": "",
+      "city": "Nagpur",
+      "course": "Full-Stack Java Developer",
+      "mode": "Online",
+      "batch": "Weekday",
+      "qualification": "B.Tech / B.E",
+      "status": "joined",
+      "batch_id": "b-onl-2",
+      "batch_name": "Java Online — Weekend",
+      "_ago": 28
+    },
+    {
+      "enrollment_id": "SS-100299",
+      "name": "Kajal Bhoyar",
+      "phone": "9604123456",
+      "email": "",
+      "city": "Wardha",
+      "course": "",
+      "mode": "Classroom",
+      "batch": "Weekday",
+      "qualification": "B.Com",
+      "status": "pending",
+      "_ago": 1
+    }
+  ],
+  "enquiries": [
+    {
+      "name": "Rohan Deshmukh",
+      "phone": "9822011234",
+      "email": "rohan.d@example.com",
+      "course_interest": "Full Stack Development",
+      "message": "Fees aur batch timing batayein. Weekend batch chahiye.",
+      "status": "new",
+      "_ago": 0,
+      "_follow_in": 0
+    },
+    {
+      "name": "Priya Wankhede",
+      "phone": "9970123456",
+      "email": "",
+      "course_interest": "Digital Marketing",
+      "message": "Is there an online batch? I am working, evenings only.",
+      "status": "new",
+      "_ago": 1,
+      "_follow_in": 1
+    },
+    {
+      "name": "Aman Sharma",
+      "phone": "8888012345",
+      "email": "aman.sharma@example.com",
+      "course_interest": "Python Programming",
+      "message": "Placement support milta hai kya?",
+      "status": "new",
+      "_ago": 2,
+      "_follow_in": -1
+    },
+    {
+      "name": "Sneha Patil",
+      "phone": "9423456789",
+      "email": "sneha.p@example.com",
+      "course_interest": "Data Analytics",
+      "message": "Looking for a demo class before enrolling.",
+      "status": "contacted",
+      "_ago": 3,
+      "_follow_in": 2,
+      "notes": "Called on day 3. Wants demo class on Saturday. Fees quoted."
+    },
+    {
+      "name": "Vikram Joshi",
+      "phone": "7020345678",
+      "email": "",
+      "course_interest": "Tally with GST",
+      "message": "Need accounting course for my shop staff (3 people).",
+      "status": "contacted",
+      "_ago": 4,
+      "_follow_in": -2,
+      "notes": "Asked for group discount. Will confirm with partner."
+    },
+    {
+      "name": "Neha Gupta",
+      "phone": "9096123456",
+      "email": "neha.gupta@example.com",
+      "course_interest": "UI/UX Design",
+      "message": "Do you provide certificate? Duration kitna hai?",
+      "status": "contacted",
+      "_ago": 6,
+      "_follow_in": 5,
+      "notes": "Sent brochure on WhatsApp."
+    },
+    {
+      "name": "Aditya Kulkarni",
+      "phone": "9356789012",
+      "email": "aditya.k@example.com",
+      "course_interest": "Full Stack Development",
+      "message": "Final year student, want internship + course.",
+      "status": "enrolled",
+      "_ago": 8,
+      "notes": "Joined weekday batch. Fees paid in 2 instalments."
+    },
+    {
+      "name": "Pooja Meshram",
+      "phone": "8605123456",
+      "email": "",
+      "course_interest": "Digital Marketing",
+      "message": "Interested in SEO and social media modules.",
+      "status": "enrolled",
+      "_ago": 11,
+      "notes": "Enrolled online batch."
+    },
+    {
+      "name": "Sandeep Thakre",
+      "phone": "9552012345",
+      "email": "sandeep.t@example.com",
+      "course_interest": "Cyber Security",
+      "message": "Is there any corporate batch for our IT team?",
+      "status": "closed",
+      "_ago": 14,
+      "notes": "Moved to Corporate Training enquiry. Closing here."
+    },
+    {
+      "name": "Kajal Bhoyar",
+      "phone": "9604123456",
+      "email": "",
+      "course_interest": "",
+      "message": "Just checking what courses are available.",
+      "status": "closed",
+      "_ago": 19,
+      "notes": "Not interested right now. Call back after exams."
+    },
+    {
+      "name": "Mohit Raut",
+      "phone": "9373123456",
+      "email": "mohit.raut@example.com",
+      "course_interest": "Python Programming",
+      "message": "Can I pay fees in instalments?",
+      "status": "new",
+      "_ago": 0
+    },
+    {
+      "name": "Anjali Dhote",
+      "phone": "9923123456",
+      "email": "anjali.d@example.com",
+      "course_interest": "Data Analytics",
+      "message": "Need weekend batch for Power BI and Excel.",
+      "status": "contacted",
+      "_ago": 5,
+      "_follow_in": 0,
+      "notes": "Interested. Will decide after seeing the syllabus."
+    }
+  ],
+  "settings": [
+    {
+      "name": "Skill Training Center",
+      "tagline": "SS Infotech",
+      "address": "Ramdaspeth, Nagpur",
+      "site_url": "https://ssinfotech.co",
+      "idle_minutes": "30"
+    }
+  ],
+  "locations": [
+    {
+      "name": "Ramdaspeth, Nagpur",
+      "city": "Nagpur",
+      "address": "Ramdaspeth, Nagpur",
+      "published": true
+    }
+  ],
+  "online_training": [
+    {
+      "id": "b-onl-1",
+      "course": "Full-Stack Java Developer",
+      "batch_name": "Java Online — Evening",
+      "trainer": "",
+      "_start_in": 6,
+      "timing": "7:00 PM – 9:00 PM",
+      "days": "Mon – Fri",
+      "duration": "5 Months",
+      "seats": 20,
+      "seats_filled": 0,
+      "fees": "45000",
+      "platform": "Zoom",
+      "language": "English, Hindi",
+      "certificate": true,
+      "recordings": true,
+      "status": "upcoming",
+      "published": true,
+      "_ago": 5
+    },
+    {
+      "id": "b-onl-2",
+      "course": "Full-Stack Java Developer",
+      "batch_name": "Java Online — Weekend",
+      "_start_in": -20,
+      "timing": "10:00 AM – 1:00 PM",
+      "days": "Sat – Sun",
+      "duration": "5 Months",
+      "seats": 15,
+      "seats_filled": 2,
+      "fees": "42000",
+      "platform": "Google Meet",
+      "language": "English",
+      "certificate": true,
+      "recordings": true,
+      "status": "ongoing",
+      "published": true,
+      "_ago": 40
+    }
+  ],
+  "classroom_training": [
+    {
+      "id": "b-cls-1",
+      "course": "Full-Stack Java Developer",
+      "batch_name": "Java Weekday — Morning",
+      "_start_in": 9,
+      "timing": "10:00 AM – 12:00 PM",
+      "days": "Mon – Fri",
+      "duration": "5 Months",
+      "seats": 30,
+      "seats_filled": 6,
+      "fees": "48000",
+      "center": "Ramdaspeth, Nagpur",
+      "batch": "Weekday",
+      "certificate": true,
+      "placement_support": true,
+      "status": "upcoming",
+      "published": true,
+      "_ago": 10
+    },
+    {
+      "id": "b-cls-2",
+      "course": "Full-Stack Java Developer",
+      "batch_name": "Java Weekend — Batch 2",
+      "_start_in": 3,
+      "timing": "11:00 AM – 2:00 PM",
+      "days": "Sat – Sun",
+      "duration": "5 Months",
+      "seats": 6,
+      "seats_filled": 0,
+      "fees": "46000",
+      "center": "Ramdaspeth, Nagpur",
+      "batch": "Weekend",
+      "certificate": true,
+      "placement_support": true,
+      "status": "upcoming",
+      "published": true,
+      "_ago": 8
+    },
+    {
+      "id": "b-cls-3",
+      "course": "Full-Stack Java Developer",
+      "batch_name": "Java Weekday — Evening (draft)",
+      "_start_in": 30,
+      "timing": "6:00 PM – 8:00 PM",
+      "days": "Mon – Fri",
+      "duration": "5 Months",
+      "seats": 25,
+      "seats_filled": 0,
+      "fees": "",
+      "center": "Ramdaspeth, Nagpur",
+      "batch": "Weekday",
+      "status": "upcoming",
+      "published": false,
+      "_ago": 1
+    }
+  ],
+  "banners": [
+    {
+      "heading": "Build Your Career with Industry-Ready Skills",
+      "subheading": "Job-oriented IT courses with live projects, expert trainers and placement support.",
+      "image": "",
+      "cta_text": "Explore Courses",
+      "cta_link": "/courses",
+      "align": "left",
+      "position": 1,
+      "published": true,
+      "_ago": 30
+    },
+    {
+      "heading": "Classroom & Online Batches Starting Soon",
+      "subheading": "Choose weekday, weekend or live online batches that fit your schedule.",
+      "image": "",
+      "cta_text": "View Batches",
+      "cta_link": "/classroom-training",
+      "align": "left",
+      "position": 2,
+      "published": true,
+      "_ago": 20
+    },
+    {
+      "heading": "Corporate Training for Your Team",
+      "subheading": "Custom programs delivered on-site or online for companies.",
+      "image": "",
+      "cta_text": "Request a Quote",
+      "cta_link": "/corporate-training",
+      "align": "center",
+      "position": 3,
+      "published": false,
+      "_ago": 10
+    }
+  ],
+  "site_content": [
+    {
+      "announce_show": true,
+      "announce_text": "Admissions open for the new batches. Limited seats!",
+      "announce_link": "/classroom-training",
+      "hero_title": "Learn Skills That Get You Hired",
+      "hero_subtitle": "Practical, project-based training in Nagpur and online.",
+      "hero_cta_text": "Explore Courses",
+      "hero_cta_link": "/courses",
+      "hero_cta2_text": "Talk to a Counsellor",
+      "hero_cta2_link": "/contact",
+      "about_text": "SS Infotech Skill Training Center helps students and professionals build job-ready skills through hands-on training.",
+      "sec_online_show": true,
+      "sec_online_title": "Online Training",
+      "sec_online_sub": "Live and recorded classes with expert trainers, from anywhere.",
+      "sec_classroom_show": true,
+      "sec_classroom_title": "Classroom Training",
+      "sec_classroom_sub": "Weekday and weekend batches at our Ramdaspeth centre.",
+      "sec_corporate_show": true,
+      "sec_corporate_title": "Corporate Training",
+      "sec_corporate_sub": "Upskill your team with tailored programs.",
+      "sec_gallery_show": true,
+      "sec_gallery_title": "Our College Partners",
+      "sec_gallery_sub": "Training sessions and events across partner colleges.",
+      "sec_placements_show": true,
+      "sec_placements_title": "Placements",
+      "sec_placements_sub": "Where our students work today.",
+      "sec_testimonials_show": true,
+      "sec_testimonials_title": "What Students Say",
+      "sec_testimonials_sub": "Real feedback from our learners.",
+      "sec_blog_show": true,
+      "sec_blog_title": "Knowledge Hub",
+      "sec_blog_sub": "Tips, guides and career advice."
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Rohan Deshmukh",
+      "course": "Full-Stack Java Developer",
+      "rating": "5",
+      "feedback": "The trainers explain every concept with real projects. I got placed within two months of finishing the course.",
+      "status": "pending",
+      "_ago": 0,
+      "image": ""
+    },
+    {
+      "name": "Priya Wankhede",
+      "course": "Digital Marketing",
+      "rating": "4",
+      "feedback": "Good practical sessions and the doubt-support group was very helpful. Would like more weekend slots.",
+      "status": "pending",
+      "_ago": 1,
+      "image": ""
+    },
+    {
+      "name": "Aman Sharma",
+      "course": "Python & DSA",
+      "rating": "5",
+      "feedback": "Best place in Nagpur to learn DSA properly. Mock interviews gave me a lot of confidence.",
+      "status": "pending",
+      "_ago": 2,
+      "image": ""
+    },
+    {
+      "name": "Sneha Patil",
+      "course": "Data Analytics",
+      "rating": "5",
+      "feedback": "Hands-on Power BI and SQL training. The certificate helped me get shortlisted.",
+      "status": "approved",
+      "_ago": 9,
+      "image": "",
+      "featured": true
+    },
+    {
+      "name": "Vikram Joshi",
+      "course": "Cyber Security",
+      "rating": "4",
+      "feedback": "Well structured course and supportive trainers.",
+      "status": "approved",
+      "_ago": 15,
+      "image": ""
+    },
+    {
+      "name": "Anonymous",
+      "course": "",
+      "rating": "1",
+      "feedback": "Spam link http://example.com buy now",
+      "status": "rejected",
+      "_ago": 20,
+      "image": ""
+    }
+  ]
+}
