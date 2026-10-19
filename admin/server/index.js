@@ -30,15 +30,22 @@ const PUBLIC_READ = new Set(
   TABLES.filter(t => t === "testimonials" || !PUBLIC_WRITE.has(t))
 );
 
+
 const send = (res, code, data) => {
   res.writeHead(code, {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type,x-admin-token",
-    "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+    "Access-Control-Allow-Headers": "Content-Type, x-admin-token",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
   });
-  res.end(data === undefined ? "" : JSON.stringify(data));
+
+  if (code === 204 || data === undefined) {
+    return res.end();
+  }
+
+  return res.end(JSON.stringify(data));
 };
+
 
 const readBody = req => new Promise((resolve, reject) => {
   let raw = "";
@@ -121,62 +128,6 @@ const database = client.db("test");
     const table = parts[2];
     const id = parts[3];
 
-    
-    // Secure student enrollment status lookup
-    if (
-      parts[1] === "api" &&
-      parts[2] === "enrollments" &&
-      parts[3] === "status" &&
-      req.method === "POST"
-    ) {
-      try {
-        const body = await readBody(req);
-
-        if (
-          !isObject(body) ||
-          typeof body.id !== "string" ||
-          typeof body.trackingToken !== "string"
-        ) {
-          return send(res, 400, { error: "Enrollment ID and tracking token are required" });
-        }
-
-        const enrollment = await collections.enrollments.findOne({
-          id: body.id
-        });
-
-        if (!enrollment || !enrollment.trackingTokenHash) {
-          return send(res, 404, { error: "Enrollment not found or invalid credentials" });
-        }
-
-        const suppliedHash = crypto
-          .createHash("sha256")
-          .update(body.trackingToken)
-          .digest("hex");
-
-        const supplied = Buffer.from(suppliedHash, "hex");
-        const stored = Buffer.from(enrollment.trackingTokenHash, "hex");
-
-        if (
-          supplied.length !== stored.length ||
-          !crypto.timingSafeEqual(supplied, stored)
-        ) {
-          return send(res, 404, { error: "Enrollment not found or invalid credentials" });
-        }
-
-        return send(res, 200, {
-          id: enrollment.id,
-          course: enrollment.course ?? "",
-          batch: enrollment.batch ?? "",
-          status: enrollment.status ?? "pending",
-          created_at: enrollment.created_at ?? ""
-        });
-      } catch (error) {
-        console.error("Enrollment status lookup error:", error);
-        return send(res, 400, { error: "Invalid request" });
-      }
-    }
-
-
     if (parts[1] !== "api" || !TABLES.includes(table)) {
       return send(res, 404, { error: "not found" });
     }
@@ -213,7 +164,6 @@ const database = client.db("test");
         }
         if (id) return send(res, 405, { error: `POST goes to /api/${table}` });
 
-       
         const body = await readBody(req);
         if (!isObject(body)) {
           return send(res, 400, { error: "body must be a JSON object" });
@@ -225,26 +175,14 @@ const database = client.db("test");
           created_at: new Date().toISOString()
         };
 
-        let trackingToken;
-
         if (!admin) {
           delete row.published;
           delete row.featured;
           delete row.notes;
           delete row.follow_up;
-          delete row.trackingTokenHash;
-
           row.status = table === "enrollments" || table === "testimonials"
             ? "pending"
             : "new";
-
-          if (table === "enrollments") {
-            trackingToken = crypto.randomBytes(32).toString("hex");
-            row.trackingTokenHash = crypto
-              .createHash("sha256")
-              .update(trackingToken)
-              .digest("hex");
-          }
         }
 
         if (row.slug && await collection.findOne({ slug: row.slug })) {
@@ -252,14 +190,9 @@ const database = client.db("test");
         }
 
         await collection.insertOne(row);
-
-        if (trackingToken) {
-          return send(res, 201, { ...row, trackingToken });
-        }
-
         return send(res, 201, row);
-
       }
+
       if (!admin) return send(res, 401, { error: "unauthorized" });
 
       if (req.method === "PUT" || req.method === "PATCH") {

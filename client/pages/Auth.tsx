@@ -13,13 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
-/* ─────────────────────────────────────────────────────────────
- * Login & Registration page
- *   /login    → opens on the "Login" tab
- *   /register → opens on the "Register" tab
- * ───────────────────────────────────────────────────────────── */
-
 /* ── Validation ─────────────────────────────────────────────── */
+
 const emailField = z
   .string()
   .trim()
@@ -33,23 +28,29 @@ const loginSchema = z.object({
 
 const registerSchema = z
   .object({
-    name: z.string().trim().min(2, "Enter your full name").max(80, "Name is too long"),
+    name: z
+      .string()
+      .trim()
+      .min(2, "Enter your full name")
+      .max(80, "Name is too long"),
     email: emailField,
     phone: z
       .string()
       .trim()
       .refine(
-        (v) => /^(\+91)?[6-9]\d{9}$/.test(v.replace(/[\s-]/g, "")),
-        "Enter a valid 10-digit mobile number",
+        (value) =>
+          /^(\+?91)?[6-9]\d{9}$/.test(value.replace(/[\s-]/g, "")),
+        "Enter a valid 10-digit Indian mobile number",
       ),
     password: z
       .string()
       .min(8, "Use at least 8 characters")
+      .max(128, "Password is too long")
       .regex(/[A-Za-z]/, "Include at least one letter")
       .regex(/\d/, "Include at least one number"),
     confirmPassword: z.string().min(1, "Confirm your password"),
   })
-  .refine((d) => d.password === d.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
     message: "Passwords don't match",
   });
@@ -57,29 +58,79 @@ const registerSchema = z
 type LoginValues = z.infer<typeof loginSchema>;
 type RegisterValues = z.infer<typeof registerSchema>;
 
-/* ── Backend hook-up point ──────────────────────────────────────
- * This project has no authentication API yet, so nothing is sent
- * anywhere. Replace the body of this function with your real call, e.g.
- *
- *   const res = await fetch("/api/auth/login", {
- *     method: "POST",
- *     headers: { "Content-Type": "application/json" },
- *     body: JSON.stringify(values),
- *   });
- *   return { ok: res.ok, message: (await res.json()).message };
- * ─────────────────────────────────────────────────────────────── */
+type AuthResult = {
+  ok: boolean;
+  message?: string;
+};
+
+/* ── Backend API ─────────────────────────────────────────────── */
+
 async function submitAuth(
-  _kind: "login" | "register",
-  _values: LoginValues | RegisterValues,
-): Promise<{ ok: boolean; message?: string }> {
-  return {
-    ok: false,
-    message:
-      "Your details look good, but sign-in isn't connected to a server yet. Add your API call in submitAuth() in client/pages/Auth.tsx.",
-  };
+  kind: "login" | "register",
+  values: LoginValues | RegisterValues,
+): Promise<AuthResult> {
+  const API = (import.meta.env.VITE_API_URL || "http://localhost:8787").replace(
+    /\/$/,
+    "",
+  );
+
+  const payload =
+    kind === "register"
+      ? {
+          name: (values as RegisterValues).name.trim(),
+          email: (values as RegisterValues).email.trim().toLowerCase(),
+          phone: (values as RegisterValues).phone.trim(),
+          password: (values as RegisterValues).password,
+        }
+      : {
+          email: (values as LoginValues).email.trim().toLowerCase(),
+          password: (values as LoginValues).password,
+        };
+
+  try {
+    const response = await fetch(
+      `${API}/api/student-auth/${kind === "register" ? "register" : "login"}`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        message:
+          result.error ||
+          result.message ||
+          (kind === "register"
+            ? "Registration failed. Please try again."
+            : "Login failed. Please check your details."),
+      };
+    }
+
+    return {
+      ok: true,
+      message:
+        result.message ||
+        (kind === "register"
+          ? "Registration successful!"
+          : "Login successful!"),
+    };
+  } catch {
+    return {
+      ok: false,
+      message:
+        "Unable to connect to the server. Please check that the backend is running.",
+    };
+  }
 }
 
-/* ── Small form field with label, error text and optional show/hide ── */
+/* ── Reusable form field ─────────────────────────────────────── */
+
 type TextFieldProps = React.ComponentProps<typeof Input> & {
   label: string;
   error?: string;
@@ -90,7 +141,11 @@ type TextFieldProps = React.ComponentProps<typeof Input> & {
 const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
   ({ label, error, hint, password, id, className, ...props }, ref) => {
     const [visible, setVisible] = React.useState(false);
-    const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
+    const describedBy = error
+      ? `${id}-error`
+      : hint
+        ? `${id}-hint`
+        : undefined;
 
     return (
       <div className="space-y-1.5">
@@ -115,12 +170,16 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
           {password && (
             <button
               type="button"
-              onClick={() => setVisible((v) => !v)}
+              onClick={() => setVisible((value) => !value)}
               aria-label={visible ? "Hide password" : "Show password"}
               aria-pressed={visible}
               className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-lg text-slate-500 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-violet-500"
             >
-              {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {visible ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
             </button>
           )}
         </div>
@@ -137,9 +196,11 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
     );
   },
 );
+
 TextField.displayName = "TextField";
 
-/* ── Forms ──────────────────────────────────────────────────── */
+/* ── Login form ──────────────────────────────────────────────── */
+
 function LoginForm() {
   const {
     register,
@@ -147,10 +208,17 @@ function LoginForm() {
     formState: { errors, isSubmitting },
   } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
 
+  const navigate = useNavigate();
+
   const onSubmit = async (values: LoginValues) => {
-    const res = await submitAuth("login", values);
-    if (res.ok) toast.success(res.message ?? "Logged in");
-    else toast.info(res.message ?? "Something went wrong. Please try again.");
+    const result = await submitAuth("login", values);
+
+    if (result.ok) {
+      toast.success(result.message ?? "Logged in");
+      navigate("/", { replace: true });
+    } else {
+      toast.error(result.message ?? "Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -173,8 +241,12 @@ function LoginForm() {
         error={errors.password?.message}
         {...register("password")}
       />
-      <Button type="submit" disabled={isSubmitting} className="h-11 w-full rounded-lg text-base font-semibold">
-        {isSubmitting && <Loader2 className="animate-spin" />}
+      <Button
+        type="submit"
+        disabled={isSubmitting}
+        className="h-11 w-full rounded-lg text-base font-semibold"
+      >
+        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Log in
       </Button>
       <p className="text-center text-sm text-slate-500">
@@ -187,6 +259,8 @@ function LoginForm() {
   );
 }
 
+/* ── Registration form ───────────────────────────────────────── */
+
 function RegisterForm() {
   const {
     register,
@@ -194,10 +268,18 @@ function RegisterForm() {
     formState: { errors, isSubmitting },
   } = useForm<RegisterValues>({ resolver: zodResolver(registerSchema) });
 
+  const navigate = useNavigate();
+
   const onSubmit = async (values: RegisterValues) => {
-    const res = await submitAuth("register", values);
-    if (res.ok) toast.success(res.message ?? "Account created");
-    else toast.info(res.message ?? "Something went wrong. Please try again.");
+    const result = await submitAuth("register", values);
+
+   if (result.ok) {
+  toast.success(result.message ?? "Account created");
+  window.dispatchEvent(new Event("student-auth-changed"));
+  navigate("/", { replace: true });
+} else {
+  toast.error(result.message ?? "Something went wrong. Please try again.");
+}
   };
 
   return (
@@ -250,15 +332,20 @@ function RegisterForm() {
         error={errors.confirmPassword?.message}
         {...register("confirmPassword")}
       />
-      <Button type="submit" disabled={isSubmitting} className="h-11 w-full rounded-lg text-base font-semibold">
-        {isSubmitting && <Loader2 className="animate-spin" />}
+      <Button
+        type="submit"
+        disabled={isSubmitting}
+        className="h-11 w-full rounded-lg text-base font-semibold"
+      >
+        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Create account
       </Button>
     </form>
   );
 }
 
-/* ── Page ───────────────────────────────────────────────────── */
+/* ── Page ────────────────────────────────────────────────────── */
+
 const trust = [
   { value: "60,000+", label: "Students trained" },
   { value: "5,000+", label: "Successful placements" },
@@ -275,7 +362,6 @@ export default function Auth() {
       <section className="bg-gradient-to-br from-violet-50 via-white to-fuchsia-50">
         <div className="container px-5 py-10 sm:px-8 lg:py-16">
           <div className="mx-auto grid max-w-5xl overflow-hidden rounded-3xl border border-violet-100 bg-white shadow-2xl shadow-violet-900/10 lg:grid-cols-[0.9fr_1.1fr]">
-            {/* Brand panel (desktop only) */}
             <aside
               className="relative hidden flex-col justify-between gap-10 p-10 text-white lg:flex"
               style={{
@@ -288,7 +374,10 @@ export default function Auth() {
             >
               <div>
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-pink-100">
-                  <span className="h-1.5 w-1.5 rounded-full bg-pink-300" aria-hidden="true" />
+                  <span
+                    className="h-1.5 w-1.5 rounded-full bg-pink-300"
+                    aria-hidden="true"
+                  />
                   Skill Training Center
                 </span>
                 <h2 className="mt-6 text-3xl font-extrabold leading-tight tracking-tight">
@@ -298,25 +387,33 @@ export default function Auth() {
                   </span>
                 </h2>
                 <p className="mt-4 max-w-sm text-white/75">
-                  Log in to continue, or create an account to get started with job-ready training.
+                  Log in to continue, or create an account to get started with
+                  job-ready training.
                 </p>
               </div>
-
               <dl className="space-y-4">
-                {trust.map((t) => (
-                  <div key={t.label} className="flex items-baseline gap-3 border-t border-white/15 pt-4">
-                    <dt className="w-32 shrink-0 text-2xl font-extrabold">{t.value}</dt>
-                    <dd className="text-sm text-white/70">{t.label}</dd>
+                {trust.map((item) => (
+                  <div
+                    key={item.label}
+                    className="flex items-baseline gap-3 border-t border-white/15 pt-4"
+                  >
+                    <dt className="w-32 shrink-0 text-2xl font-extrabold">
+                      {item.value}
+                    </dt>
+                    <dd className="text-sm text-white/70">{item.label}</dd>
                   </div>
                 ))}
               </dl>
             </aside>
 
-            {/* Form panel */}
             <div className="p-6 sm:p-10">
               <Tabs
                 value={tab}
-                onValueChange={(v) => navigate(v === "register" ? "/register" : "/login", { replace: true })}
+                onValueChange={(value) =>
+                  navigate(value === "register" ? "/register" : "/login", {
+                    replace: true,
+                  })
+                }
               >
                 <TabsList className="grid h-11 w-full grid-cols-2 rounded-xl bg-slate-100 p-1">
                   <TabsTrigger
@@ -334,24 +431,38 @@ export default function Auth() {
                 </TabsList>
 
                 <TabsContent value="login" className="mt-8">
-                  <h1 className="text-2xl font-bold tracking-tight text-[#2b1450]">Welcome back</h1>
-                  <p className="mb-6 mt-1 text-sm text-slate-600">Log in to continue to your account.</p>
+                  <h1 className="text-2xl font-bold tracking-tight text-[#2b1450]">
+                    Welcome back
+                  </h1>
+                  <p className="mb-6 mt-1 text-sm text-slate-600">
+                    Log in to continue to your account.
+                  </p>
                   <LoginForm />
                   <p className="mt-6 text-center text-sm text-slate-600">
                     New here?{" "}
-                    <Link to="/register" replace className="font-semibold text-primary hover:underline">
+                    <Link
+                      to="/register"
+                      className="font-semibold text-primary hover:underline"
+                    >
                       Create an account
                     </Link>
                   </p>
                 </TabsContent>
 
                 <TabsContent value="register" className="mt-8">
-                  <h1 className="text-2xl font-bold tracking-tight text-[#2b1450]">Create your account</h1>
-                  <p className="mb-6 mt-1 text-sm text-slate-600">It only takes a minute.</p>
+                  <h1 className="text-2xl font-bold tracking-tight text-[#2b1450]">
+                    Create your account
+                  </h1>
+                  <p className="mb-6 mt-1 text-sm text-slate-600">
+                    It only takes a minute.
+                  </p>
                   <RegisterForm />
                   <p className="mt-6 text-center text-sm text-slate-600">
                     Already have an account?{" "}
-                    <Link to="/login" replace className="font-semibold text-primary hover:underline">
+                    <Link
+                      to="/login"
+                      className="font-semibold text-primary hover:underline"
+                    >
                       Log in
                     </Link>
                   </p>

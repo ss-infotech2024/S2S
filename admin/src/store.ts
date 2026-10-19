@@ -62,21 +62,57 @@ export function importAll(data: Record<string, unknown>, tables: string[]) {
 // If VITE_API_URL is set, data lives on the shared server (so the website sees changes); otherwise in this browser.
 const API = import.meta.env.VITE_API_URL as string | undefined;
 console.log("Backend API URL:", API);
+
 async function call(path: string, init: RequestInit = {}) {
-  const r = await fetch(`${API}/api/${path}`, {
-    ...init, headers: { "Content-Type": "application/json", "x-admin-token": (import.meta.env.VITE_ADMIN_TOKEN as string) ?? "" },
+  if (!API) {
+    throw new Error("Backend API is not configured. Check VITE_API_URL in .env");
+  }
+
+  const token = import.meta.env.VITE_ADMIN_TOKEN as string | undefined;
+
+  const r = await fetch(`${API.replace(/\/$/, "")}/api/${path}`, {
+    ...init,
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-token": token ?? "",
+      ...init.headers,
+    },
   });
+
   if (!r.ok) {
     const msg = await r.json().then((b) => b?.error).catch(() => "");
     throw new Error(msg || `API ${r.status}`);
   }
+
   return r.status === 204 ? null : r.json();
 }
+
 export const listRows = (t: string): Promise<Row[]> => (API ? call(t) : localList(t));
 export const saveRow = async (t: string, row: Row): Promise<void> => {
   if (!API) return localSave(t, row);
   await call(row.id ? `${t}/${row.id}` : t, { method: row.id ? "PUT" : "POST", body: JSON.stringify(row) });
 };
+
+
+export const approveEnrollment = async (enrollmentId: string) => {
+  if (!API) {
+    throw new Error("Backend API is not configured.");
+  }
+
+  return call(`enrollments/${encodeURIComponent(enrollmentId)}/approve`, {
+    method: "POST",
+  });
+};
+
+
+export const resendStudentSetup = async (studentId: string) => {
+  if (!API) throw new Error("Backend API is not configured.");
+  return call(`students/${encodeURIComponent(studentId)}/resend-setup`, {
+    method: "POST",
+  });
+};
+
+
 export const deleteRow = async (t: string, id: string): Promise<void> => {
   if (!API) return localDelete(t, id);
   await call(`${t}/${id}`, { method: "DELETE" });

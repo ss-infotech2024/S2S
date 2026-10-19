@@ -1,7 +1,10 @@
+import { nav, resources } from "./resources";
+import type { Field, Resource } from "./resources";
 import { useEffect, useRef, useState, FormEvent } from "react";
 import { Navigate, useParams, useSearchParams } from "react-router-dom";
-import { listRows, saveRow, deleteRow, deleteMany, download, usageOf, describeUsage, cascadeRename, uniqueClash, Row } from "./store";
-import { resources, nav, Resource, Field } from "./resources";
+
+import { listRows, saveRow, deleteRow, deleteMany, download, usageOf, describeUsage, cascadeRename, uniqueClash, approveEnrollment,resendStudentSetup, Row ,} from "./store";
+
 import Courses from "./Courses";
 import Batches from "./Batches";
 import Testimonials from "./Testimonials";
@@ -104,6 +107,45 @@ function Screen({ cfg }: { cfg: Resource }) {
     try { await saveRow(cfg.table, { ...r, ...p }); } catch (e) { return say(fail("Could not update", e), 5000); }
     load();
   };
+  
+const approveStudent = async (r: Row) => {
+  if (cfg.table !== "enrollments") return;
+
+  if (!confirm(`Approve enrollment for ${r.name || r.email}? A student account will be created and a password setup email will be sent.`)) {
+    return;
+  }
+
+  try {
+    const result = await approveEnrollment(r.id);
+    say(`Approved! Student ID: ${result.studentId}`, 6000);
+    await load();
+  } catch (e) {
+    say(fail("Approval failed", e), 6000);
+  }
+};
+
+const resendSetupLink = async (r: Row) => {
+  if (!r.studentId) {
+    say("Student ID is not available for this enrollment.", 5000);
+    return;
+  }
+
+  if (
+    !confirm(
+      `Resend password setup email to ${r.email || r.name}?`
+    )
+  ) {
+    return;
+  }
+
+  try {
+    const result = await resendStudentSetup(String(r.studentId));
+    say(result.message || "Password setup email sent.", 6000);
+  } catch (e) {
+    say(fail("Resend failed", e), 6000);
+  }
+};
+
   const duplicate = (r: Row) => {
     const copy: Row = { ...r };
     delete copy.id; delete copy.created_at; delete copy.batch_id; delete copy.batch_name;
@@ -238,6 +280,25 @@ function Screen({ cfg }: { cfg: Resource }) {
                   </td>
                 ))}
                 <td className="act">
+                  
+{cfg.table === "enrollments" &&
+  r.status === "pending" &&
+  <button className="primary" onClick={() => approveStudent(r)}>
+    Approve
+  </button>
+}
+
+{cfg.table === "enrollments" &&
+  r.studentId &&
+  r.status === "confirmed" && (
+    <button
+      type="button"
+      onClick={() => resendSetupLink(r)}
+    >
+      Resend Setup Link
+    </button>
+  )}
+
                   {cfg.contact && r.phone && <><a href={`tel:${r.phone}`}>Call</a><a href={`https://wa.me/${wa(r.phone)}`} target="_blank" rel="noreferrer">WhatsApp</a></>}
                   <button onClick={() => setEditing(r)}>Edit</button>
                   {!cfg.contact && <button onClick={() => duplicate(r)} title="Create a copy as a draft">Copy</button>}
