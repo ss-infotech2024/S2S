@@ -28,10 +28,23 @@ type Slide = {
   image: string;
   imageAlt: string;
   imagePosition?: string; // CSS object-position, e.g. "75% 50%" to keep a subject in frame
-  badge: { value: string; label: string };
+  imageFit?: "cover" | "contain"; // "contain" shows a whole poster without cropping its text
+  badge?: { value: string; label: string };
 };
 
 const slides: Slide[] = [
+  {
+    eyebrow: "Registrations Open · Limited Seats",
+    title: "6 Months",
+    highlight: "Internship Opportunity",
+    text: "Get real-world experience in Full Stack Development, Data Analytics, App Development or AI & Automation — with internship opportunities across Nagpur & Pan India.",
+    points: ["Live Industry Projects", "10+ Additional Skills", "Placement Support"],
+    primary: { label: "Apply Now", to: "/contact" },
+    secondary: { label: "Explore Courses", to: "/courses" },
+    image: "/honeBanner/Intnernship.png",
+    imageAlt: "SS Training Center 6 months internship opportunity poster — program fee ₹9,999",
+    imageFit: "contain",
+  },
   {
     eyebrow: "Welcome to Skill Training Center",
     title: "Skill 2 Success:",
@@ -99,7 +112,7 @@ const slides: Slide[] = [
   },
 ];
 
-const AUTOPLAY_MS = 1000;
+const AUTOPLAY_MS = 6000;
 
 /** Soft fade-and-rise used to stagger the copy in when a slide becomes active. */
 const rise = (active: boolean, step: number) => ({
@@ -229,31 +242,45 @@ function SlideView({
           className="absolute -inset-3 rounded-[2.25rem] bg-fuchsia-500/20 blur-2xl"
         />
 
-        <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-white/10 shadow-2xl shadow-black/40 ring-1 ring-white/25 md:aspect-[2/1] lg:aspect-[16/10]">
+        <div
+          className={cn(
+            "relative overflow-hidden rounded-3xl shadow-2xl shadow-black/40 ring-1 ring-white/25",
+            // Posters keep their own 4:3 shape so the whole design is visible; photos fill a wide frame.
+            slide.imageFit === "contain"
+              ? "mx-auto aspect-[4/3] max-h-[70vh] bg-white lg:max-h-none"
+              : "aspect-[16/10] bg-white/10 md:aspect-[2/1] lg:aspect-[16/10]",
+          )}
+        >
           <img
             src={loadImage ? slide.image : undefined}
             alt={slide.imageAlt}
             decoding="async"
             className={cn(
-              "h-full w-full object-cover transition-transform duration-[1400ms] ease-out motion-reduce:transition-none motion-reduce:scale-100",
+              "h-full w-full transition-transform duration-[1400ms] ease-out motion-reduce:transition-none motion-reduce:scale-100",
+              slide.imageFit === "contain" ? "object-contain" : "object-cover",
               active ? "scale-100" : "scale-105",
             )}
             style={{ objectPosition: slide.imagePosition ?? "center" }}
           />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-t from-[#1e0e3a]/55 via-transparent to-transparent"
-          />
 
-          {/* Stat badge sits inside the frame, so it can never collide with the controls */}
-          <div className="absolute bottom-3 left-3 rounded-2xl border border-white/50 bg-white/90 px-3 py-2 text-[#2b1450] shadow-lg backdrop-blur sm:bottom-5 sm:left-5 sm:px-5 sm:py-3 lg:bottom-4 lg:left-4 lg:px-3.5 lg:py-2 xl:bottom-5 xl:left-5 xl:px-5 xl:py-3">
-            <div className="text-lg font-extrabold leading-none sm:text-2xl lg:text-xl xl:text-2xl">
-              {slide.badge.value}
-            </div>
-            <div className="mt-1 text-[0.7rem] font-medium text-[#2b1450]/70 sm:text-sm lg:text-xs xl:text-sm">
-              {slide.badge.label}
-            </div>
-          </div>
+          {slide.badge && (
+            <>
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-[#1e0e3a]/55 via-transparent to-transparent"
+              />
+
+              {/* Stat badge sits inside the frame, so it can never collide with the controls */}
+              <div className="absolute bottom-3 left-3 rounded-2xl border border-white/50 bg-white/90 px-3 py-2 text-[#2b1450] shadow-lg backdrop-blur sm:bottom-5 sm:left-5 sm:px-5 sm:py-3 lg:bottom-4 lg:left-4 lg:px-3.5 lg:py-2 xl:bottom-5 xl:left-5 xl:px-5 xl:py-3">
+                <div className="text-lg font-extrabold leading-none sm:text-2xl lg:text-xl xl:text-2xl">
+                  {slide.badge.value}
+                </div>
+                <div className="mt-1 text-[0.7rem] font-medium text-[#2b1450]/70 sm:text-sm lg:text-xs xl:text-sm">
+                  {slide.badge.label}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

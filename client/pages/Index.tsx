@@ -20,6 +20,7 @@ import {
 } from "@heroicons/react/24/outline";
 import PosterTemplates from "../components/site/PosterTemplates";
 import HorizontalSlider from "@/components/site/HorizontalSlider";
+import InternshipPoster from "@/components/site/InternshipPoster";
 
 export default function Index() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -129,6 +130,7 @@ export default function Index() {
     <Layout>
       <div className="bg-white">
         <Hero />
+        <InternshipPoster />
         {/* <PosterTemplates /> */}
         <HorizontalSlider />
         
