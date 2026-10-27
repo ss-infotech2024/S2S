@@ -10,6 +10,16 @@ import bcrypt from "bcryptjs";
 
 const SESSION_COOKIE = "s2s_student_session";
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
+// Set SESSION_COOKIE_SAMESITE=None (which implies Secure) when the website and API are on different sites.
+const COOKIE_SAMESITE = process.env.SESSION_COOKIE_SAMESITE || "Lax";
+const COOKIE_SECURE =
+  process.env.SESSION_COOKIE_SECURE === "true" ||
+  COOKIE_SAMESITE.toLowerCase() === "none";
+
+function sessionCookie(value, maxAgeSeconds) {
+  return `${SESSION_COOKIE}=${value}; HttpOnly; Path=/; SameSite=${COOKIE_SAMESITE}; Max-Age=${maxAgeSeconds}${COOKIE_SECURE ? "; Secure" : ""}`;
+}
+
 function createStudentSessionId() {
   return crypto.randomBytes(32).toString("hex");
 }
@@ -32,7 +42,11 @@ function parseCookies(req) {
         const name = cookie.slice(0, separatorIndex).trim();
         const value = cookie.slice(separatorIndex + 1).trim();
 
-        return [name, decodeURIComponent(value)];
+        try {
+          return [name, decodeURIComponent(value)];
+        } catch {
+          return [name, value];
+        }
       })
   );
 }
@@ -43,11 +57,36 @@ const PORT = Number(process.env.PORT || 8787);
 const TOKEN = process.env.ADMIN_TOKEN;
 const URI = process.env.MONGODB_URI;
 
-const ALLOWED_ORIGINS = new Set([
-  "http://localhost:5174",
-  "http://localhost:5176",
-  "http://localhost:8080",
-]);
+const toOrigin = value => {
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+};
+
+// Local dev servers (website on 8080, admin on 5174 — Vite moves to the next port when one is busy),
+// plus the deployed portals and any extra origins listed in CORS_ORIGINS (comma separated).
+const DEV_ORIGINS = ["localhost", "127.0.0.1"].flatMap(host =>
+  [8080, 5173, 5174, 5175, 5176].map(port => `http://${host}:${port}`)
+);
+
+const ALLOWED_ORIGINS = new Set(
+  [
+    ...DEV_ORIGINS,
+    process.env.STUDENT_PORTAL_URL,
+    process.env.ADMIN_PORTAL_URL,
+    ...String(process.env.CORS_ORIGINS || "").split(","),
+  ]
+    .map(value => String(value || "").trim())
+    .filter(Boolean)
+    .map(toOrigin)
+    .filter(Boolean)
+);
+
+// Batch fields that only students enrolled in that batch may see.
+const PRIVATE_BATCH_FIELDS = ["meeting_link"];
+const BATCH_TABLES = new Set(["online_training", "classroom_training"]);
 
 const SEED = new URL("../src/seed.json", import.meta.url);
 
@@ -76,11 +115,6 @@ const PUBLIC_READ = new Set([
   "classroom_training",
   "testimonials"
 ]);
-
-const FRONTEND_ORIGIN =
-  process.env.STUDENT_PORTAL_URL || "http://localhost:8080";
-
-
 
 const send = (res, code, data, origin = null, extraHeaders = {}) => {
   const headers = {
@@ -151,6 +185,44 @@ const clean = doc => {
   return row;
 };
 
+const publicView = (admin, table, row) => {
+  if (admin || !BATCH_TABLES.has(table)) return row;
+  const copy = { ...row };
+  for (const field of PRIVATE_BATCH_FIELDS) delete copy[field];
+  return copy;
+};
+
+// Student account fields that are safe to show in the admin panel (never the password hash).
+const studentSummary = student => ({
+  id: student.id,
+  studentId: student.studentId,
+  name: student.name ?? "",
+  email: student.email ?? "",
+  phone: student.phone ?? "",
+  course: student.course ?? "",
+  enrollmentId: student.enrollmentId ?? "",
+  status: student.status ?? "",
+  assignedCourseIds: assignedCourseIds(student),
+  created_at: student.created_at ?? ""
+});
+
+const assignedCourseIds = student =>
+  Array.isArray(student?.assignedCourseIds)
+    ? student.assignedCourseIds.filter(value => typeof value === "string")
+    : [];
+
+const courseCard = course => ({
+  id: course.id,
+  slug: course.slug ?? "",
+  title: course.title ?? "",
+  short: course.short ?? "",
+  description: course.description ?? "",
+  image: course.image ?? "",
+  category: course.category ?? "",
+  level: course.level ?? "",
+  duration: course.duration ?? ""
+});
+
 function createStudentId() {
   return `SSS-${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
 }
@@ -208,13 +280,48 @@ async function start() {
   const client = new MongoClient(URI);
   await client.connect();
 
-const database = client.db("test");
+  const database = client.db(process.env.MONGODB_DB || "test");
   await database.command({ ping: 1 });
   console.log("Connected to MongoDB");
 
   const collections = Object.fromEntries(
     TABLES.map(table => [table, database.collection(table)])
   );
+
+  // Resolve the logged-in student from the HttpOnly session cookie only — never from request data.
+  async function getSessionStudent(req, res) {
+    const sessionId = parseCookies(req)[SESSION_COOKIE];
+
+    if (!sessionId || !/^[a-f0-9]{64}$/i.test(sessionId)) {
+      return { error: "Please log in" };
+    }
+
+    const session = await collections.student_sessions.findOne({
+      sessionHash: hashSessionId(sessionId)
+    });
+
+    if (!session || new Date(session.expiresAt).getTime() <= Date.now()) {
+      if (session) {
+        await collections.student_sessions.deleteOne({ id: session.id });
+      }
+
+      res.setHeader("Set-Cookie", sessionCookie("", 0));
+      return { error: "Session expired. Please log in again." };
+    }
+
+    const student = await collections.students.findOne({
+      studentId: session.studentId,
+      status: "active"
+    });
+
+    if (!student) {
+      await collections.student_sessions.deleteOne({ id: session.id });
+      res.setHeader("Set-Cookie", sessionCookie("", 0));
+      return { error: "Student account is not active" };
+    }
+
+    return { student };
+  }
 
   // Seed each collection only when it is empty.
   const seed = JSON.parse(fs.readFileSync(SEED, "utf8"));
@@ -239,34 +346,28 @@ const database = client.db("test");
     const table = parts[2];
     const id = parts[3];
 
-    
-const origin = req.headers.origin || null;
+    const origin = req.headers.origin || null;
 
-if (origin) {
-  res.setHeader("Access-Control-Allow-Origin", origin);
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-admin-token");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-  res.setHeader("Vary", "Origin");
-}
-const reply = (code, data, extraHeaders = {}) =>
-  send(res, code, data, origin, extraHeaders);
-if (origin && !ALLOWED_ORIGINS.has(origin)) {
-  return send(res, 403, {
-    error: "Origin not allowed"
-  });
-}
+    if (origin && !ALLOWED_ORIGINS.has(origin)) {
+      return send(res, 403, { error: "Origin not allowed" });
+    }
 
-if (req.method === "OPTIONS") {
-  res.writeHead(204, {
-    "Access-Control-Allow-Origin": origin,
-    "Access-Control-Allow-Credentials": "true",
-    "Access-Control-Allow-Headers": "Content-Type,x-admin-token",
-    "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-    "Vary": "Origin",
-  });
+    // Applied to every response from an allowed origin, including those sent without passing `origin`.
+    if (origin) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type,x-admin-token");
+      res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+      res.setHeader("Vary", "Origin");
+    }
 
-  return res.end();
-}
+    const reply = (code, data, extraHeaders = {}) =>
+      send(res, code, data, origin, extraHeaders);
+
+    if (req.method === "OPTIONS") {
+      res.writeHead(204);
+      return res.end();
+    }
 
 
     // Admin-only enrollment approval and student account creation
@@ -309,39 +410,55 @@ if (req.method === "OPTIONS") {
           $or: [{ enrollmentId: id }, { email }]
         });
 
+        let student;
+        let createdStudent = false;
+
         if (existingStudent) {
-          return send(res, 409, {
-            error: "A student account already exists for this enrollment or email"
-          });
-        }
-
-        let studentId;
-
-        for (let attempt = 0; attempt < 5; attempt++) {
-          const candidate = createStudentId();
-          if (!(await collections.students.findOne({ studentId: candidate }))) {
-            studentId = candidate;
-            break;
+          // Resume an approval that created the account but could not send the setup email.
+          if (
+            existingStudent.enrollmentId === id &&
+            existingStudent.status === "pending_setup"
+          ) {
+            student = existingStudent;
+          } else {
+            return send(res, 409, {
+              error: "A student account already exists for this enrollment or email"
+            });
           }
+        } else {
+          let newStudentId;
+
+          for (let attempt = 0; attempt < 5; attempt++) {
+            const candidate = createStudentId();
+            if (!(await collections.students.findOne({ studentId: candidate }))) {
+              newStudentId = candidate;
+              break;
+            }
+          }
+
+          if (!newStudentId) {
+            return send(res, 500, { error: "Could not generate a unique student ID" });
+          }
+
+          student = {
+            id: crypto.randomUUID(),
+            studentId: newStudentId,
+            enrollmentId: id,
+            name: enrollment.name || "",
+            email,
+            course: enrollment.course || "",
+            assignedCourseIds: [],
+            passwordHash: null,
+            status: "pending_setup",
+            created_at: new Date().toISOString()
+          };
+
+          await collections.students.insertOne(student);
+          createdStudent = true;
         }
 
-        if (!studentId) {
-          return send(res, 500, { error: "Could not generate a unique student ID" });
-        }
-
+        const studentId = student.studentId;
         const setup = createSetupToken();
-
-        const student = {
-          id: crypto.randomUUID(),
-          studentId,
-          enrollmentId: id,
-          name: enrollment.name || "",
-          email,
-          course: enrollment.course || "",
-          passwordHash: null,
-          status: "pending_setup",
-          created_at: new Date().toISOString()
-        };
 
         const tokenRecord = {
           id: crypto.randomUUID(),
@@ -352,9 +469,7 @@ if (req.method === "OPTIONS") {
           created_at: new Date().toISOString()
         };
 
-        await collections.students.insertOne(student);
-
-                await collections.student_setup_tokens.insertOne(tokenRecord);
+        await collections.student_setup_tokens.insertOne(tokenRecord);
 
         try {
           await sendPasswordSetupEmail(
@@ -367,12 +482,23 @@ if (req.method === "OPTIONS") {
             id: tokenRecord.id
           });
 
+          // Roll back so the enrollment stays pending and can simply be approved again.
+          if (createdStudent) {
+            await collections.students.deleteOne({ id: student.id });
+          }
+
           console.error("Student setup email failed:", emailError.message);
 
           return send(res, 502, {
             error: "Email could not be sent. Please try again."
           });
         }
+
+        // Only the newest setup link stays valid.
+        await collections.student_setup_tokens.updateMany(
+          { studentId, id: { $ne: tokenRecord.id }, usedAt: null },
+          { $set: { usedAt: new Date().toISOString() } }
+        );
 
         await collections.enrollments.updateOne(
           { id },
@@ -460,6 +586,7 @@ if (req.method === "OPTIONS") {
           passwordHash,
           status: "active",
           course: "",
+          assignedCourseIds: [],
           created_at: new Date().toISOString()
         };
 
@@ -492,7 +619,7 @@ return send(
   },
   origin,
   {
-    "Set-Cookie": `${SESSION_COOKIE}=${sessionId}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${Math.floor(SESSION_TTL_MS / 1000)}`
+    "Set-Cookie": sessionCookie(sessionId, Math.floor(SESSION_TTL_MS / 1000))
   }
 );
       } catch (error) {
@@ -577,7 +704,7 @@ return send(
   },
   origin,
   {
-    "Set-Cookie": `${SESSION_COOKIE}=${sessionId}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${Math.floor(SESSION_TTL_MS / 1000)}`
+    "Set-Cookie": sessionCookie(sessionId, Math.floor(SESSION_TTL_MS / 1000))
   }
 );
 
@@ -597,40 +724,10 @@ return send(
       req.method === "GET"
     ) {
       try {
-        const cookies = parseCookies(req);
-        const sessionId = cookies[SESSION_COOKIE];
-
-        if (!sessionId || !/^[a-f0-9]{64}$/i.test(sessionId)) {
-          return send(res, 401, { error: "Please log in" });
-        }
-
-        const sessionHash = hashSessionId(sessionId);
-
-        const session = await collections.student_sessions.findOne({
-          sessionHash
-        });
-
-        if (!session || new Date(session.expiresAt).getTime() <= Date.now()) {
-          if (session) {
-            await collections.student_sessions.deleteOne({ id: session.id });
-          }
-
-          res.setHeader(
-            "Set-Cookie",
-            `${SESSION_COOKIE}=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0`
-          );
-
-          return send(res, 401, { error: "Session expired. Please log in again." });
-        }
-
-        const student = await collections.students.findOne({
-          studentId: session.studentId,
-          status: "active"
-        });
+        const { student, error } = await getSessionStudent(req, res);
 
         if (!student) {
-          await collections.student_sessions.deleteOne({ id: session.id });
-          return send(res, 401, { error: "Student account is not active" });
+          return send(res, 401, { error });
         }
 
         return send(res, 200, {
@@ -665,32 +762,196 @@ return send(
           });
         }
 
-        res.writeHead(200, {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": FRONTEND_ORIGIN,
-          "Access-Control-Allow-Headers": "Content-Type,x-admin-token",
-          "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-          "Set-Cookie": `${SESSION_COOKIE}=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0`
-        });
-
-        
-return send(
-  res,
-  200,
-  {
-    message: "Logged out successfully"
-  },
-  origin,
-  {
-    "Set-Cookie": `${SESSION_COOKIE}=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0`
-  }
-);
+        return send(
+          res,
+          200,
+          { message: "Logged out successfully" },
+          origin,
+          { "Set-Cookie": sessionCookie("", 0) }
+        );
       } catch (error) {
         console.error("Student logout failed:", error);
 
         return send(res, 500, {
           error: "Unable to log out right now"
         }, origin);
+      }
+    }
+
+    // Student LMS: courses assigned to the logged-in student
+    if (
+      parts[1] === "api" &&
+      parts[2] === "student" &&
+      parts[3] === "courses" &&
+      req.method === "GET"
+    ) {
+      try {
+        const { student, error } = await getSessionStudent(req, res);
+
+        if (!student) {
+          return send(res, 401, { error });
+        }
+
+        const courseIds = assignedCourseIds(student);
+        const courseId = parts[4];
+
+        if (parts.length > 5 || (parts.length === 5 && !courseId)) {
+          return send(res, 404, { error: "not found" });
+        }
+
+        if (!courseId) {
+          const courses = courseIds.length
+            ? await collections.courses.find({ id: { $in: courseIds } }).toArray()
+            : [];
+
+          // Keep the order in which the admin assigned the courses.
+          const byId = new Map(courses.map(course => [course.id, course]));
+
+          return send(res, 200, {
+            courses: courseIds
+              .map(value => byId.get(value))
+              .filter(Boolean)
+              .map(courseCard)
+          });
+        }
+
+        // Authorise against the session's assignments before loading anything.
+        if (courseId.length > 100 || !courseIds.includes(courseId)) {
+          return send(res, 403, { error: "This course is not assigned to your account" });
+        }
+
+        const course = await collections.courses.findOne({ id: courseId });
+
+        if (!course) {
+          return send(res, 404, { error: "Course not found" });
+        }
+
+        // Batches come from this student's own approved enrollments for this course.
+        const enrollments = await collections.enrollments
+          .find({
+            studentId: student.studentId,
+            status: { $in: ["confirmed", "joined"] },
+            batch_id: { $nin: [null, ""] }
+          })
+          .toArray();
+
+        const batches = [];
+
+        for (const enrollment of enrollments) {
+          for (const table of BATCH_TABLES) {
+            const batch = await collections[table].findOne({ id: enrollment.batch_id });
+
+            if (batch && batch.course === course.title) {
+              batches.push({
+                id: batch.id,
+                mode: table === "online_training" ? "Online" : "Classroom",
+                batch_name: batch.batch_name ?? "",
+                status: batch.status ?? "",
+                start_date: batch.start_date ?? "",
+                days: batch.days ?? "",
+                timing: batch.timing ?? "",
+                trainer: batch.trainer ?? "",
+                center: batch.center ?? "",
+                platform: batch.platform ?? "",
+                meeting_link: batch.meeting_link ?? ""
+              });
+            }
+          }
+        }
+
+        const { _id, published, ...details } = course;
+
+        return send(res, 200, { course: { ...details, batches } });
+      } catch (error) {
+        console.error("Student courses lookup failed:", error);
+        return send(res, 500, { error: "Unable to load your courses right now" });
+      }
+    }
+
+    // Admin: list student accounts (without password hashes)
+    if (
+      parts[1] === "api" &&
+      parts[2] === "students" &&
+      parts.length === 3 &&
+      req.method === "GET"
+    ) {
+      if (!isAdmin(req)) {
+        return send(res, 401, { error: "unauthorized" });
+      }
+
+      try {
+        const students = await collections.students
+          .find({})
+          .sort({ created_at: -1 })
+          .toArray();
+
+        return send(res, 200, students.map(studentSummary));
+      } catch (error) {
+        console.error("Student list failed:", error);
+        return send(res, 500, { error: "Unable to load students" });
+      }
+    }
+
+    // Admin: replace the list of courses assigned to a student
+    if (
+      parts[1] === "api" &&
+      parts[2] === "students" &&
+      parts[4] === "courses" &&
+      parts.length === 5 &&
+      (req.method === "PUT" || req.method === "PATCH")
+    ) {
+      if (!isAdmin(req)) {
+        return send(res, 401, { error: "unauthorized" });
+      }
+
+      try {
+        const studentId = decodeURIComponent(parts[3] || "");
+        const body = await readBody(req);
+
+        if (
+          !isObject(body) ||
+          !Array.isArray(body.courseIds) ||
+          body.courseIds.length > 200 ||
+          !body.courseIds.every(value => typeof value === "string" && value.length <= 100)
+        ) {
+          return send(res, 400, { error: "courseIds must be an array of course IDs" });
+        }
+
+        const student = await collections.students.findOne({ studentId });
+
+        if (!student) {
+          return send(res, 404, { error: "Student not found" });
+        }
+
+        const courseIds = [...new Set(body.courseIds)];
+        const found = courseIds.length
+          ? await collections.courses
+              .find({ id: { $in: courseIds } }, { projection: { id: 1 } })
+              .toArray()
+          : [];
+        const known = new Set(found.map(course => course.id));
+        const unknown = courseIds.filter(value => !known.has(value));
+
+        if (unknown.length) {
+          return send(res, 400, { error: `Unknown course ID(s): ${unknown.join(", ")}` });
+        }
+
+        await collections.students.updateOne(
+          { id: student.id },
+          {
+            $set: {
+              assignedCourseIds: courseIds,
+              courses_updated_at: new Date().toISOString()
+            }
+          }
+        );
+
+        return send(res, 200, studentSummary({ ...student, assignedCourseIds: courseIds }));
+      } catch (error) {
+        console.error("Course assignment failed:", error);
+        const code =
+          error.message === "too large" ? 413 : error.message === "invalid JSON" ? 400 : 500;
+        return send(res, code, { error: "Could not update assigned courses" });
       }
     }
 
@@ -952,13 +1213,14 @@ if (
         if (id) {
           const row = clean(await collection.findOne({ id }));
           return row && visibleTo(admin, table, row)
-            ? send(res, 200, row)
+            ? send(res, 200, publicView(admin, table, row))
             : send(res, 404, { error: "not found" });
         }
 
         const rows = (await collection.find({}).toArray())
           .map(clean)
           .filter(row => visibleTo(admin, table, row))
+          .map(row => publicView(admin, table, row))
           .sort((a, b) =>
             String(b.created_at ?? "").localeCompare(String(a.created_at ?? ""))
           );
@@ -992,6 +1254,11 @@ if (
           delete row.notes;
           delete row.follow_up;
           delete row.trackingTokenHash;
+          // Account links and batch placement are set by the admin only.
+          delete row.studentId;
+          delete row.batch_id;
+          delete row.batch_name;
+          delete row.approved_at;
 
           row.status = table === "enrollments" || table === "testimonials"
             ? "pending"

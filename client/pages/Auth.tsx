@@ -12,6 +12,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { API, notifyAuthChanged, safeRedirectPath } from "@/lib/studentApi";
+
+/** Where to go after login: the protected page the visitor was sent away from, else the dashboard. */
+function useAfterAuthPath() {
+  const location = useLocation();
+  return safeRedirectPath((location.state as { from?: unknown } | null)?.from);
+}
 
 /* ── Validation ─────────────────────────────────────────────── */
 
@@ -69,11 +76,6 @@ async function submitAuth(
   kind: "login" | "register",
   values: LoginValues | RegisterValues,
 ): Promise<AuthResult> {
-  const API = (import.meta.env.VITE_API_URL || "http://localhost:8787").replace(
-    /\/$/,
-    "",
-  );
-
   const payload =
     kind === "register"
       ? {
@@ -209,13 +211,15 @@ function LoginForm() {
   } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
 
   const navigate = useNavigate();
+  const nextPath = useAfterAuthPath();
 
   const onSubmit = async (values: LoginValues) => {
     const result = await submitAuth("login", values);
 
     if (result.ok) {
       toast.success(result.message ?? "Logged in");
-      navigate("/", { replace: true });
+      notifyAuthChanged();
+      navigate(nextPath, { replace: true });
     } else {
       toast.error(result.message ?? "Something went wrong. Please try again.");
     }
@@ -250,6 +254,10 @@ function LoginForm() {
         Log in
       </Button>
       <p className="text-center text-sm text-slate-500">
+        Enrollment approved? Set your password using the link we emailed you
+        before logging in.
+      </p>
+      <p className="text-center text-sm text-slate-500">
         Trouble signing in?{" "}
         <Link to="/contact" className="font-medium text-primary hover:underline">
           Contact us
@@ -269,17 +277,18 @@ function RegisterForm() {
   } = useForm<RegisterValues>({ resolver: zodResolver(registerSchema) });
 
   const navigate = useNavigate();
+  const nextPath = useAfterAuthPath();
 
   const onSubmit = async (values: RegisterValues) => {
     const result = await submitAuth("register", values);
 
-   if (result.ok) {
-  toast.success(result.message ?? "Account created");
-  window.dispatchEvent(new Event("student-auth-changed"));
-  navigate("/", { replace: true });
-} else {
-  toast.error(result.message ?? "Something went wrong. Please try again.");
-}
+    if (result.ok) {
+      toast.success(result.message ?? "Account created");
+      notifyAuthChanged();
+      navigate(nextPath, { replace: true });
+    } else {
+      toast.error(result.message ?? "Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -353,7 +362,7 @@ const trust = [
 ];
 
 export default function Auth() {
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
   const navigate = useNavigate();
   const tab = pathname.startsWith("/register") ? "register" : "login";
 
@@ -412,6 +421,7 @@ export default function Auth() {
                 onValueChange={(value) =>
                   navigate(value === "register" ? "/register" : "/login", {
                     replace: true,
+                    state,
                   })
                 }
               >
@@ -442,6 +452,7 @@ export default function Auth() {
                     New here?{" "}
                     <Link
                       to="/register"
+                      state={state}
                       className="font-semibold text-primary hover:underline"
                     >
                       Create an account
@@ -461,6 +472,7 @@ export default function Auth() {
                     Already have an account?{" "}
                     <Link
                       to="/login"
+                      state={state}
                       className="font-semibold text-primary hover:underline"
                     >
                       Log in

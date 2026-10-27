@@ -113,6 +113,20 @@ export const resendStudentSetup = async (studentId: string) => {
 };
 
 
+// Student login accounts (the `students` collection) — separate from the enrollment leads in "Students / Users".
+export const listStudentAccounts = async (): Promise<Row[]> => {
+  if (!API) throw new Error("Backend API is not configured.");
+  return call("students");
+};
+
+export const assignStudentCourses = async (studentId: string, courseIds: string[]): Promise<Row> => {
+  if (!API) throw new Error("Backend API is not configured.");
+  return call(`students/${encodeURIComponent(studentId)}/courses`, {
+    method: "PUT",
+    body: JSON.stringify({ courseIds }),
+  });
+};
+
 export const deleteRow = async (t: string, id: string): Promise<void> => {
   if (!API) return localDelete(t, id);
   await call(`${t}/${id}`, { method: "DELETE" });

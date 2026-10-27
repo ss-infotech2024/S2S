@@ -1,43 +1,43 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { BookOpen, LogOut } from "lucide-react";
 import { toast } from "sonner";
-
-const API = (
-  import.meta.env.VITE_API_URL || "http://localhost:8787"
-).replace(/\/$/, "");
-
-type Student = {
-  studentId: string;
-  name: string;
-  email: string;
-  course: string;
-};
+import Layout from "@/components/site/Layout";
+import { getCourseById } from "@/data/courses";
+import {
+  ApiError,
+  logoutStudent,
+  studentFetch,
+  type AssignedCourse,
+  type StudentProfile,
+} from "@/lib/studentApi";
 
 export default function StudentDashboard() {
-  const [student, setStudent] = useState<Student | null>(null);
+  const [student, setStudent] = useState<StudentProfile | null>(null);
+  const [courses, setCourses] = useState<AssignedCourse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     let active = true;
 
-    fetch(`${API}/api/student-auth/me`, {
-      credentials: "include",
-    })
-      .then(async (response) => {
-        const data = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-          throw new Error(data.error || "Please log in again.");
+    Promise.all([
+      studentFetch<{ student: StudentProfile }>("/api/student-auth/me"),
+      studentFetch<{ courses: AssignedCourse[] }>("/api/student/courses"),
+    ])
+      .then(([me, assigned]) => {
+        if (!active) return;
+        setStudent(me.student);
+        setCourses(assigned.courses);
+      })
+      .catch((e) => {
+        if (!active) return;
+        if (e instanceof ApiError && e.status === 401) {
+          navigate("/login", { replace: true, state: { from: "/student-dashboard" } });
+        } else {
+          setError("Unable to load your dashboard. Please try again.");
         }
-
-        return data;
-      })
-      .then((data) => {
-        if (active) setStudent(data.student);
-      })
-      .catch(() => {
-        if (active) navigate("/login", { replace: true });
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -50,63 +50,113 @@ export default function StudentDashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${API}/api/student-auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      await logoutStudent();
     } catch {
-      toast.error("Server se logout confirm nahi ho saka.");
+      toast.error("Could not confirm logout with the server.");
     } finally {
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
     }
   };
 
-  if (loading) {
-    return <div className="p-6">Loading student dashboard...</div>;
-  }
-
-  if (!student) return null;
-
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
-      <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">Student Dashboard</h1>
-          <p className="text-sm text-slate-600">
-            Welcome, {student.name}
-          </p>
-        </div>
+    <Layout>
+      <main className="min-h-[70vh] bg-slate-50">
+        <div className="container py-10">
+          {loading && <p className="text-slate-500">Loading student dashboard...</p>}
 
-        <button
-          onClick={handleLogout}
-          className="rounded-lg bg-slate-900 px-4 py-2 text-white"
-        >
-          Logout
-        </button>
-      </header>
+          {!loading && error && (
+            <div className="rounded-xl border border-red-200 bg-white p-4 text-red-700">
+              {error}
+            </div>
+          )}
 
-      <section className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border bg-white p-5">
-          <p className="text-sm text-slate-500">Student ID</p>
-          <h2 className="mt-2 text-xl font-semibold">
-            {student.studentId}
-          </h2>
-        </div>
+          {!loading && student && (
+            <>
+              <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-widest text-primary">
+                    Student Dashboard
+                  </p>
+                  <h1 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
+                    Welcome, {student.name}
+                  </h1>
+                  <p className="mt-1 text-sm text-slate-600">
+                    Student ID {student.studentId} · {student.email}
+                  </p>
+                </div>
 
-        <div className="rounded-xl border bg-white p-5">
-          <p className="text-sm text-slate-500">Registered Email</p>
-          <h2 className="mt-2 break-all font-semibold">
-            {student.email}
-          </h2>
-        </div>
+                <button
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+                >
+                  <LogOut className="h-4 w-4" /> Logout
+                </button>
+              </header>
 
-        <div className="rounded-xl border bg-white p-5 sm:col-span-2">
-          <p className="text-sm text-slate-500">Enrolled Course</p>
-          <h2 className="mt-2 text-xl font-semibold">
-            {student.course}
-          </h2>
+              <section id="my-courses" aria-labelledby="my-courses-heading">
+                <h2 id="my-courses-heading" className="mb-4 text-xl font-bold text-slate-900">
+                  My Courses
+                </h2>
+
+                {courses.length === 0 ? (
+                  <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+                    <BookOpen className="mx-auto h-8 w-8 text-slate-400" />
+                    <h3 className="mt-3 text-lg font-semibold">No courses assigned yet</h3>
+                    <p className="mt-1 text-sm text-slate-500">
+                      Your courses will appear here once the institute assigns them to your
+                      account. Meanwhile you can browse what we offer.
+                    </p>
+                    <Link
+                      to="/courses"
+                      className="mt-5 inline-block rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+                    >
+                      Explore Courses
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {courses.map((course) => {
+                      const image = course.image || getCourseById(course.slug)?.image;
+                      const summary = course.short || course.description;
+                      return (
+                        <Link
+                          key={course.id}
+                          to={`/student-dashboard/courses/${encodeURIComponent(course.id)}`}
+                          className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                        >
+                          <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-violet-100 to-fuchsia-100">
+                            {image ? (
+                              <img src={image} alt="" loading="lazy" className="h-full w-full object-cover" />
+                            ) : (
+                              <BookOpen className="h-10 w-10 text-violet-400" />
+                            )}
+                          </div>
+                          <div className="p-5">
+                            {(course.category || course.level) && (
+                              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                {[course.category, course.level].filter(Boolean).join(" · ")}
+                              </p>
+                            )}
+                            <h3 className="mt-1 text-lg font-bold text-slate-900 group-hover:text-primary">
+                              {course.title}
+                            </h3>
+                            {summary && (
+                              <p className="mt-2 line-clamp-3 text-sm text-slate-600">{summary}</p>
+                            )}
+                            <span className="mt-4 inline-block text-sm font-semibold text-primary">
+                              Open course →
+                            </span>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
+            </>
+          )}
         </div>
-      </section>
-    </div>
+      </main>
+    </Layout>
   );
 }

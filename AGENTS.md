@@ -1,32 +1,32 @@
 # Fusion Starter
 
-A production-ready full-stack React application template with integrated Express server, featuring React Router 6 SPA mode, TypeScript, Vitest, Zod and modern tooling.
+S2S Skill Training Center: public website + student LMS, admin panel and API, built with React Router 6 SPA mode, TypeScript, Vitest, Zod and modern tooling.
 
-While the starter comes with a express server, only create endpoint when strictly neccesary, for example to encapsulate logic that must leave in the server, such as private keys handling, or certain DB operations, db...
+The project has three separate parts: the student website (`client/`, Vite at the repo root), the admin panel (`admin/`, its own Vite app) and the API (`backend/`, a plain Node `http` server on MongoDB). There is no Express server in this repo.
 
 ## Tech Stack
 
 - **PNPM**: Prefer pnpm
 - **Frontend**: React 18 + React Router 6 (spa) + TypeScript + Vite + TailwindCSS 3
-- **Backend**: Express server integrated with Vite dev server
-- **Testing**: Vitest
+- **Backend**: `backend/server/index.js` — Node `http` + MongoDB, student sessions in an HttpOnly cookie, admin calls via `x-admin-token`
+- **Testing**: Vitest (client), `node:test` (backend)
 - **UI**: Radix UI + TailwindCSS 3 + Lucide React icons
 
 ## Project Structure
 
 ```
-client/                   # React SPA frontend
+client/                   # Student website + student LMS (React SPA)
 ├── pages/                # Route components (Index.tsx = home)
 ├── components/ui/        # Pre-built UI component library
-├── App.tsx                # App entry point and with SPA routing setup
+├── lib/studentApi.ts     # Student API base URL, session helpers
+├── App.tsx               # App entry point and SPA routing setup
 └── global.css            # TailwindCSS 3 theming and global styles
 
-server/                   # Express API backend
-├── index.ts              # Main server setup (express config + routes)
-└── routes/               # API handlers
-
-shared/                   # Types used by both client & server
-└── api.ts                # Example of how to share api interfaces
+admin/                    # Admin panel (separate Vite app, port 5174)
+backend/                  # API server (port 8787)
+├── server/index.js       # All routes
+├── src/seed.json         # Seed data for empty collections
+└── test/                 # Integration tests (use a throwaway database)
 ```
 
 ## Key Features
@@ -67,34 +67,24 @@ className={cn(
 )}
 ```
 
-### Express Server Integration
+### API
 
-- **Development**: Single port (8080) for both frontend/backend
-- **Hot reload**: Both client and server code
-- **API endpoints**: Prefixed with `/api/`
-
-#### Example API Routes
-- `GET /api/ping` - Simple ping api
-- `GET /api/demo` - Demo endpoint  
-
-### Shared Types
-Import consistent types in both client and server:
-```typescript
-import { DemoResponse } from '@shared/api';
-```
-
-Path aliases:
-- `@shared/*` - Shared folder
-- `@/*` - Client folder
+- Base URL from `VITE_API_URL` (default `http://localhost:8787`); every route is prefixed with `/api/`.
+- Public: `GET /api/courses` and other published content, form `POST`s, `/api/student-auth/*`.
+- Student (session cookie): `GET /api/student/courses`, `GET /api/student/courses/:courseId` — only courses in the student's `assignedCourseIds`.
+- Admin (`x-admin-token`): generic CRUD, `GET /api/students`, `PUT /api/students/:studentId/courses`, enrollment approval, setup-link resend.
 
 ## Development Commands
 
 ```bash
-pnpm dev        # Start dev server (client + server)
-pnpm build      # Production build
-pnpm start      # Start production server
-pnpm typecheck  # TypeScript validation
-pnpm test          # Run Vitest tests
+pnpm dev                     # Student website on http://localhost:8080
+npm --prefix backend start   # API on http://localhost:8787 (needs backend/.env)
+npm --prefix admin run dev   # Admin panel on http://localhost:5174
+pnpm build                   # Production build of the website (dist/spa)
+pnpm start                   # Preview the production build
+pnpm typecheck               # TypeScript validation
+pnpm test                    # Client Vitest tests
+npm --prefix backend test    # Backend integration tests
 ```
 
 ## Adding Features
@@ -104,46 +94,11 @@ pnpm test          # Run Vitest tests
 Open `client/global.css` and `tailwind.config.ts` and add new tailwind colors.
 
 ### New API Route
-1. **Optional**: Create a shared interface in `shared/api.ts`:
-```typescript
-export interface MyRouteResponse {
-  message: string;
-  // Add other response properties here
-}
-```
-
-2. Create a new route handler in `server/routes/my-route.ts`:
-```typescript
-import { RequestHandler } from "express";
-import { MyRouteResponse } from "@shared/api"; // Optional: for type safety
-
-export const handleMyRoute: RequestHandler = (req, res) => {
-  const response: MyRouteResponse = {
-    message: 'Hello from my endpoint!'
-  };
-  res.json(response);
-};
-```
-
-3. Register the route in `server/index.ts`:
-```typescript
-import { handleMyRoute } from "./routes/my-route";
-
-// Add to the createServer function:
-app.get("/api/my-endpoint", handleMyRoute);
-```
-
-4. Use in React components with type safety:
-```typescript
-import { MyRouteResponse } from '@shared/api'; // Optional: for type safety
-
-const response = await fetch('/api/my-endpoint');
-const data: MyRouteResponse = await response.json();
-```
+Add a handler block in `backend/server/index.js` before the generic `/api/:table` handler. Derive the student from `getSessionStudent(req, res)`, never from request data, and check `isAdmin(req)` for admin routes.
 
 ### New Page Route
 1. Create component in `client/pages/MyPage.tsx`
-2. Add route in `client/App.tsx`:
+2. Add route in `client/App.tsx` (wrap in `ProtectedStudentRoute` if it is student-only):
 ```typescript
 <Route path="/my-page" element={<MyPage />} />
 ```
@@ -151,14 +106,12 @@ const data: MyRouteResponse = await response.json();
 ## Production Deployment
 
 - **Standard**: `pnpm build`
-- **Binary**: Self-contained executables (Linux, macOS, Windows)
 - **Cloud Deployment**: Use either Netlify or Vercel via their MCP integrations for easy deployment. Both providers work well with this starter template.
 
 ## Architecture Notes
 
-- Single-port development with Vite + Express integration
+- Website, admin panel and API run as separate processes
 - TypeScript throughout (client, server, shared)
 - Full hot reload for rapid development
 - Production-ready with multiple deployment options
 - Comprehensive UI component library included
-- Type-safe API communication via shared interfaces

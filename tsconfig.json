@@ -27,16 +27,9 @@
 
     /* Path mapping */
     "paths": {
-      "@/*": ["./client/*"],
-      "@shared/*": ["./shared/*"]
+      "@/*": ["./client/*"]
     }
   },
-  "include": [
-    "client/**/*",
-    "server/**/*",
-    "shared/**/*",
-    "vite.config.ts",
-    "vite.config.server.ts"
-  ],
+  "include": ["client/**/*", "vite.config.ts"],
   "exclude": ["node_modules", "dist"]
 }

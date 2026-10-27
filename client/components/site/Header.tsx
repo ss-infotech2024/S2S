@@ -1,8 +1,9 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { LogIn, BookOpen, UserCircle, LogOut, ChevronDown } from "lucide-react";
+import { LogIn, BookOpen, LayoutDashboard, ClipboardList, LogOut, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { API, AUTH_CHANGED_EVENT, logoutStudent } from "@/lib/studentApi";
 
 const navItems = [
   { to: "/", label: "Home" },
@@ -35,7 +36,6 @@ export default function Header() {
   const lastScrollY = useRef(0);
   const profileRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const API = (import.meta.env.VITE_API_URL || "http://localhost:8787").replace(/\/$/, "");
 
   const loadStudent = useCallback(async () => {
     try {
@@ -64,7 +64,7 @@ export default function Header() {
     } finally {
       setAuthLoading(false);
     }
-  }, [API]);
+  }, []);
 
   useEffect(() => {
     void loadStudent();
@@ -72,8 +72,8 @@ export default function Header() {
 
   useEffect(() => {
     const refresh = () => void loadStudent();
-    window.addEventListener("student-auth-changed", refresh);
-    return () => window.removeEventListener("student-auth-changed", refresh);
+    window.addEventListener(AUTH_CHANGED_EVENT, refresh);
+    return () => window.removeEventListener(AUTH_CHANGED_EVENT, refresh);
   }, [loadStudent]);
 
   useEffect(() => {
@@ -106,18 +106,13 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${API}/api/student-auth/logout`, {
-        method: "POST",
-        credentials: "include",
-        headers: { Accept: "application/json" },
-      });
+      await logoutStudent();
     } catch {
       // Still clear the local display if the server cannot be reached.
     } finally {
       setStudent(null);
       setProfileOpen(false);
       setOpen(false);
-      window.dispatchEvent(new Event("student-auth-changed"));
       navigate("/", { replace: true });
     }
   };
@@ -155,10 +150,13 @@ export default function Header() {
             <p className="truncate text-xs text-slate-500">{student?.email}</p>
           </div>
           <Link to="/student-dashboard" onClick={() => { setProfileOpen(false); setOpen(false); }} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-slate-700 hover:bg-violet-50 hover:text-violet-800">
-            <UserCircle className="h-4 w-4" /> My Profile
+            <LayoutDashboard className="h-4 w-4" /> Student Dashboard
+          </Link>
+          <Link to="/student-dashboard#my-courses" onClick={() => { setProfileOpen(false); setOpen(false); }} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-slate-700 hover:bg-violet-50 hover:text-violet-800">
+            <BookOpen className="h-4 w-4" /> My Courses
           </Link>
           <Link to="/my-enrollments" onClick={() => { setProfileOpen(false); setOpen(false); }} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-slate-700 hover:bg-violet-50 hover:text-violet-800">
-            <BookOpen className="h-4 w-4" /> My Courses
+            <ClipboardList className="h-4 w-4" /> My Enrollments
           </Link>
           <button type="button" onClick={() => void handleLogout()} className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-red-600 hover:bg-red-50">
             <LogOut className="h-4 w-4" /> Logout

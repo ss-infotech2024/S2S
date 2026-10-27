@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/site/Layout";
+import { API } from "@/lib/studentApi";
 
 type SavedEnrollment = {
   id: string;
@@ -15,7 +16,7 @@ type EnrollmentStatus = SavedEnrollment & {
   status: string;
 };
 
-const API_URL = (import.meta.env.VITE_ADMIN_API_URL || "").replace(/\/$/, "");
+const API_URL = (import.meta.env.VITE_ADMIN_API_URL || API).replace(/\/$/, "");
 
 export default function MyEnrollments() {
   const [enrollments, setEnrollments] = useState<EnrollmentStatus[]>([]);

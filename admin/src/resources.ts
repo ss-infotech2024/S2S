@@ -25,6 +25,7 @@ export const nav: { to: string; label: string; keys?: string[] }[] = [
   { to: "testimonials", label: "Testimonials", keys: ["testimonials"] },
   { to: "blog", label: "Blog", keys: ["posts"] },
   { to: "students", label: "Students / Users", keys: ["students"] },
+  { to: "student-accounts", label: "Student Accounts" },
   { to: "enquiries", label: "Contact Enquiries", keys: ["enquiries"] },
   { to: "settings", label: "Settings" },
 ];

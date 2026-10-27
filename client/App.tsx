@@ -26,6 +26,7 @@ import Overseas from "@/pages/Overseas";
 import SetPassword from "./pages/SetPassword";
 import ProtectedStudentRoute from "./components/ProtectedStudentRoute";
 import StudentDashboard from "./pages/StudentDashboard";
+import StudentCourse from "./pages/StudentCourse";
 
 
 
@@ -43,121 +44,28 @@ const App = () => (
         <ScrollToTop />
         
 <Routes>
-  {/* Login and Register must remain accessible without login */}
+  {/* Public marketing pages: no login required */}
+  <Route path="/" element={<Index />} />
+  <Route path="/courses" element={<Courses />} />
+  <Route path="/courses/:id" element={<CourseDetails />} />
+  <Route path="/enroll/:id" element={<Enroll />} />
+  <Route path="/my-enrollments" element={<MyEnrollments />} />
+  <Route path="/online-training" element={<OnlineTraining />} />
+  <Route path="/classroom-training" element={<ClassroomTraining />} />
+  <Route path="/corporate-training" element={<CorporateTraining />} />
+  <Route path="/overseas" element={<Overseas />} />
+  <Route path="/placements" element={<Placements />} />
+  <Route path="/blog" element={<Blog />} />
+  <Route path="/about" element={<About />} />
+  <Route path="/contact" element={<Contact />} />
+
+  {/* Account pages */}
   <Route path="/login" element={<Auth />} />
   <Route path="/register" element={<Auth />} />
+  <Route path="/set-password" element={<SetPassword />} />
+  <Route path="/portal" element={<Navigate to="/student-dashboard" replace />} />
 
-  {/* Student-facing pages require login */}
- <Route path="/" element={<Index />} />
-
-  <Route
-    path="/courses"
-    element={
-      <ProtectedStudentRoute>
-        <Courses />
-      </ProtectedStudentRoute>
-    }
-  />
-
-  <Route
-    path="/my-enrollments"
-    element={
-      <ProtectedStudentRoute>
-        <MyEnrollments />
-      </ProtectedStudentRoute>
-    }
-  />
-
-  <Route
-    path="/courses/:id"
-    element={
-      <ProtectedStudentRoute>
-        <CourseDetails />
-      </ProtectedStudentRoute>
-    }
-  />
-
-  <Route
-    path="/enroll/:id"
-    element={
-      <ProtectedStudentRoute>
-        <Enroll />
-      </ProtectedStudentRoute>
-    }
-  />
-
-  <Route
-    path="/online-training"
-    element={
-      <ProtectedStudentRoute>
-        <OnlineTraining />
-      </ProtectedStudentRoute>
-    }
-  />
-
-  <Route
-    path="/classroom-training"
-    element={
-      <ProtectedStudentRoute>
-        <ClassroomTraining />
-      </ProtectedStudentRoute>
-    }
-  />
-
-  <Route
-    path="/corporate-training"
-    element={
-      <ProtectedStudentRoute>
-        <CorporateTraining />
-      </ProtectedStudentRoute>
-    }
-  />
-
-  <Route
-    path="/overseas"
-    element={
-      <ProtectedStudentRoute>
-        <Overseas />
-      </ProtectedStudentRoute>
-    }
-  />
-
-  <Route
-    path="/placements"
-    element={
-      <ProtectedStudentRoute>
-        <Placements />
-      </ProtectedStudentRoute>
-    }
-  />
-
-  <Route
-    path="/blog"
-    element={
-      <ProtectedStudentRoute>
-        <Blog />
-      </ProtectedStudentRoute>
-    }
-  />
-
-  <Route
-    path="/about"
-    element={
-      <ProtectedStudentRoute>
-        <About />
-      </ProtectedStudentRoute>
-    }
-  />
-
-  <Route
-    path="/contact"
-    element={
-      <ProtectedStudentRoute>
-        <Contact />
-      </ProtectedStudentRoute>
-    }
-  />
-
+  {/* Student LMS: requires a valid student session (the API enforces access too) */}
   <Route
     path="/student-dashboard"
     element={
@@ -166,9 +74,14 @@ const App = () => (
       </ProtectedStudentRoute>
     }
   />
-
-  {/* Existing special routes */}
-  <Route path="/portal" element={<Navigate to="/login" replace />} />
+  <Route
+    path="/student-dashboard/courses/:courseId"
+    element={
+      <ProtectedStudentRoute>
+        <StudentCourse />
+      </ProtectedStudentRoute>
+    }
+  />
 
   <Route
     path="/admin"
@@ -180,8 +93,7 @@ const App = () => (
     }
   />
 
-  <Route path="/set-password" element={<SetPassword />} />
-
+  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
   <Route path="*" element={<NotFound />} />
 </Routes>
 

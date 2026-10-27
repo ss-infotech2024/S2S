@@ -1,9 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-
-const API = (
-  import.meta.env.VITE_API_URL || "http://localhost:8787"
-).replace(/\/$/, "");
+import { API } from "@/lib/studentApi";
 
 export default function ProtectedStudentRoute({
   children,
@@ -39,7 +36,7 @@ export default function ProtectedStudentRoute({
     return () => {
       active = false;
     };
-  }, []);
+  }, [location.pathname]);
 
   if (status === "checking") {
     return <div className="p-6 text-center">Checking student session...</div>;
@@ -50,7 +47,7 @@ export default function ProtectedStudentRoute({
       <Navigate
         to="/login"
         replace
-        state={{ from: location.pathname }}
+        state={{ from: `${location.pathname}${location.search}` }}
       />
     );
   }

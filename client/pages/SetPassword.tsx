@@ -1,9 +1,6 @@
-
 import { useState, type FormEvent } from "react";
-
-const API = (
-  import.meta.env.VITE_API_URL || "http://localhost:8787"
-).replace(/\/$/, "");
+import { Link } from "react-router-dom";
+import { API } from "@/lib/studentApi";
 
 const SetPassword = () => {
   const [password, setPassword] = useState("");
@@ -131,6 +128,16 @@ const SetPassword = () => {
               ? "Password Set"
               : "Set Password"}
         </button>
+
+        {success && (
+          <Link
+            to="/login"
+            state={{ from: "/student-dashboard" }}
+            className="block text-center text-sm font-semibold text-blue-700 hover:underline"
+          >
+            Continue to login
+          </Link>
+        )}
       </form>
     </div>
   );

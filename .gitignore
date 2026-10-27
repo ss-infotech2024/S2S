@@ -25,3 +25,6 @@ dist-ssr
 
 .config/
 !.env
+
+# Backend secrets (Mongo URI, admin token, SMTP)
+backend/.env
