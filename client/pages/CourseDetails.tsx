@@ -8,184 +8,167 @@ import {
   AcademicCapIcon,
   CheckBadgeIcon,
   SparklesIcon,
+  CheckCircleIcon,
+  SunIcon,
+  MoonIcon,
+  CalendarDaysIcon,
+  UserGroupIcon,
+  CodeBracketIcon,
+  BriefcaseIcon,
+  BookOpenIcon,
+  ClipboardDocumentCheckIcon,
+  VideoCameraIcon,
+  ChatBubbleLeftRightIcon,
+  MapPinIcon,
+  WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
+import { CheckBadgeIcon as CheckBadgeSolid } from "@heroicons/react/24/solid";
 
 import Layout from "@/components/site/Layout";
 import { getCourseById } from "@/data/courses";
+import { getCourseExtras } from "@/data/courseExtras";
+import { Card, SectionHeading, scrollToSection } from "@/components/course-details/shared";
+import CourseHero from "@/components/course-details/CourseHero";
+import SectionTabs from "@/components/course-details/SectionTabs";
+import VideoLessons from "@/components/course-details/VideoLessons";
+import LearningMaterials from "@/components/course-details/LearningMaterials";
+import { Skeleton } from "@/components/ui/skeleton";
 
-// ==================== NEW LAVENDER + PINK DESIGN SYSTEM ====================
+// ==================== DESIGN SYSTEM — blue / indigo / purple, subtle pink accent ====================
 
 const COLORS = {
-  primary: "from-violet-400 to-pink-400",
-  primaryLight: "from-violet-500/10 to-pink-500/10",
-  accent: "pink-400",
-  card: "bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-violet-200/60 dark:border-violet-800/60",
-  hoverCard: "hover:border-pink-300 dark:hover:border-pink-700",
+  primary: "from-blue-600 to-purple-600",
+  primarySoft: "from-blue-50 to-purple-50",
+  card: "bg-white border border-slate-200",
+  hoverCard: "hover:border-indigo-200",
 };
 
 const SPACING = {
-  section: "py-10 sm:py-16 md:py-20",
-  card: "p-6 sm:p-8 md:p-10",
-  inner: "p-4 sm:p-5",
-} as const;
+  section: "py-10 sm:py-14 md:py-16",
+  card: "p-6 sm:p-8",
+};
 
 const TYPOGRAPHY = {
-  h1: "text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter",
-  h2: "text-2xl sm:text-3xl font-semibold",
-  h3: "text-xl sm:text-2xl font-semibold",
-  body: "text-base sm:text-lg",
-  small: "text-sm",
-} as const;
+  h1: "text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight",
+  h2: "text-xl sm:text-2xl font-bold",
+};
 
-// Framer Motion Variants
+const LEVEL_STYLES: Record<string, { dot: string; text: string; bg: string }> = {
+  Beginner: { dot: "bg-emerald-500", text: "text-emerald-700", bg: "bg-emerald-50" },
+  Intermediate: { dot: "bg-amber-500", text: "text-amber-700", bg: "bg-amber-50" },
+  Advanced: { dot: "bg-rose-500", text: "text-rose-700", bg: "bg-rose-50" },
+};
+
+// Framer Motion variants
 const fadeInUp = {
-  initial: { opacity: 0, y: 40 },
+  initial: { opacity: 0, y: 32 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, ease: easeOut },
+  transition: { duration: 0.6, ease: easeOut },
 };
 
 const staggerContainer = {
-  animate: { transition: { staggerChildren: 0.12 } },
+  animate: { transition: { staggerChildren: 0.1 } },
 };
 
 const itemVariant = {
-  initial: { opacity: 0, y: 25 },
+  initial: { opacity: 0, y: 22 },
   animate: { opacity: 1, y: 0 },
 };
 
-// ==================== REUSABLE COMPONENTS ====================
+// ==================== SMALL REUSABLE PIECES ====================
 
-interface HeadingProps {
-  children: React.ReactNode;
-  icon?: React.ReactNode;
-}
-
-const Heading = ({ children, icon }: HeadingProps) => (
-  <div className="flex items-center gap-3 mb-6">
-    {icon && <div className="text-violet-400">{icon}</div>}
-    <h3 className={TYPOGRAPHY.h2}>{children}</h3>
-  </div>
-);
-
-interface CardProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-const Card = ({ children, className = "" }: CardProps) => (
-  <div
-    className={`
-      rounded-3xl ${COLORS.card} shadow-xl shadow-violet-500/5 
-      ${COLORS.hoverCard} transition-all duration-300 ${className}
-    `}
-  >
-    {children}
-  </div>
-);
-
-interface ButtonProps {
+interface PrimaryButtonProps {
   children: React.ReactNode;
   href?: string;
   className?: string;
 }
 
-const Button = ({ children, href, className = "" }: ButtonProps) => {
+const PrimaryButton = ({ children, href, className = "" }: PrimaryButtonProps) => {
   const Component = href ? Link : "button";
   return (
     <Component
       to={href}
-      className={`
-        w-full flex items-center justify-center gap-3 
-        bg-gradient-to-r ${COLORS.primary} text-white 
-        font-semibold text-lg py-4 px-8 rounded-2xl 
-        shadow-lg shadow-pink-500/30 hover:shadow-xl 
-        hover:scale-[1.02] active:scale-[0.98] 
-        transition-all duration-300 ${className}
-      `}
+      className={`flex w-full items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r ${COLORS.primary} px-8 py-4 text-base font-semibold text-white shadow-md shadow-indigo-600/25 transition-all duration-300 hover:shadow-lg hover:shadow-indigo-600/30 active:scale-[0.98] ${className}`}
     >
       {children}
     </Component>
   );
 };
 
-interface InfoPillProps {
+interface MetaChipProps {
   icon: React.ReactNode;
   label: string;
   value: string;
 }
 
-const InfoPill = ({ icon, label, value }: InfoPillProps) => (
-  <motion.div
-    whileHover={{ scale: 1.03, y: -3 }}
-    className="flex items-center gap-4 bg-white/70 dark:bg-zinc-800/70 p-5 rounded-2xl border border-violet-100 dark:border-violet-800"
-  >
-    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-100 to-pink-100 dark:from-violet-900/50 dark:to-pink-900/50 flex items-center justify-center text-2xl">
+const MetaChip = ({ icon, label, value }: MetaChipProps) => (
+  <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
       {icon}
     </div>
-    <div>
-      <p className="text-xs uppercase tracking-widest text-violet-500 dark:text-violet-400 font-medium">{label}</p>
-      <p className="text-xl font-semibold mt-0.5">{value}</p>
+    <div className="min-w-0">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">{label}</p>
+      <p className="truncate text-sm font-bold text-[#171034]">{value}</p>
     </div>
-  </motion.div>
-);
-
-interface ListItemProps {
-  children: React.ReactNode;
-}
-
-const ListItem = ({ children }: ListItemProps) => (
-  <div className="flex items-start gap-4 group">
-    <div className="mt-1.5 w-2 h-2 rounded-full bg-gradient-to-r from-pink-400 to-violet-400 flex-shrink-0 group-hover:scale-125 transition-transform" />
-    <span className="text-foreground/80 leading-relaxed">{children}</span>
   </div>
 );
 
-// Module Card & FaqItem (unchanged for consistency)
+const OutcomeItem = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex items-start gap-3">
+    <CheckCircleIcon className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" aria-hidden="true" />
+    <span className="text-sm leading-relaxed text-slate-600">{children}</span>
+  </div>
+);
+
+const SyllabusItem = ({ index, children }: { index: number; children: React.ReactNode }) => (
+  <div className="flex items-start gap-3">
+    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-purple-100 text-[10px] font-bold text-purple-700">
+      {index + 1}
+    </span>
+    <span className="text-sm leading-relaxed text-slate-600">{children}</span>
+  </div>
+);
+
+// ---- Curriculum accordion (functionality unchanged) ----
+
 interface ModuleCardProps {
   module: any;
   index: number;
   isActive: boolean;
   onToggle: (index: number) => void;
+  onWatch: (index: number) => void;
 }
 
-const ModuleCard = ({ module, index, isActive, onToggle }: ModuleCardProps) => (
+const ModuleCard = ({ module, index, isActive, onToggle, onWatch }: ModuleCardProps) => (
   <div
-    className={`rounded-3xl border-2 transition-all duration-300 overflow-hidden ${
-      isActive
-        ? "border-violet-400 bg-gradient-to-br from-violet-50 to-pink-50 dark:from-violet-950/30 dark:to-pink-950/30"
-        : "border-violet-200/70 dark:border-violet-800/70 hover:border-pink-300"
+    className={`overflow-hidden rounded-2xl border-2 transition-all duration-300 ${
+      isActive ? "border-blue-300 bg-blue-50/40" : "border-slate-200 hover:border-indigo-200"
     }`}
   >
     <button
       onClick={() => onToggle(index)}
-      className="w-full p-7 text-left flex items-center justify-between group"
+      aria-expanded={isActive}
+      className="flex w-full items-center justify-between gap-4 p-5 text-left sm:p-6"
     >
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-4">
         <div
-          className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold transition-all ${
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-base font-bold transition-colors ${
             isActive
-              ? "bg-gradient-to-br from-violet-400 to-pink-400 text-white"
-              : "bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-300"
+              ? "bg-gradient-to-br from-blue-600 to-purple-600 text-white"
+              : "bg-slate-100 text-slate-600"
           }`}
         >
           {index + 1}
         </div>
         <div>
-          <h4 className="font-semibold text-xl group-hover:text-pink-500 transition-colors">
-            {module.title}
-          </h4>
-          <p className="text-sm text-muted-foreground mt-1">
-            {module.topics.length} engaging topics
+          <h4 className="font-semibold text-[#171034]">{module.title}</h4>
+          <p className="mt-0.5 text-xs text-slate-400">
+            Module {String(index + 1).padStart(2, "0")} · {module.topics.length} topics
           </p>
         </div>
       </div>
-
-      <motion.div
-        animate={{ rotate: isActive ? 180 : 0 }}
-        transition={{ duration: 0.4 }}
-        className="text-violet-400"
-      >
-        <ChevronDownIcon className="w-6 h-6" />
+      <motion.div animate={{ rotate: isActive ? 180 : 0 }} transition={{ duration: 0.3 }} className="shrink-0 text-slate-400">
+        <ChevronDownIcon className="h-5 w-5" aria-hidden="true" />
       </motion.div>
     </button>
 
@@ -195,28 +178,40 @@ const ModuleCard = ({ module, index, isActive, onToggle }: ModuleCardProps) => (
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.4 }}
-          className="px-7 pb-7"
+          transition={{ duration: 0.3 }}
+          className="overflow-hidden"
         >
-          <div className="pl-2 border-l-2 border-dashed border-pink-300 space-y-4">
+          <div className="space-y-3 border-t border-slate-100 px-5 pb-5 pt-4 sm:px-6 sm:pb-6">
             {module.topics.map((topic: string, i: number) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="flex items-start gap-3 text-foreground/80"
+                transition={{ delay: i * 0.04 }}
+                className="flex items-center gap-3 text-sm text-slate-600"
               >
-                <PlayIcon className="w-5 h-5 mt-0.5 text-pink-400 flex-shrink-0" />
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-purple-100 text-[10px] font-bold text-purple-700">
+                  {i + 1}
+                </span>
                 <span>{topic}</span>
               </motion.div>
             ))}
+            <button
+              type="button"
+              onClick={() => onWatch(index)}
+              className="mt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700"
+            >
+              <PlayIcon className="h-3.5 w-3.5" aria-hidden="true" />
+              Watch video lessons for this module
+            </button>
           </div>
         </motion.div>
       )}
     </AnimatePresence>
   </div>
 );
+
+// ---- FAQ ----
 
 interface FaqItemProps {
   faq: { question: string; answer: string };
@@ -225,41 +220,303 @@ interface FaqItemProps {
   onToggle: (index: number) => void;
 }
 
-const FaqItem = ({ faq, index, isExpanded, onToggle }: FaqItemProps) => (
+const FaqItem = ({ faq, isExpanded, onToggle, index }: FaqItemProps) => (
   <div
-    className={`rounded-3xl border-2 transition-all duration-300 overflow-hidden ${
-      isExpanded
-        ? "border-pink-400 bg-gradient-to-br from-pink-50/80 to-violet-50/80 dark:from-pink-950/30 dark:to-violet-950/30"
-        : "border-violet-200/60 dark:border-violet-800/60 hover:border-pink-300"
+    className={`overflow-hidden rounded-2xl border-2 transition-all duration-300 ${
+      isExpanded ? "border-blue-300 bg-blue-50/30" : "border-slate-200 hover:border-indigo-200"
     }`}
   >
-    <button
-      onClick={() => onToggle(index)}
-      className="w-full px-7 py-6 text-left flex items-center justify-between"
-    >
-      <span className="font-medium text-lg pr-8 leading-tight">{faq.question}</span>
-      <motion.div
-        animate={{ rotate: isExpanded ? 180 : 0 }}
-        className="text-pink-400"
-      >
-        <ChevronDownIcon className="w-6 h-6" />
+    <button onClick={() => onToggle(index)} className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left">
+      <span className="text-sm font-semibold leading-snug text-[#171034] sm:text-base">{faq.question}</span>
+      <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} className="shrink-0 text-slate-400">
+        <ChevronDownIcon className="h-5 w-5" aria-hidden="true" />
       </motion.div>
     </button>
-
     <AnimatePresence>
       {isExpanded && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.4 }}
-          className="px-7 pb-7 text-foreground/70"
+          transition={{ duration: 0.3 }}
+          className="overflow-hidden"
         >
-          {faq.answer}
+          <p className="px-6 pb-6 text-sm leading-relaxed text-slate-500">{faq.answer}</p>
         </motion.div>
       )}
     </AnimatePresence>
   </div>
+);
+
+// ---- Choose Your Batch ----
+
+interface BatchOption {
+  id: "weekday" | "weekend";
+  title: string;
+  icon: typeof SunIcon;
+  schedule: string;
+  time: string;
+  description: string;
+  theme: string;
+}
+
+const batchOptions: BatchOption[] = [
+  {
+    id: "weekday",
+    title: "Weekday Batch",
+    icon: SunIcon,
+    schedule: "Monday – Friday",
+    time: "6:30 PM – 8:30 PM",
+    description: "Ideal for working professionals upskilling after hours.",
+    theme: "from-blue-500 to-blue-600",
+  },
+  {
+    id: "weekend",
+    title: "Weekend Batch",
+    icon: MoonIcon,
+    schedule: "Saturday & Sunday",
+    time: "10:00 AM – 2:00 PM",
+    description: "Perfect for students and job seekers with weekday commitments.",
+    theme: "from-purple-500 to-purple-600",
+  },
+];
+
+interface BatchCardProps {
+  batch: BatchOption;
+  isSelected: boolean;
+  onSelect: () => void;
+}
+
+const BatchCard = ({ batch, isSelected, onSelect }: BatchCardProps) => {
+  const Icon = batch.icon;
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 300, damping: 24 }}
+      className={`relative overflow-hidden rounded-2xl border-2 bg-white p-6 transition-colors duration-300 ${
+        isSelected ? "border-blue-400 shadow-lg shadow-indigo-500/10" : "border-slate-200 hover:border-indigo-200"
+      }`}
+    >
+      {isSelected && (
+        <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-blue-600 px-2.5 py-1 text-[11px] font-semibold text-white">
+          <CheckBadgeSolid className="h-3.5 w-3.5" aria-hidden="true" />
+          Selected
+        </div>
+      )}
+
+      <div className="flex items-center gap-3">
+        <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${batch.theme} text-white shadow-sm`}>
+          <Icon className="h-6 w-6" aria-hidden="true" />
+        </div>
+        <div>
+          <h4 className="text-lg font-bold text-[#171034]">{batch.title}</h4>
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            Seats open
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-4 space-y-1.5 border-t border-slate-100 pt-4 text-sm text-slate-500">
+        <div className="flex items-center gap-2">
+          <CalendarDaysIcon className="h-4 w-4 text-slate-400" aria-hidden="true" />
+          {batch.schedule}
+        </div>
+        <div className="flex items-center gap-2">
+          <ClockIcon className="h-4 w-4 text-slate-400" aria-hidden="true" />
+          {batch.time}
+        </div>
+      </div>
+
+      <p className="mt-3 text-sm leading-relaxed text-slate-500">{batch.description}</p>
+
+      <motion.button
+        whileTap={{ scale: 0.97 }}
+        onClick={onSelect}
+        className={`mt-5 w-full rounded-xl py-2.5 text-sm font-semibold transition-all duration-300 ${
+          isSelected
+            ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
+            : "border border-slate-300 text-slate-600 hover:border-blue-400 hover:text-blue-700"
+        }`}
+      >
+        {isSelected ? "Batch Selected ✓" : "Select Batch"}
+      </motion.button>
+    </motion.div>
+  );
+};
+
+// ==================== PAGE BACKGROUND (shared by skeleton + content so it never flickers) ====================
+
+const PageBackground = () => (
+  <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 bg-[radial-gradient(#c7d2fe_0.6px,transparent_1px)] dark:bg-[radial-gradient(#4338ca_0.6px,transparent_1px)] [background-size:44px_44px] opacity-20" />
+    <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/50 via-white to-white dark:from-indigo-950/30 dark:via-background dark:to-background" />
+    <div className="absolute -top-32 -right-32 h-[480px] w-[480px] rounded-full bg-blue-200/25 blur-[110px] dark:bg-blue-600/10" />
+    <div className="absolute -bottom-32 -left-32 h-[420px] w-[420px] rounded-full bg-pink-200/20 blur-[100px] dark:bg-pink-600/10" />
+  </div>
+);
+
+// ==================== SKELETON LOADER ====================
+// Mirrors the real page structure (same container, spacing, card radii and
+// two-column layout) so that swapping to real content causes no layout shift.
+
+const SkeletonBar = ({ className = "" }: { className?: string }) => (
+  <Skeleton className={`bg-slate-200/80 ${className}`} />
+);
+
+const SkeletonCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <div className={`rounded-[20px] border border-slate-200 bg-white shadow-sm ${SPACING.card} ${className}`}>
+    {children}
+  </div>
+);
+
+const SkeletonSectionHeading = () => (
+  <div className="mb-6 flex items-start gap-3">
+    <SkeletonBar className="h-10 w-10 shrink-0 rounded-xl" />
+    <div className="flex-1 space-y-2 pt-1">
+      <SkeletonBar className="h-5 w-48 max-w-full" />
+      <SkeletonBar className="h-3.5 w-64 max-w-full" />
+    </div>
+  </div>
+);
+
+const SkeletonList = ({ rows = 4 }: { rows?: number }) => (
+  <div className="space-y-4">
+    {Array.from({ length: rows }).map((_, i) => (
+      <div key={i} className="flex items-start gap-3">
+        <SkeletonBar className="mt-0.5 h-5 w-5 shrink-0 rounded-full" />
+        <SkeletonBar className="h-4 flex-1" />
+      </div>
+    ))}
+  </div>
+);
+
+const CourseDetailsSkeleton = () => (
+  <section
+    className={`container ${SPACING.section} relative min-h-screen`}
+    aria-busy="true"
+    aria-live="polite"
+  >
+    <span className="sr-only">Loading course details…</span>
+
+    {/* Breadcrumb */}
+    <div className="mb-6 flex h-4 items-center gap-2">
+      <SkeletonBar className="h-3 w-14" />
+      <SkeletonBar className="h-3 w-2" />
+      <SkeletonBar className="h-3 w-40" />
+    </div>
+
+    <div className="lg:flex lg:items-start lg:gap-8 xl:gap-10">
+      {/* Main column */}
+      <div className="min-w-0 flex-1 space-y-10">
+        {/* Hero + meta chips */}
+        <div className="space-y-4">
+          <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm sm:p-9">
+            <SkeletonBar className="h-7 w-44 rounded-full" />
+            <SkeletonBar className="mt-4 h-10 w-3/4 sm:h-12" />
+            <div className="mt-4 max-w-2xl space-y-2.5">
+              <SkeletonBar className="h-4 w-full" />
+              <SkeletonBar className="h-4 w-5/6" />
+            </div>
+            <div className="mt-6 flex flex-wrap gap-x-8 gap-y-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <SkeletonBar className="h-7 w-12" />
+                  <SkeletonBar className="h-3 w-16" />
+                </div>
+              ))}
+            </div>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <SkeletonBar className="h-12 w-36 rounded-xl" />
+              <SkeletonBar className="h-12 w-44 rounded-xl" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                <SkeletonBar className="h-9 w-9 shrink-0 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <SkeletonBar className="h-2.5 w-14" />
+                  <SkeletonBar className="h-3.5 w-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Section tabs */}
+        <div className="flex gap-1 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <SkeletonBar key={i} className="h-9 w-24 shrink-0 rounded-xl" />
+          ))}
+        </div>
+
+        {/* Overview */}
+        <SkeletonCard>
+          <div className="grid gap-10 md:grid-cols-2">
+            <div>
+              <SkeletonSectionHeading />
+              <SkeletonList rows={5} />
+            </div>
+            <div>
+              <SkeletonSectionHeading />
+              <SkeletonList rows={5} />
+            </div>
+          </div>
+        </SkeletonCard>
+
+        {/* Curriculum */}
+        <SkeletonCard>
+          <SkeletonSectionHeading />
+          <div className="space-y-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-4 rounded-2xl border-2 border-slate-100 p-5 sm:p-6">
+                <SkeletonBar className="h-11 w-11 shrink-0 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <SkeletonBar className="h-4 w-2/3" />
+                  <SkeletonBar className="h-3 w-28" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </SkeletonCard>
+
+        {/* Video lessons */}
+        <SkeletonCard>
+          <SkeletonSectionHeading />
+          <SkeletonBar className="aspect-video w-full rounded-2xl" />
+        </SkeletonCard>
+      </div>
+
+      {/* Sidebar */}
+      <aside className="mt-10 shrink-0 space-y-6 lg:mt-0 lg:w-[300px] xl:w-[340px]">
+        <div className="rounded-[20px] border border-indigo-100 bg-white p-6 shadow-lg shadow-indigo-500/10 sm:p-7">
+          <div className="flex flex-col items-center gap-2">
+            <SkeletonBar className="h-9 w-32" />
+            <SkeletonBar className="h-3 w-48 max-w-full" />
+          </div>
+          <SkeletonBar className="mt-5 h-12 w-full rounded-xl" />
+          <SkeletonBar className="mt-5 h-14 w-full rounded-2xl" />
+          <div className="mt-6 space-y-3 border-t border-indigo-100 pt-5">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex items-center justify-between">
+                <SkeletonBar className="h-4 w-20" />
+                <SkeletonBar className="h-4 w-24" />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="rounded-[20px] border border-slate-200 bg-white p-6 shadow-sm">
+          <SkeletonSectionHeading />
+          <div className="space-y-2.5">
+            <SkeletonBar className="h-3.5 w-full" />
+            <SkeletonBar className="h-3.5 w-11/12" />
+            <SkeletonBar className="h-3.5 w-4/5" />
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
 );
 
 // ==================== MAIN COMPONENT ====================
@@ -268,14 +525,30 @@ export default function CourseDetails() {
   const { id } = useParams();
   const course = id ? getCourseById(id) : null;
 
-  const [activeModule, setActiveModule] = useState<number>(-1);
+  const [activeModule, setActiveModule] = useState<number>(0);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Loading is tracked per course id, so navigating from one course to another
+  // always shows the skeleton again (no stale content, no half-reset state).
+  const [loadedId, setLoadedId] = useState<string | null>(null);
+  const isLoading = loadedId !== (id ?? null);
+  const [selectedBatch, setSelectedBatch] = useState<BatchOption["id"] | null>(null);
+  const [activeVideo, setActiveVideo] = useState(0);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 450);
+    // Reset per-course UI state while the skeleton is showing.
+    setActiveModule(0);
+    setExpandedFaq(null);
+    setSelectedBatch(null);
+    setActiveVideo(0);
+
+    const timer = setTimeout(() => setLoadedId(id ?? null), 400);
     return () => clearTimeout(timer);
-  }, []);
+  }, [id]);
+
+  const watchModule = (moduleIndex: number) => {
+    setActiveVideo(moduleIndex + 1); // index 0 is the course preview
+    scrollToSection("video-lessons");
+  };
 
   const toggleModule = (index: number) => {
     setActiveModule(activeModule === index ? -1 : index);
@@ -290,16 +563,16 @@ export default function CourseDetails() {
       <Layout>
         <div className="container py-24 text-center">
           <motion.div {...fadeInUp}>
-            <SparklesIcon className="w-20 h-20 mx-auto text-pink-400 mb-6" />
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent">
+            <SparklesIcon className="mx-auto mb-6 h-16 w-16 text-indigo-400" aria-hidden="true" />
+            <h1 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-4xl font-bold text-transparent">
               Course Not Found
             </h1>
-            <p className="mt-6 text-xl text-foreground/70 max-w-md mx-auto">
-              Sorry, we couldn't find that course. Try exploring our beautiful collection.
+            <p className="mx-auto mt-4 max-w-md text-base text-slate-500">
+              Sorry, we couldn't find that course. Try exploring our full collection instead.
             </p>
-            <Button href="/courses" className="mt-10 max-w-xs mx-auto">
+            <PrimaryButton href="/courses" className="mx-auto mt-8 max-w-xs">
               Explore All Courses
-            </Button>
+            </PrimaryButton>
           </motion.div>
         </div>
       </Layout>
@@ -309,25 +582,52 @@ export default function CourseDetails() {
   if (isLoading) {
     return (
       <Layout>
-        <div className="min-h-[70vh] flex items-center justify-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 1.4, ease: "linear" }}
-            className="w-20 h-20 border-4 border-violet-200 border-t-violet-400 rounded-full"
-          />
-        </div>
+        <PageBackground />
+        <CourseDetailsSkeleton />
       </Layout>
     );
   }
 
+  const level = LEVEL_STYLES[course.level] ?? { dot: "bg-blue-500", text: "text-blue-700", bg: "bg-blue-50" };
+  const selectedBatchDetails = batchOptions.find((b) => b.id === selectedBatch) || null;
+  const extras = getCourseExtras(course.id);
+
+  const tabs = [
+    { id: "overview", label: "Overview" },
+    ...(course.modules?.length ? [{ id: "curriculum", label: "Curriculum" }] : []),
+    { id: "video-lessons", label: "Video Lessons" },
+    ...(extras.materials.length ? [{ id: "learning-materials", label: "Learning Materials" }] : []),
+    ...(course.projects?.length ? [{ id: "projects", label: "Projects" }] : []),
+    { id: "faq", label: "FAQ" },
+  ];
+
+  const whyLearnWithUs = [
+    { icon: UserGroupIcon, title: "Expert Mentors", desc: "Learn from industry professionals with real-world experience." },
+    { icon: CodeBracketIcon, title: "Hands-on Projects", desc: "Apply concepts through practical, portfolio-ready projects." },
+    { icon: CheckBadgeIcon, title: "Recognized Certificate", desc: "Earn a certificate that validates your skills to employers." },
+    { icon: BriefcaseIcon, title: "Placement Assistance", desc: "Get interview prep and support connecting with hiring partners." },
+    { icon: CalendarDaysIcon, title: "Flexible Batches", desc: "Choose weekday or weekend timings that fit your schedule." },
+    { icon: BookOpenIcon, title: "Lifetime Access", desc: "Revisit recordings and course material anytime, at no extra cost." },
+  ];
+
+  const trainingProcess = [
+    { icon: ClipboardDocumentCheckIcon, title: "Enroll & Onboard", desc: "Sign up and get access to your learning dashboard." },
+    { icon: VideoCameraIcon, title: "Live Interactive Classes", desc: "Attend expert-led sessions with real-time doubt solving." },
+    { icon: CodeBracketIcon, title: "Practice & Build Projects", desc: "Strengthen concepts with hands-on assignments and projects." },
+    { icon: ChatBubbleLeftRightIcon, title: "Mentor Support", desc: "Get 1:1 guidance whenever you're stuck." },
+    { icon: BriefcaseIcon, title: "Certify & Get Placed", desc: "Earn your certificate and receive placement assistance." },
+  ];
+
   const faqs = [
     {
       question: "Do you provide placement assistance?",
-      answer: "Yes, we offer comprehensive placement support including interview preparation, resume reviews, mock interviews, and direct connections with our hiring partners.",
+      answer:
+        "Yes, we offer comprehensive placement support including interview preparation, resume reviews, mock interviews, and direct connections with our hiring partners.",
     },
     {
       question: "What is the class schedule?",
-      answer: "We offer flexible batches including weekday evenings and weekend sessions. You can choose the schedule that works best for you.",
+      answer:
+        "We offer flexible batches including weekday evenings and weekend sessions — pick the one that works best for you in the Choose Your Batch section above.",
     },
     {
       question: "Is there any prerequisite knowledge required?",
@@ -339,69 +639,164 @@ export default function CourseDetails() {
 
   return (
     <Layout>
-      {/* Elegant New Background */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        {/* Soft subtle texture */}
-        <div className="absolute inset-0 bg-[radial-gradient(#c4b5fd_0.6px,transparent_1px)] dark:bg-[radial-gradient(#8b7cf0_0.6px,transparent_1px)] [background-size:60px_60px] opacity-20" />
+      <PageBackground />
 
-        {/* Gentle gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-100/50 via-transparent to-pink-100/40 dark:from-violet-950/40 dark:via-transparent dark:to-pink-950/30" />
+      <section className={`container ${SPACING.section} relative min-h-screen`}>
+        {/* Breadcrumb */}
+        <motion.div {...fadeInUp} className="mb-6 flex items-center gap-1.5 text-xs text-slate-400">
+          <Link to="/courses" className="font-medium hover:text-indigo-600">Courses</Link>
+          <span>/</span>
+          <span className="truncate text-slate-500">{course.title}</span>
+        </motion.div>
 
-        {/* Very soft decorative glows */}
-        <div className="absolute -top-40 -right-40 w-[700px] h-[700px] bg-violet-300/25 dark:bg-violet-600/10 rounded-full blur-[130px]" />
-        <div className="absolute -bottom-40 -left-40 w-[650px] h-[650px] bg-pink-300/25 dark:bg-pink-600/10 rounded-full blur-[120px]" />
-      </div>
-
-      <section className={`container ${SPACING.section} relative min-h-screen bg-[#f5f2ff] dark:bg-[#0f0a1f]`}>
-        <motion.div
-          variants={staggerContainer}
-          initial="initial"
-          animate="animate"
-          className="grid gap-10 lg:gap-14 md:grid-cols-12"
-        >
-          {/* Main Content */}
-          <div className="md:col-span-8 space-y-12">
+        <div className="lg:flex lg:items-start lg:gap-8 xl:gap-10">
+          {/* ===================== Main Content ===================== */}
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            animate="animate"
+            className="min-w-0 flex-1 space-y-10"
+          >
             {/* Hero */}
-            <motion.div variants={itemVariant}>
-              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-3xl bg-gradient-to-r from-violet-100 to-pink-100 dark:from-violet-900/50 dark:to-pink-900/50 border border-violet-200 dark:border-violet-700 mb-6">
-                <SparklesIcon className="w-5 h-5 text-pink-500" />
-                <span className="font-medium text-violet-600 dark:text-violet-300">Premium AI Learning Experience</span>
+            <motion.div variants={itemVariant} className="space-y-4">
+              <CourseHero course={course} />
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <MetaChip icon={<ClockIcon className="h-5 w-5" />} label="Duration" value={course.duration} />
+                <MetaChip icon={<AcademicCapIcon className="h-5 w-5" />} label="Level" value={course.level} />
+                <MetaChip icon={<CheckBadgeIcon className="h-5 w-5" />} label="Certificate" value="Included" />
+                <MetaChip icon={<MapPinIcon className="h-5 w-5" />} label="Mode" value="Live Online" />
               </div>
-
-              <h1 className={`${TYPOGRAPHY.h1} leading-none bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500 bg-clip-text text-transparent`}>
-                {course.title}
-              </h1>
-
-              <p className="mt-8 text-xl text-foreground/80 max-w-3xl leading-relaxed">
-                {course.description}
-              </p>
             </motion.div>
 
-            {/* Info Pills */}
-            <motion.div variants={itemVariant}>
-              <Card className={SPACING.card}>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  <InfoPill icon="⏱️" label="Duration" value={course.duration} />
-                  <InfoPill icon="📚" label="Level" value={course.level || "All Levels"} />
-                  <InfoPill icon="🏆" label="Certificate" value="Included" />
-                </div>
+            {/* Section tabs — direct child so sticky works */}
+            <SectionTabs tabs={tabs} />
 
-                {/* Outcomes & Syllabus */}
-                <div className="grid md:grid-cols-2 gap-12 mt-12 pt-12 border-t border-violet-100 dark:border-violet-800">
+            {/* Overview */}
+            <motion.div id="overview" variants={itemVariant} className="scroll-mt-44 space-y-6">
+              <Card className={SPACING.card}>
+                <div className="grid gap-10 md:grid-cols-2">
                   <div>
-                    <Heading icon="✨">What You'll Learn</Heading>
-                    <div className="space-y-5">
+                    <SectionHeading icon={<SparklesIcon className="h-5 w-5" aria-hidden="true" />} title="What You'll Learn" />
+                    <div className="space-y-4">
                       {course.outcomes.map((item: string, i: number) => (
-                        <ListItem key={i}>{item}</ListItem>
+                        <OutcomeItem key={i}>{item}</OutcomeItem>
                       ))}
                     </div>
                   </div>
-
                   <div>
-                    <Heading icon="📋">Course Syllabus</Heading>
-                    <div className="space-y-5">
+                    <SectionHeading icon={<BookOpenIcon className="h-5 w-5" aria-hidden="true" />} title="Course Syllabus" />
+                    <div className="space-y-4">
                       {course.syllabus.map((item: string, i: number) => (
-                        <ListItem key={i}>{item}</ListItem>
+                        <SyllabusItem key={i} index={i}>{item}</SyllabusItem>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {(extras.tools.length > 0 || extras.careerRoles.length > 0) && (
+                <Card className={SPACING.card}>
+                  <div className="grid gap-10 md:grid-cols-2">
+                    {extras.tools.length > 0 && (
+                      <div>
+                        <SectionHeading
+                          icon={<WrenchScrewdriverIcon className="h-5 w-5" aria-hidden="true" />}
+                          title="Tools & Technologies"
+                          subtitle="What you'll work with hands-on"
+                        />
+                        <div className="flex flex-wrap gap-2">
+                          {extras.tools.map((tool) => (
+                            <span
+                              key={tool}
+                              className="rounded-lg border border-indigo-100 bg-indigo-50/60 px-3 py-1.5 text-xs font-medium text-indigo-700"
+                            >
+                              {tool}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {extras.careerRoles.length > 0 && (
+                      <div>
+                        <SectionHeading
+                          icon={<BriefcaseIcon className="h-5 w-5" aria-hidden="true" />}
+                          title="Career Roles"
+                          subtitle="Jobs this course prepares you for"
+                        />
+                        <div className="space-y-2.5">
+                          {extras.careerRoles.map((role) => (
+                            <div
+                              key={role}
+                              className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-[#171034]"
+                            >
+                              <BriefcaseIcon className="h-4 w-4 shrink-0 text-purple-500" aria-hidden="true" />
+                              {role}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              )}
+            </motion.div>
+
+            {/* Curriculum */}
+            {course.modules && course.modules.length > 0 && (
+              <motion.div id="curriculum" variants={itemVariant} className="scroll-mt-44">
+                <Card className={SPACING.card}>
+                  <SectionHeading
+                    icon={<AcademicCapIcon className="h-5 w-5" aria-hidden="true" />}
+                    title="Course Curriculum"
+                    subtitle={`${course.modules.length} modules · ${course.modules.reduce((n, m) => n + m.topics.length, 0)} topics — click a module to see what's covered`}
+                  />
+                  <div className="space-y-4">
+                    {course.modules.map((module: any, index: number) => (
+                      <ModuleCard
+                        key={index}
+                        module={module}
+                        index={index}
+                        isActive={activeModule === index}
+                        onToggle={toggleModule}
+                        onWatch={watchModule}
+                      />
+                    ))}
+                  </div>
+                </Card>
+              </motion.div>
+            )}
+
+            {/* Video Lessons */}
+            <motion.div id="video-lessons" variants={itemVariant} className="scroll-mt-44">
+              <VideoLessons course={course} extras={extras} selected={activeVideo} onSelect={setActiveVideo} />
+            </motion.div>
+
+            {/* Learning Materials */}
+            {extras.materials.length > 0 && (
+              <motion.div id="learning-materials" variants={itemVariant} className="scroll-mt-44">
+                <LearningMaterials materials={extras.materials} />
+              </motion.div>
+            )}
+
+            {/* Prerequisites + Career Outcomes */}
+            <motion.div variants={itemVariant}>
+              <Card className={SPACING.card}>
+                <div className="grid gap-10 md:grid-cols-2">
+                  <div>
+                    <SectionHeading icon={<ClipboardDocumentCheckIcon className="h-5 w-5" aria-hidden="true" />} title="Prerequisites" />
+                    <div className="space-y-4">
+                      {course.prerequisites?.length ? (
+                        course.prerequisites.map((item: string, i: number) => <OutcomeItem key={i}>{item}</OutcomeItem>)
+                      ) : (
+                        <OutcomeItem>No prior experience required</OutcomeItem>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <SectionHeading icon={<BriefcaseIcon className="h-5 w-5" aria-hidden="true" />} title="Career Outcomes" />
+                    <div className="space-y-4">
+                      {course.outcomes.map((item: string, i: number) => (
+                        <OutcomeItem key={i}>{item}</OutcomeItem>
                       ))}
                     </div>
                   </div>
@@ -409,45 +804,102 @@ export default function CourseDetails() {
               </Card>
             </motion.div>
 
-            {/* Curriculum */}
-            <motion.div variants={itemVariant}>
+            {/* Choose Your Batch */}
+            <motion.div id="choose-batch" variants={itemVariant} className="scroll-mt-24">
               <Card className={SPACING.card}>
-                <Heading icon="🎓">Course Curriculum</Heading>
-                <div className="space-y-5">
-                  {course.modules?.map((module: any, index: number) => (
-                    <ModuleCard
-                      key={index}
-                      module={module}
-                      index={index}
-                      isActive={activeModule === index}
-                      onToggle={toggleModule}
+                <SectionHeading
+                  icon={<CalendarDaysIcon className="h-5 w-5" aria-hidden="true" />}
+                  title="Choose Your Batch"
+                  subtitle="Two schedules, same live, instructor-led experience"
+                />
+                <div className="grid gap-5 sm:grid-cols-2">
+                  {batchOptions.map((batch) => (
+                    <BatchCard
+                      key={batch.id}
+                      batch={batch}
+                      isSelected={selectedBatch === batch.id}
+                      onSelect={() => setSelectedBatch(batch.id)}
                     />
                   ))}
                 </div>
               </Card>
             </motion.div>
 
-            {/* Demo Video */}
-            {course.demoVideo && (
-              <motion.div variants={itemVariant}>
+            {/* Key Projects */}
+            {course.projects && course.projects.length > 0 && (
+              <motion.div id="projects" variants={itemVariant} className="scroll-mt-44">
                 <Card className={SPACING.card}>
-                  <Heading icon={<PlayIcon className="w-7 h-7 text-pink-400" />}>
-                    Course Preview
-                  </Heading>
-                  <div className="rounded-3xl overflow-hidden border border-violet-100 dark:border-violet-800 shadow-inner">
-                    <video controls poster={course.image} className="w-full aspect-video">
-                      <source src={course.demoVideo} type="video/mp4" />
-                    </video>
+                  <SectionHeading icon={<CodeBracketIcon className="h-5 w-5" aria-hidden="true" />} title="Key Projects You'll Build" />
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {course.projects.map((project: string, i: number) => (
+                      <div
+                        key={i}
+                        className="flex items-start gap-3 rounded-2xl border border-slate-200 p-4 transition-colors hover:border-indigo-200"
+                      >
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 text-blue-600">
+                          <CodeBracketIcon className="h-5 w-5" aria-hidden="true" />
+                        </span>
+                        <span className="text-sm font-medium leading-snug text-[#171034]">{project}</span>
+                      </div>
+                    ))}
                   </div>
                 </Card>
               </motion.div>
             )}
 
-            {/* FAQ */}
+            {/* Why Learn With Us */}
             <motion.div variants={itemVariant}>
               <Card className={SPACING.card}>
-                <h2 className={TYPOGRAPHY.h2 + " mb-8"}>Frequently Asked Questions</h2>
-                <div className="space-y-5">
+                <SectionHeading icon={<CheckBadgeIcon className="h-5 w-5" aria-hidden="true" />} title="Why Learn With Us?" />
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {whyLearnWithUs.map(({ icon: Icon, title, desc }) => (
+                    <motion.div
+                      key={title}
+                      whileHover={{ y: -3 }}
+                      className="rounded-2xl border border-slate-200 p-5 transition-colors hover:border-indigo-200"
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                      </div>
+                      <h4 className="mt-3 text-sm font-bold text-[#171034]">{title}</h4>
+                      <p className="mt-1 text-xs leading-relaxed text-slate-500">{desc}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* Training Process */}
+            <motion.div variants={itemVariant}>
+              <Card className={SPACING.card}>
+                <SectionHeading icon={<ClipboardDocumentCheckIcon className="h-5 w-5" aria-hidden="true" />} title="Our Training Process" />
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+                  {trainingProcess.map(({ icon: Icon, title, desc }, i) => (
+                    <div key={title} className="relative">
+                      {i < trainingProcess.length - 1 && (
+                        <div className="absolute right-0 top-6 hidden h-px w-full translate-x-1/2 bg-slate-200 lg:block" />
+                      )}
+                      <div className="relative z-10 flex flex-col items-start gap-3 lg:items-center lg:text-center">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-sm">
+                          <Icon className="h-5 w-5" aria-hidden="true" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-indigo-500">Step {i + 1}</p>
+                          <h4 className="mt-0.5 text-sm font-bold text-[#171034]">{title}</h4>
+                          <p className="mt-1 text-xs leading-relaxed text-slate-500">{desc}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* FAQ */}
+            <motion.div id="faq" variants={itemVariant} className="scroll-mt-44">
+              <Card className={SPACING.card}>
+                <SectionHeading icon={<ChatBubbleLeftRightIcon className="h-5 w-5" aria-hidden="true" />} title="Frequently Asked Questions" />
+                <div className="space-y-4">
                   {faqs.map((faq, index) => (
                     <FaqItem
                       key={index}
@@ -460,73 +912,128 @@ export default function CourseDetails() {
                 </div>
               </Card>
             </motion.div>
-          </div>
 
-          {/* Sidebar */}
-          <div className="md:col-span-4 space-y-8 lg:sticky lg:top-10 self-start">
-            {/* Enrollment Card */}
+            {/* Final CTA */}
             <motion.div variants={itemVariant}>
-              <div className="rounded-3xl bg-gradient-to-br from-violet-50 to-pink-50 dark:from-violet-950 dark:to-pink-950 p-9 border border-violet-200 dark:border-violet-800 shadow-2xl shadow-pink-500/10">
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-violet-600 dark:text-violet-300 tracking-tighter">
-                    {course.fees}
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-2">One-time investment • Lifetime access</p>
-                </div>
-
-                <Button href={`/enroll/${course.id}`} className="mt-10 text-xl">
-                  <SparklesIcon className="w-6 h-6" />
+              <div className="overflow-hidden rounded-[20px] bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-8 text-center sm:p-12">
+                <SparklesIcon className="mx-auto h-8 w-8 text-white/90" aria-hidden="true" />
+                <h3 className="mt-3 text-2xl font-bold text-white sm:text-3xl">
+                  Ready to start your {course.title} journey?
+                </h3>
+                <p className="mx-auto mt-2 max-w-lg text-sm text-white/80 sm:text-base">
+                  Talk to our counselors, pick your batch, and take the first step toward your new career.
+                </p>
+                <Link
+                  to={`/enroll/${course.id}`}
+                  className="mx-auto mt-6 inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-3.5 text-sm font-semibold text-indigo-700 shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <SparklesIcon className="h-5 w-5" aria-hidden="true" />
                   Enquire Now
-                </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </motion.div>
 
-                <div className="mt-10 pt-8 border-t border-violet-200 dark:border-violet-800 space-y-5 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Duration</span>
-                    <span className="font-medium">{course.duration}</span>
+          {/* ===================== Sidebar ===================== */}
+          <aside className="mt-10 shrink-0 space-y-6 lg:mt-0 lg:sticky lg:top-24 lg:w-[300px] xl:w-[340px]">
+            {/* Enquiry / Course Info Card */}
+            <motion.div variants={itemVariant} initial="initial" animate="animate">
+              <div className="overflow-hidden rounded-[20px] border border-indigo-100 bg-gradient-to-br from-white to-indigo-50/60 p-6 shadow-lg shadow-indigo-500/10 sm:p-7">
+                {course.fees ? (
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-[#171034]">{course.fees}</div>
+                    <p className="mt-1 text-xs text-slate-500">One-time investment • Lifetime access</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Level</span>
-                    <span className="font-medium">{course.level || "All Levels"}</span>
+                ) : (
+                  <div className="text-center">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500">Course Fees</p>
+                    <p className="mt-1 text-lg font-bold text-[#171034]">Get Personalized Pricing</p>
+                    <p className="mt-1 text-xs text-slate-500">Talk to our counselor for fees & current offers</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Certificate</span>
-                    <span className="font-medium text-emerald-500">✓ Included</span>
+                )}
+
+                {/* Selected batch indicator */}
+                <AnimatePresence mode="wait">
+                  {selectedBatchDetails ? (
+                    <motion.div
+                      key="selected"
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      className="mt-5 flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3"
+                    >
+                      <selectedBatchDetails.icon className="h-5 w-5 shrink-0 text-blue-600" aria-hidden="true" />
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-blue-500">Selected Batch</p>
+                        <p className="truncate text-sm font-bold text-[#171034]">
+                          {selectedBatchDetails.title} · {selectedBatchDetails.time}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.a
+                      key="unselected"
+                      href="#choose-batch"
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      className="mt-5 block rounded-xl border border-dashed border-slate-300 px-4 py-3 text-center text-xs font-medium text-slate-500 transition-colors hover:border-indigo-300 hover:text-indigo-600"
+                    >
+                      No batch selected — choose one below ↓
+                    </motion.a>
+                  )}
+                </AnimatePresence>
+
+                <PrimaryButton href={`/enroll/${course.id}`} className="mt-5">
+                  {/* <SparklesIcon className="h-5 w-5" aria-hidden="true" /> */}
+                  Enquire Now
+                </PrimaryButton>
+
+                <div className="mt-6 space-y-3 border-t border-indigo-100 pt-5 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Duration</span>
+                    <span className="font-semibold text-[#171034]">{course.duration}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Level</span>
+                    <span className={`inline-flex items-center gap-1.5 rounded-full ${level.bg} px-2.5 py-0.5 text-xs font-semibold ${level.text}`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${level.dot}`} />
+                      {course.level}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Certificate</span>
+                    <span className="inline-flex items-center gap-1 font-semibold text-emerald-600">
+                      <CheckCircleIcon className="h-4 w-4" aria-hidden="true" />
+                      Included
+                    </span>
                   </div>
                 </div>
               </div>
             </motion.div>
 
-            {/* Batch & Instructors */}
-            <motion.div variants={itemVariant}>
-              <Card className="p-8">
-                <Heading icon="🗓️">Upcoming Batches</Heading>
-                <p className="text-foreground/70 leading-relaxed">
-                  {course.schedule || "Next batch starts soon. Contact us for personalized batch information."}
+            {/* Expert Instructors */}
+            <motion.div variants={itemVariant} initial="initial" animate="animate">
+              <Card className="p-6">
+                <SectionHeading icon={<UserGroupIcon className="h-5 w-5" aria-hidden="true" />} title="Expert Instructors" />
+                <p className="text-sm leading-relaxed text-slate-500">
+                  Learn from passionate industry leaders and subject-matter experts with years of real-world experience.
                 </p>
               </Card>
             </motion.div>
-
-            <motion.div variants={itemVariant}>
-              <Card className="p-8">
-                <Heading icon="👩‍🏫">Expert Instructors</Heading>
-                <p className="text-foreground/70 leading-relaxed">
-                  Learn from passionate industry leaders and AI researchers with years of real-world experience.
-                </p>
-              </Card>
-            </motion.div>
-          </div>
-        </motion.div>
+          </aside>
+        </div>
 
         {/* Mobile Floating Button */}
         <motion.div
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="fixed bottom-6 left-4 right-4 md:hidden z-50"
+          className="fixed bottom-6 left-4 right-4 z-50 sm:hidden"
         >
-          <Button href={`/enroll/${course.id}`}>
-            <SparklesIcon className="w-6 h-6" />
+          <PrimaryButton href={`/enroll/${course.id}`}>
+            {/* <SparklesIcon className="h-5 w-5" aria-hidden="true" /> */}
             Enquire Now
-          </Button>
+          </PrimaryButton>
         </motion.div>
       </section>
     </Layout>

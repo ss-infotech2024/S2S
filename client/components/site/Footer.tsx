@@ -78,15 +78,7 @@ export default function Footer() {
 
       <div className="border-t border-gray-700 py-6 text-center text-xs text-gray-400">
         © {new Date().getFullYear()} Skill Training Center. All rights reserved. <br />
-        Developed by{" "}
-        <a
-          href="https://www.linkedin.com/in/tejas-khope"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-400 hover:underline"
-        >
-          Tejas khope 
-        </a>.
+        
       </div>
     </footer>
   );

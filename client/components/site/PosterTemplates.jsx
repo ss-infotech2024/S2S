@@ -14,7 +14,7 @@ export default function PosterTemplates() {
   // Poster templates data
   const posterTemplates = [
     {
-      title: "ServiceNow AI-Data Analytics",
+      title: "ServiceNow Data Analytics",
       description: "Traning",
       icon: SparklesIcon,
       color: "from-blue-500 to-cyan-500",
@@ -30,7 +30,7 @@ export default function PosterTemplates() {
       previewImage: germani,
     },
     {
-      title: "DataBricks AI-Data Analytics",
+      title: "DataBricks Data Analytics",
       description: "Traning",
       icon: SparklesIcon,
       color: "from-blue-500 to-cyan-500",
@@ -46,7 +46,7 @@ export default function PosterTemplates() {
       previewImage: german,
     },
     {
-      title: "AI-Data Analytics",
+      title: "Data Analytics",
       description: "Traning & Certification",
       icon: SparklesIcon,
       color: "from-blue-500 to-cyan-500",
@@ -54,7 +54,7 @@ export default function PosterTemplates() {
       previewImage: newposter6,
     },
     {
-      title: "AI-Data Analytics",
+      title: "Data Analytics",
       description: "Traning & Certification",
       icon: PlayCircleIcon,
       color: "from-purple-500 to-pink-500",
@@ -62,8 +62,8 @@ export default function PosterTemplates() {
       previewImage: newposter5,
     },
     {
-      title: "AI  Data-Bricks Seminar",
-      description: "AI Analytics Engineering On Data-Bricks Seminar",
+      title: "Data-Bricks Seminar",
+      description: "Data Analytics Engineering On Data-Bricks Seminar",
       icon: TrophyIcon,
       color: "from-orange-500 to-red-500",
       bgColor: "from-orange-500/10 to-red-500/10",
