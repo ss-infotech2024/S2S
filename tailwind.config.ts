@@ -6,12 +6,28 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: {
+        DEFAULT: "1rem",
+        sm: "1.5rem",
+        lg: "2rem",
+      },
       screens: {
-        "2xl": "1400px",
+        "2xl": "1280px",
       },
     },
     extend: {
+      // Compact type ramp: display sizes are capped so headings stay in
+      // proportion with 14-16px body text (see client/global.css).
+      fontSize: {
+        xl: ["1.1875rem", { lineHeight: "1.65rem" }],
+        "2xl": ["1.375rem", { lineHeight: "1.85rem" }],
+        "3xl": ["1.625rem", { lineHeight: "2.1rem" }],
+        "4xl": ["1.875rem", { lineHeight: "2.35rem" }],
+        "5xl": ["2.125rem", { lineHeight: "2.6rem" }],
+        "6xl": ["2.5rem", { lineHeight: "1.1" }],
+        "7xl": ["2.75rem", { lineHeight: "1.1" }],
+        "8xl": ["3rem", { lineHeight: "1.05" }],
+      },
       fontFamily: {
         sans: [
           "Inter",

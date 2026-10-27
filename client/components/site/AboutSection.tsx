@@ -69,8 +69,8 @@ export default function AboutSection({
   floatingBadge = "Live Classroom",
 }: AboutSectionProps) {
   return (
-    <section id="about" className="container py-20 bg-white">
-      <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+    <section id="about" className="container py-14 bg-white">
+      <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
         {/* Left Column — Content */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}

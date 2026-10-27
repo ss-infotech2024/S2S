@@ -164,13 +164,13 @@
 //         />
 //       </div>
 
-//       <section className="container py-20 relative">
+//       <section className="container py-14 relative">
 //         {/* Hero Section */}
 //         <motion.div
 //           initial={{ opacity: 0, y: 30 }}
 //           animate={{ opacity: 1, y: 0 }}
 //           transition={{ duration: 0.8 }}
-//           className="mx-auto max-w-4xl text-center mb-16"
+//           className="mx-auto max-w-4xl text-center mb-10"
 //         >
 //           <motion.div
 //             initial={{ opacity: 0, scale: 0.5 }}
@@ -185,7 +185,7 @@
 //           <h1 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent">
 //             Blog & Insights
 //           </h1>
-//           <p className="mt-6 text-xl text-foreground/70 max-w-2xl mx-auto">
+//           <p className="mt-6 text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
 //             Latest updates, tutorials, and industry insights from our expert team.
 //             <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent font-semibold"> Stay ahead in your learning journey.</span>
 //           </p>
@@ -196,7 +196,7 @@
 //           initial={{ opacity: 0, y: 20 }}
 //           animate={{ opacity: 1, y: 0 }}
 //           transition={{ delay: 0.4 }}
-//           className="max-w-4xl mx-auto mb-12"
+//           className="max-w-4xl mx-auto mb-8"
 //         >
 //           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
 //             {/* Search Bar */}
@@ -320,7 +320,7 @@
 //             <motion.div
 //               initial={{ opacity: 0, y: 20 }}
 //               animate={{ opacity: 1, y: 0 }}
-//               className="text-center py-16"
+//               className="text-center py-12"
 //             >
 //               <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-muted/50 flex items-center justify-center">
 //                 <BookOpenIcon className="w-10 h-10 text-muted-foreground" />
@@ -350,13 +350,13 @@
 //           whileInView={{ opacity: 1, y: 0 }}
 //           viewport={{ once: true }}
 //           transition={{ delay: 1 }}
-//           className="text-center mt-20"
+//           className="text-center mt-12"
 //         >
-//           <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-purple-600/10 to-transparent border border-primary/20 p-12 backdrop-blur-sm">
+//           <div className="rounded-2xl bg-gradient-to-br from-primary/10 via-purple-600/10 to-transparent border border-primary/20 p-8 backdrop-blur-sm">
 //             <h2 className="text-3xl md:text-4xl font-bold mb-4">
 //               Stay Updated with Latest Trends
 //             </h2>
-//             <p className="text-xl text-foreground/70 mb-8 max-w-2xl mx-auto">
+//             <p className="text-base md:text-lg text-foreground/70 mb-8 max-w-2xl mx-auto">
 //               Subscribe to our newsletter and never miss an update on the latest in technology and education.
 //             </p>
 //             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
@@ -391,7 +391,7 @@
 //               initial={{ scale: 0.8, opacity: 0 }}
 //               animate={{ scale: 1, opacity: 1 }}
 //               exit={{ scale: 0.8, opacity: 0 }}
-//               className="relative max-w-4xl max-h-[90vh] bg-background rounded-3xl overflow-hidden"
+//               className="relative max-w-4xl max-h-[90vh] bg-background rounded-2xl overflow-hidden"
 //               onClick={(e) => e.stopPropagation()}
 //             >
 //               {/* Modal Header */}
@@ -885,7 +885,7 @@ export default function Blog() {
           <div className="pointer-events-none absolute -top-16 right-0 h-72 w-72 rounded-full bg-purple-300/30 blur-3xl" />
           <div className="pointer-events-none absolute bottom-0 left-1/2 h-40 w-96 -translate-x-1/2 rounded-full bg-pink-200/30 blur-3xl" />
 
-          <div className="container relative pt-14 pb-20 text-center md:pt-20 md:pb-24">
+          <div className="container relative pt-14 pb-14 text-center md:pt-14 md:pb-16">
             <motion.span
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -962,7 +962,7 @@ export default function Blog() {
         </section>
 
         {/* ========================= FILTERS + POSTS ========================= */}
-        <section className="container -mt-8 pb-16 md:pb-20">
+        <section className="container -mt-8 pb-16 md:pb-14">
           {/* Category filters */}
           <div
             role="group"
@@ -1018,7 +1018,7 @@ export default function Blog() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                     onClick={() => setSelectedPost(featured)}
-                    className="group mb-8 grid cursor-pointer overflow-hidden rounded-3xl border border-indigo-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/10 lg:grid-cols-[1.05fr_1fr]"
+                    className="group mb-8 grid cursor-pointer overflow-hidden rounded-2xl border border-indigo-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/10 lg:grid-cols-[1.05fr_1fr]"
                   >
                     <div className="relative h-56 overflow-hidden sm:h-72 lg:h-auto lg:min-h-[320px]">
                       <BlogImage
@@ -1034,7 +1034,7 @@ export default function Blog() {
                       </span>
                     </div>
 
-                    <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
+                    <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-7">
                       <span className="w-fit rounded-full bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-600">
                         {featured.category}
                       </span>
@@ -1133,7 +1133,7 @@ export default function Blog() {
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-3xl border border-dashed border-indigo-200 bg-white/70 px-6 py-16 text-center"
+                className="rounded-2xl border border-dashed border-indigo-200 bg-white/70 px-6 py-12 text-center"
               >
                 <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-indigo-50">
                   <MagnifyingGlassIcon className="h-7 w-7 text-indigo-400" />
@@ -1160,7 +1160,7 @@ export default function Blog() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="relative mx-auto mt-14 max-w-6xl overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 px-6 py-8 text-white shadow-xl shadow-indigo-500/20 md:px-10 md:py-9"
+            className="relative mx-auto mt-14 max-w-6xl overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 px-6 py-8 text-white shadow-xl shadow-indigo-500/20 md:px-10 md:py-9"
           >
             <div className="pointer-events-none absolute -right-10 -top-16 h-52 w-52 rounded-full bg-pink-400/25 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-16 left-10 h-44 w-44 rounded-full bg-blue-300/25 blur-3xl" />
@@ -1238,7 +1238,7 @@ export default function Blog() {
               exit={{ opacity: 0, y: 30, scale: 0.98 }}
               transition={{ duration: 0.25 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:rounded-3xl"
+              className="relative flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-lg sm:rounded-2xl"
             >
               <div className="relative h-44 shrink-0 sm:h-60">
                 <BlogImage

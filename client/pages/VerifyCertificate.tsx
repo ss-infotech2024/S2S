@@ -45,7 +45,7 @@ export default function VerifyCertificate() {
         <div className="container max-w-2xl py-14">
           <div className="text-center">
             <ShieldCheck className="mx-auto h-10 w-10 text-primary" />
-            <h1 className="mt-3 text-3xl font-extrabold text-[#2b1450]">Verify a Certificate</h1>
+            <h1 className="mt-3 text-2xl font-extrabold text-[#2b1450]">Verify a Certificate</h1>
             <p className="mt-2 text-slate-600">Enter the certificate ID printed on an SS Infotech certificate.</p>
           </div>
 
@@ -58,7 +58,7 @@ export default function VerifyCertificate() {
             {loading && <p className="flex items-center justify-center gap-2 text-slate-500"><Loader2 className="h-4 w-4 animate-spin" /> Checking...</p>}
             {error && <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-center text-red-700">{error}</p>}
             {result?.valid === true && (
-              <div className="rounded-2xl border border-green-200 bg-white p-6 shadow-lg shadow-violet-900/5">
+              <div className="rounded-xl border border-green-200 bg-white p-5 shadow-lg shadow-violet-900/5">
                 <p className="flex items-center gap-2 font-semibold text-green-700"><BadgeCheck className="h-5 w-5" /> Valid certificate</p>
                 <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
                   <div><dt className="text-slate-500">Awarded to</dt><dd className="text-lg font-bold text-slate-900">{result.student_name}</dd></div>
@@ -69,7 +69,7 @@ export default function VerifyCertificate() {
               </div>
             )}
             {result?.valid === false && (
-              <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center">
+              <div className="rounded-xl border border-slate-200 bg-white p-5 text-center">
                 <SearchX className="mx-auto h-8 w-8 text-slate-400" />
                 <p className="mt-2 font-semibold text-slate-900">No certificate found with this ID</p>
                 <p className="mt-1 text-sm text-slate-500">Check the ID and try again.</p>

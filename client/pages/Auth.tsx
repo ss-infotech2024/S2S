@@ -248,7 +248,7 @@ function LoginForm() {
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="h-11 w-full rounded-lg text-base font-semibold"
+        className="h-10 w-full rounded-lg text-sm font-semibold"
       >
         {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Log in
@@ -344,7 +344,7 @@ function RegisterForm() {
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="h-11 w-full rounded-lg text-base font-semibold"
+        className="h-10 w-full rounded-lg text-sm font-semibold"
       >
         {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Create account
@@ -369,10 +369,10 @@ export default function Auth() {
   return (
     <Layout>
       <section className="bg-gradient-to-br from-violet-50 via-white to-fuchsia-50">
-        <div className="container px-5 py-10 sm:px-8 lg:py-16">
-          <div className="mx-auto grid max-w-5xl overflow-hidden rounded-3xl border border-violet-100 bg-white shadow-2xl shadow-violet-900/10 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="container py-8 lg:py-12">
+          <div className="mx-auto grid max-w-5xl overflow-hidden rounded-2xl border border-violet-100 bg-white shadow-lg shadow-violet-900/10 lg:grid-cols-[0.9fr_1.1fr]">
             <aside
-              className="relative hidden flex-col justify-between gap-10 p-10 text-white lg:flex"
+              className="relative hidden flex-col justify-between gap-10 p-7 text-white lg:flex"
               style={{
                 backgroundColor: "#1e0e3a",
                 backgroundImage: [
@@ -415,7 +415,7 @@ export default function Auth() {
               </dl>
             </aside>
 
-            <div className="p-6 sm:p-10">
+            <div className="p-6 sm:p-7">
               <Tabs
                 value={tab}
                 onValueChange={(value) =>
@@ -425,7 +425,7 @@ export default function Auth() {
                   })
                 }
               >
-                <TabsList className="grid h-11 w-full grid-cols-2 rounded-xl bg-slate-100 p-1">
+                <TabsList className="grid h-10 w-full grid-cols-2 rounded-xl bg-slate-100 p-1">
                   <TabsTrigger
                     value="login"
                     className="h-full rounded-lg text-sm font-semibold text-slate-500 data-[state=active]:bg-white data-[state=active]:text-[#2b1450] data-[state=active]:shadow"
@@ -440,11 +440,11 @@ export default function Auth() {
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="login" className="mt-8">
-                  <h1 className="text-2xl font-bold tracking-tight text-[#2b1450]">
+                <TabsContent value="login" className="mt-6">
+                  <h1 className="text-xl font-bold tracking-tight text-[#2b1450]">
                     Welcome back
                   </h1>
-                  <p className="mb-6 mt-1 text-sm text-slate-600">
+                  <p className="mb-5 mt-1 text-sm text-slate-600">
                     Log in to continue to your account.
                   </p>
                   <LoginForm />
@@ -460,11 +460,11 @@ export default function Auth() {
                   </p>
                 </TabsContent>
 
-                <TabsContent value="register" className="mt-8">
-                  <h1 className="text-2xl font-bold tracking-tight text-[#2b1450]">
+                <TabsContent value="register" className="mt-6">
+                  <h1 className="text-xl font-bold tracking-tight text-[#2b1450]">
                     Create your account
                   </h1>
-                  <p className="mb-6 mt-1 text-sm text-slate-600">
+                  <p className="mb-5 mt-1 text-sm text-slate-600">
                     It only takes a minute.
                   </p>
                   <RegisterForm />

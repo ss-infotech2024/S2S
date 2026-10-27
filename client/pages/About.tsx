@@ -82,13 +82,13 @@
 //         />
 //       </div>
 
-//       <section className="container py-20 relative">
+//       <section className="container py-14 relative">
 //         {/* Hero Section */}
 //         <motion.div
 //           initial={{ opacity: 0, y: 30 }}
 //           animate={{ opacity: 1, y: 0 }}
 //           transition={{ duration: 0.8 }}
-//           className="mx-auto max-w-4xl text-center mb-16"
+//           className="mx-auto max-w-4xl text-center mb-10"
 //         >
 //           <motion.div
 //             initial={{ opacity: 0, scale: 0.5 }}
@@ -103,7 +103,7 @@
 //           <h1 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent">
 //             About Skill Training Center
 //           </h1>
-//           <p className="mt-6 text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed">
+//           <p className="mt-6 text-base md:text-lg text-foreground/70 max-w-2xl mx-auto leading-relaxed">
 //             Where innovation meets excellence in the realm of IT solutions and transformative education.
 //           </p>
 //         </motion.div>
@@ -113,7 +113,7 @@
 //           initial={{ opacity: 0, y: 30 }}
 //           animate={{ opacity: 1, y: 0 }}
 //           transition={{ delay: 0.4 }}
-//           className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20"
+//           className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
 //         >
 //           {stats.map((stat, index) => (
 //             <motion.div
@@ -139,7 +139,7 @@
 //           whileInView={{ opacity: 1, y: 0 }}
 //           viewport={{ once: true }}
 //           transition={{ duration: 0.6 }}
-//           className="max-w-4xl mx-auto text-center mb-16"
+//           className="max-w-4xl mx-auto text-center mb-10"
 //         >
 //           <p className="text-lg text-foreground/70 leading-relaxed">
 //             Skill Training Center is a premier software organization with a strong presence in Pune and Nagpur.
@@ -154,13 +154,13 @@
 //           whileInView={{ opacity: 1, y: 0 }}
 //           viewport={{ once: true }}
 //           transition={{ duration: 0.8 }}
-//           className="mb-20"
+//           className="mb-12"
 //         >
-//           <div className="text-center mb-12">
+//           <div className="text-center mb-8">
 //             <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent mb-4">
 //               Our Core Values
 //             </h2>
-//             <p className="text-xl text-foreground/70 max-w-2xl mx-auto">
+//             <p className="text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
 //               The principles that guide our mission and shape our success stories
 //             </p>
 //           </div>
@@ -215,7 +215,7 @@
 //           whileInView={{ opacity: 1, y: 0 }}
 //           viewport={{ once: true }}
 //           transition={{ duration: 0.8 }}
-//           className="grid md:grid-cols-2 gap-8 mb-20"
+//           className="grid md:grid-cols-2 gap-8 mb-12"
 //         >
 //           <motion.div
 //             whileHover={{ y: -5, scale: 1.02 }}
@@ -260,11 +260,11 @@
 //           transition={{ duration: 0.8 }}
 //           className="max-w-4xl mx-auto"
 //         >
-//           <div className="text-center mb-12">
+//           <div className="text-center mb-8">
 //             <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent mb-4">
 //               Get In Touch
 //             </h2>
-//             <p className="text-xl text-foreground/70 max-w-2xl mx-auto">
+//             <p className="text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
 //               Reach out to us for more information about our services and training programs
 //             </p>
 //           </div>
@@ -337,13 +337,13 @@
 //           whileInView={{ opacity: 1, y: 0 }}
 //           viewport={{ once: true }}
 //           transition={{ duration: 0.8, delay: 0.2 }}
-//           className="text-center mt-16"
+//           className="text-center mt-10"
 //         >
-//           <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-purple-600/10 to-transparent border border-primary/20 p-12 backdrop-blur-sm">
+//           <div className="rounded-2xl bg-gradient-to-br from-primary/10 via-purple-600/10 to-transparent border border-primary/20 p-8 backdrop-blur-sm">
 //             <h2 className="text-3xl md:text-4xl font-bold mb-4">
 //               Ready to Transform Your Career?
 //             </h2>
-//             <p className="text-xl text-foreground/70 mb-8 max-w-2xl mx-auto">
+//             <p className="text-base md:text-lg text-foreground/70 mb-8 max-w-2xl mx-auto">
 //               Join thousands of successful students who have accelerated their careers with our industry-leading training programs.
 //             </p>
 //             {/* <motion.button
@@ -582,7 +582,7 @@ export default function About() {
           <div className="pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full bg-pink-500/20 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" />
 
-          <div className="container grid items-center gap-10 pt-16 pb-28 md:grid-cols-[1.1fr_0.9fr] md:pt-20 md:pb-32">
+          <div className="container grid items-center gap-10 pt-16 pb-28 md:grid-cols-[1.1fr_0.9fr] md:pt-14 md:pb-32">
             <motion.div initial="hidden" animate="show" variants={stagger}>
               <motion.span
                 variants={fadeInUp()}
@@ -687,7 +687,7 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="grid grid-cols-2 gap-y-8 rounded-3xl border border-slate-200/80 bg-white px-4 py-8 shadow-xl shadow-indigo-500/10 sm:px-6 lg:grid-cols-4 lg:gap-y-0 lg:divide-x lg:divide-slate-100"
+            className="grid grid-cols-2 gap-y-8 rounded-2xl border border-slate-200/80 bg-white px-4 py-8 shadow-xl shadow-indigo-500/10 sm:px-6 lg:grid-cols-4 lg:gap-y-0 lg:divide-x lg:divide-slate-100"
           >
             {stats.map((s, i) => (
               <div
@@ -713,8 +713,8 @@ export default function About() {
         </section>
 
         {/* ================= ABOUT / INTRODUCTION ================= */}
-        <section aria-labelledby="about-intro-heading" className="container py-16 md:py-20">
-          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+        <section aria-labelledby="about-intro-heading" className="container py-12 md:py-14">
+          <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
             <motion.div
               initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -810,7 +810,7 @@ export default function About() {
           aria-labelledby="core-values-heading"
           className="bg-gradient-to-b from-indigo-50/70 via-purple-50/60 to-white"
         >
-          <div className="container py-16 md:py-20">
+          <div className="container py-12 md:py-14">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -867,7 +867,7 @@ export default function About() {
           <div className="pointer-events-none absolute -top-20 left-1/3 h-72 w-72 rounded-full bg-pink-500/15 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 -right-16 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl" />
 
-          <div className="container relative py-16 md:py-20">
+          <div className="container relative py-12 md:py-14">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -928,7 +928,7 @@ export default function About() {
         </section>
 
         {/* ================= GET IN TOUCH ================= */}
-        <section aria-labelledby="get-in-touch-heading" className="container py-16 md:py-20">
+        <section aria-labelledby="get-in-touch-heading" className="container py-12 md:py-14">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1004,12 +1004,12 @@ export default function About() {
 
         {/* ================= FINAL CTA ================= */}
         <section className="bg-gradient-to-br from-purple-50 via-white to-pink-50">
-          <div className="container py-16">
+          <div className="container py-12">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-10 text-center text-white shadow-xl shadow-purple-500/20 md:p-14"
+              className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-7 text-center text-white shadow-xl shadow-purple-500/20 md:p-14"
             >
               <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-pink-400/20 blur-3xl" />
               <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-blue-300/20 blur-3xl" />

@@ -186,7 +186,7 @@ const Card = ({ badgeLabel, title, titleHighlight, description, image, meta, poi
           onClick();
         }
       }}
-      className="group relative mx-auto w-full max-w-[880px] cursor-pointer overflow-hidden rounded-3xl border border-sky-100 bg-gradient-to-br from-white via-white to-sky-50/60 shadow-xl shadow-slate-900/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+      className="group relative mx-auto w-full max-w-[880px] cursor-pointer overflow-hidden rounded-2xl border border-sky-100 bg-gradient-to-br from-white via-white to-sky-50/60 shadow-xl shadow-slate-900/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
     >
       {/* Decorative soft blobs, echoing the reference design's rounded corner accents */}
       <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-200/30 blur-2xl" />
@@ -303,7 +303,7 @@ const Modal = ({ isOpen, onClose, card }) => {
             onClick={onClose}
           >
             <div
-              className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-2xl"
+              className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-lg"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -414,9 +414,9 @@ const HorizontalSlider = () => {
 
   return (
     <>
-      <div className="w-full py-12">
+      <div className="w-full px-4 py-10 sm:px-6">
         <div
-          className="relative w-full"
+          className="relative mx-auto w-full max-w-[1000px]"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -478,7 +478,7 @@ const HorizontalSlider = () => {
         </div>
 
         {/* Optional: Dots Indicator */}
-        <div className="mt-6 flex justify-center gap-1">
+        <div className="mt-4 flex justify-center gap-1">
           {cardData.map((_, index) => (
             <button
               key={index}
@@ -495,7 +495,7 @@ const HorizontalSlider = () => {
               <span
                 className={`block h-2.5 w-2.5 rounded-full transition-all duration-300 ${
                   index === currentIndex
-                    ? 'bg-blue-500 scale-125'
+                    ? 'bg-primary scale-125'
                     : 'bg-slate-300 hover:bg-slate-400'
                 }`}
               />

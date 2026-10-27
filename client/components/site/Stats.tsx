@@ -44,9 +44,9 @@ export default function Stats() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section ref={ref} className="container py-16">
+    <section ref={ref} className="container py-12">
       <div
-        className="relative overflow-hidden rounded-3xl px-6 py-10 shadow-xl shadow-indigo-950/20 sm:px-10 sm:py-12"
+        className="relative overflow-hidden rounded-2xl px-6 py-10 shadow-xl shadow-indigo-950/20 sm:px-10 sm:py-12"
         style={{
           backgroundImage: [
             "radial-gradient(60% 90% at 90% 0%, rgba(45,212,191,0.18), transparent 60%)",

@@ -154,7 +154,7 @@
 //         {/* ── Batch timings ────────────────────────────────── */}
 //         <section
 //           aria-labelledby="batch-timings-heading"
-//           className="container pt-8 pb-16 md:pt-10 md:pb-20"
+//           className="container pt-8 pb-16 md:pt-10 md:pb-14"
 //         >
 //           <motion.div
 //             initial={{ opacity: 0, y: 12 }}
@@ -236,7 +236,7 @@
 //         </section>
 
 //         {/* ── Learning journey / gallery ───────────────────── */}
-//         <section aria-labelledby="learning-journey-heading" className="container pb-20">
+//         <section aria-labelledby="learning-journey-heading" className="container pb-14">
 //           <GallerySection />
 //         </section>
 //       </div>
@@ -403,7 +403,7 @@ export default function ClassroomTraining() {
           <div className="pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full bg-pink-500/20 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" />
 
-          <div className="container grid items-center gap-8 py-16 md:grid-cols-[1.1fr_0.9fr] md:gap-10 md:py-20">
+          <div className="container grid items-center gap-8 py-12 md:grid-cols-[1.1fr_0.9fr] md:gap-10 md:py-14">
             <motion.div initial="hidden" animate="show" variants={stagger}>
               <motion.span
                 variants={fadeInUp()}
@@ -494,7 +494,7 @@ export default function ClassroomTraining() {
         </section>
 
         {/* ================= BATCH TIMINGS ================= */}
-        <section aria-labelledby="batch-timings-heading" className="container py-16">
+        <section aria-labelledby="batch-timings-heading" className="container py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -582,7 +582,7 @@ export default function ClassroomTraining() {
 
         {/* ================= WHY CLASSROOM TRAINING ================= */}
         <section className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-          <div className="container py-16">
+          <div className="container py-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -623,12 +623,12 @@ export default function ClassroomTraining() {
 
         {/* ================= HOW IT WORKS ================= */}
         <section className="bg-white">
-          <div className="container py-16">
+          <div className="container py-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center max-w-2xl mx-auto mb-12"
+              className="text-center max-w-2xl mx-auto mb-8"
             >
               <span className="text-sm font-bold uppercase tracking-wide text-purple-600">
                 Simple Process
@@ -669,7 +669,7 @@ export default function ClassroomTraining() {
 
         {/* ================= COURSES ================= */}
         <section id="courses" className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-          <div className="container py-16">
+          <div className="container py-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -705,7 +705,7 @@ export default function ClassroomTraining() {
 
         {/* ================= UPCOMING BATCHES ================= */}
         <section className="bg-gradient-to-br from-[#1e1b4b] via-[#2e1065] to-[#312e81] text-white">
-          <div className="container py-16">
+          <div className="container py-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -772,19 +772,19 @@ export default function ClassroomTraining() {
 
         {/* ================= GALLERY ================= */}
         <section aria-labelledby="learning-journey-heading" className="bg-white">
-          <div className="container py-16">
+          <div className="container py-12">
             <GallerySection />
           </div>
         </section>
 
         {/* ================= FINAL CTA ================= */}
         <section className="bg-gradient-to-br from-purple-50 via-white to-pink-50">
-          <div className="container py-16">
+          <div className="container py-12">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-10 md:p-14 text-center text-white shadow-xl shadow-purple-500/20"
+              className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-7 md:p-14 text-center text-white shadow-xl shadow-purple-500/20"
             >
               <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-pink-400/20 blur-3xl" />
               <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-blue-300/20 blur-3xl" />

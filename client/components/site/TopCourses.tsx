@@ -125,7 +125,7 @@ export default function TopCourses({
   const displayedCourses = featuredCourses.slice(0, limit);
 
   return (
-    <section id="courses" className="relative py-24 bg-white overflow-hidden">
+    <section id="courses" className="relative py-16 bg-white overflow-hidden">
       {/* Ambient background accents — subtle, keeps section from feeling flat */}
       <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-violet-100/60 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-fuchsia-100/50 blur-3xl" />
@@ -137,7 +137,7 @@ export default function TopCourses({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="mx-auto max-w-3xl text-center mb-20"
+          className="mx-auto max-w-3xl text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-violet-100 to-fuchsia-100 border border-violet-200 mb-6">
             <BriefcaseIcon className="w-5 h-5 text-violet-600" />
@@ -169,7 +169,7 @@ export default function TopCourses({
               whileHover={{ y: -8 }}
               transition={{ type: "spring", stiffness: 300, damping: 22 }}
               onClick={() => navigate(`/courses/${course.id}`)}
-              className="group relative bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-violet-900/10 hover:border-violet-200/70 transition-[box-shadow,border-color] duration-300 cursor-pointer flex flex-col h-full"
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:shadow-violet-900/10 hover:border-violet-200/70 transition-[box-shadow,border-color] duration-300 cursor-pointer flex flex-col h-full"
             >
               {/* Soft gradient wash that fades in on hover, sits above the surface, below the content */}
               <div
@@ -235,7 +235,7 @@ export default function TopCourses({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="flex justify-center mt-16"
+            className="flex justify-center mt-10"
           >
             <Link
               to="/courses"

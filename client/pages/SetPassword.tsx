@@ -69,12 +69,12 @@ const SetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-50 via-white to-fuchsia-50 p-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md space-y-4 rounded-xl bg-white p-8 shadow-lg"
+        className="w-full max-w-md space-y-4 rounded-xl border border-border bg-white p-6 shadow-sm"
       >
-        <h1 className="text-2xl font-bold">Set Your Password</h1>
+        <h1 className="text-xl font-bold tracking-tight">Set Your Password</h1>
 
         <p className="text-sm text-gray-600">
           Create a password for your SS Infotech student account.
@@ -90,7 +90,7 @@ const SetPassword = () => {
           maxLength={128}
           required
           disabled={loading || success}
-          className="w-full rounded-md border p-3"
+          className="h-10 w-full rounded-lg border border-input px-3 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/20"
         />
 
         <input
@@ -103,7 +103,7 @@ const SetPassword = () => {
           maxLength={128}
           required
           disabled={loading || success}
-          className="w-full rounded-md border p-3"
+          className="h-10 w-full rounded-lg border border-input px-3 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/20"
         />
 
         {message && (
@@ -120,7 +120,7 @@ const SetPassword = () => {
         <button
           type="submit"
           disabled={loading || success}
-          className="w-full rounded-md bg-blue-600 p-3 font-semibold text-white disabled:opacity-60"
+          className="h-10 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
         >
           {loading
             ? "Setting password..."
@@ -133,7 +133,7 @@ const SetPassword = () => {
           <Link
             to="/login"
             state={{ from: "/student-dashboard" }}
-            className="block text-center text-sm font-semibold text-blue-700 hover:underline"
+            className="block text-center text-sm font-semibold text-primary hover:underline"
           >
             Continue to login
           </Link>

@@ -1,5 +1,5 @@
 /** @import must precede all other statements */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -83,119 +83,104 @@
 
 @layer base {
   :root {
-    /* Brand palette in HSL */
+    /* Brand palette in HSL, taken from the logo (purple -> magenta) */
     --brand-aqua: 166 100% 93%;
-    /* #DDFFF7 */
-    --brand-pink: 304 100% 91%;
-    /* #FFD2FC */
-    --brand-magenta: 214 100% 37%;
-    /* #0052BB */
-    --brand-purple: 290 47% 60%;
-    /* #B96AC9 */
-    --brand-dark: 0 13% 12%;
-    /* #231B1B */
-    /* Additional colors from original Placements component */
-    --success: 120 50% 45%;
-    /* Green for success badges */
-    --warning: 35 100% 50%;
-    /* Orange for warning badges, aligned with brand-accent */
-    --info: 210 85% 35%;
-    /* Blue for info, similar to original brand-blue */
+    --brand-pink: 322 70% 95%;
+    --brand-magenta: 266 50% 46%;
+    /* primary purple, ~#6A3BAF */
+    --brand-purple: 318 52% 50%;
+    /* logo magenta, ~#C23D9C */
+    --brand-dark: 252 30% 12%;
+    --success: 152 60% 36%;
+    --warning: 35 92% 48%;
+    --info: 214 80% 46%;
 
-    /* App theme mapping */
-    --background: var(--brand-aqua);
-    --foreground: var(--brand-dark);
+    /* App theme mapping: white surfaces, neutral text, purple accent */
+    --background: 0 0% 100%;
+    --foreground: 240 24% 12%;
 
-    --card: var(--brand-aqua);
-    --card-foreground: var(--brand-dark);
+    --card: 0 0% 100%;
+    --card-foreground: 240 24% 12%;
 
-    --popover: var(--brand-aqua);
-    --popover-foreground: var(--brand-dark);
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 24% 12%;
 
     --primary: var(--brand-magenta);
     --primary-foreground: 0 0% 100%;
 
-    --secondary: var(--brand-purple);
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 260 40% 96%;
+    --secondary-foreground: 266 50% 32%;
 
-    --muted: var(--brand-pink);
-    --muted-foreground: 0 0% 25%;
+    --muted: 250 25% 97%;
+    --muted-foreground: 240 8% 42%;
 
-    --accent: var(--brand-pink);
-    --accent-foreground: var(--brand-dark);
+    --accent: 262 60% 96%;
+    --accent-foreground: 266 50% 32%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 290 35% 82%;
-    --input: 290 35% 82%;
+    --border: 245 16% 90%;
+    --input: 245 14% 86%;
     --ring: var(--brand-magenta);
 
-    --radius: 0.75rem;
+    --radius: 0.625rem;
 
-    --sidebar-background: var(--brand-aqua);
-    --sidebar-foreground: var(--brand-dark);
+    /* Shared layout tokens */
+    --header-h: 4rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 24% 12%;
     --sidebar-primary: var(--brand-magenta);
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: var(--brand-pink);
-    --sidebar-accent-foreground: var(--brand-dark);
-    --sidebar-border: 290 35% 82%;
+    --sidebar-accent: 262 60% 96%;
+    --sidebar-accent-foreground: 266 50% 32%;
+    --sidebar-border: 245 16% 90%;
     --sidebar-ring: var(--brand-magenta);
   }
 
   .dark {
-    /* Brand palette in HSL */
-    --brand-aqua: 166 100% 93%;
-    /* Keep same for simplicity, or adjust if needed */
-    --brand-pink: 304 100% 91%;
-    --brand-magenta: 214 100% 47%;
-    /* Lighter for dark mode: #0066E5 */
-    --brand-purple: 290 47% 70%;
-    /* Lighter purple: #C17ED9 */
-    --brand-dark: 0 13% 12%;
-    --success: 120 50% 55%;
-    /* Brighter green for dark mode */
-    --warning: 35 100% 60%;
-    /* Brighter orange for dark mode */
-    --info: 210 85% 45%;
-    /* Brighter blue for dark mode */
+    --brand-magenta: 266 60% 66%;
+    --brand-purple: 318 60% 62%;
+    --success: 152 55% 48%;
+    --warning: 35 92% 58%;
+    --info: 214 80% 60%;
 
-    /* App theme mapping */
-    --background: var(--brand-dark);
+    --background: 250 28% 9%;
     --foreground: 0 0% 98%;
 
-    --card: var(--brand-dark);
+    --card: 250 26% 12%;
     --card-foreground: 0 0% 98%;
 
-    --popover: var(--brand-dark);
+    --popover: 250 26% 12%;
     --popover-foreground: 0 0% 98%;
 
     --primary: var(--brand-magenta);
-    --primary-foreground: 0 0% 100%;
+    --primary-foreground: 250 28% 9%;
 
-    --secondary: var(--brand-purple);
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 255 20% 18%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 290 20% 20%;
-    --muted-foreground: 0 0% 85%;
+    --muted: 255 20% 16%;
+    --muted-foreground: 250 10% 70%;
 
-    --accent: 290 22% 16%;
+    --accent: 260 22% 18%;
     --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 62% 31%;
+    --destructive: 0 62% 45%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 290 22% 20%;
-    --input: 290 22% 20%;
+    --border: 255 18% 22%;
+    --input: 255 18% 24%;
     --ring: var(--brand-magenta);
 
-    --sidebar-background: 0 13% 12%;
+    --sidebar-background: 250 28% 9%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: var(--brand-magenta);
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 290 22% 16%;
+    --sidebar-accent: 260 22% 18%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 290 22% 16%;
+    --sidebar-border: 255 18% 22%;
     --sidebar-ring: var(--brand-magenta);
   }
 }
@@ -210,6 +195,42 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  h1, h2, h3, h4 {
+    @apply tracking-tight;
+    text-wrap: balance;
+  }
+
+  img, video {
+    max-width: 100%;
+  }
+}
+
+/* Shared site patterns. Pages may keep their own layouts but should reach
+   for these so section rhythm, headings and eyebrows stay consistent. */
+@layer components {
+  .section {
+    @apply py-12 md:py-16;
+  }
+  .section-tight {
+    @apply py-8 md:py-12;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-primary/15 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary;
+  }
+  .page-title {
+    @apply text-2xl font-bold tracking-tight text-foreground sm:text-3xl;
+  }
+  .section-title {
+    @apply text-2xl font-bold tracking-tight text-foreground md:text-3xl;
+  }
+  .section-lead {
+    @apply mt-3 text-base leading-relaxed text-muted-foreground;
+  }
+  .surface {
+    @apply rounded-xl border border-border bg-card shadow-sm;
   }
 }

@@ -289,7 +289,7 @@ export default function Overseas() {
     <Layout>
       <div className="bg-white">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-primary/5 via-purple-600/5 to-pink-500/5 py-20">
+        <section className="relative bg-gradient-to-br from-primary/5 via-purple-600/5 to-pink-500/5 py-14">
           <div className="container">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -314,7 +314,7 @@ export default function Overseas() {
                 <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent"> Expert Guidance</span>
               </h1>
               
-              <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
+              <p className="text-base md:text-lg text-foreground/70 max-w-3xl mx-auto">
                 Learn German, Japanese, French, Spanish and more from native speakers. 
                 Prepare for international certifications and unlock global opportunities.
               </p>
@@ -324,13 +324,13 @@ export default function Overseas() {
 
         {/* Interactive Game Section */}
         {germanCourse && (
-          <section className="py-16 bg-gradient-to-b from-white to-primary/5">
+          <section className="py-12 bg-gradient-to-b from-white to-primary/5">
             <div className="container">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-center mb-12"
+                className="text-center mb-8"
               >
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/30 mb-6">
                   <SparklesIcon className="w-4 h-4 text-green-500" />
@@ -355,13 +355,13 @@ export default function Overseas() {
         )}
 
         {/* Language Courses Section */}
-        <section className="py-20">
+        <section className="py-14">
           <div className="container">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-10"
             >
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                 Choose Your Language
@@ -386,13 +386,13 @@ export default function Overseas() {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-20 bg-gradient-to-b from-primary/5 to-transparent">
+        <section className="py-14 bg-gradient-to-b from-primary/5 to-transparent">
           <div className="container">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-10"
             >
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                 Why Learn With Us?
@@ -430,13 +430,13 @@ export default function Overseas() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20">
+        <section className="py-14">
           <div className="container">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary to-purple-600 p-12 text-center"
+              className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-purple-600 p-8 text-center"
             >
               <div className="absolute inset-0 bg-white/10 backdrop-blur-3xl" />
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full blur-3xl" />

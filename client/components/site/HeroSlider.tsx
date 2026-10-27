@@ -148,7 +148,7 @@ function SlideView({
       aria-roledescription="slide"
       aria-label={`${index + 1} of ${slides.length}`}
       className={cn(
-        "col-start-1 row-start-1 grid items-center gap-9 md:gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16",
+        "col-start-1 row-start-1 grid items-center gap-9 md:gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12",
         "transition-[opacity,visibility] motion-reduce:transition-none",
         // Outgoing slide fades out quickly, incoming waits for it — no overlapping text.
         active ? "visible opacity-100 duration-500 delay-200" : "invisible opacity-0 duration-200",
@@ -159,7 +159,7 @@ function SlideView({
         <span
           style={eyebrow.style}
           className={cn(
-            "inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-pink-100 backdrop-blur-sm sm:text-xs",
+            "inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-pink-100 backdrop-blur-sm sm:text-xs",
             eyebrow.className,
           )}
         >
@@ -170,7 +170,7 @@ function SlideView({
         <Heading
           style={heading.style}
           className={cn(
-            "mt-5 text-[2rem] font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-4xl xl:text-5xl 2xl:text-[3.25rem]",
+            "mt-4 text-[1.75rem] font-bold leading-[1.15] tracking-tight sm:text-4xl xl:text-5xl",
             heading.className,
           )}
         >
@@ -188,7 +188,7 @@ function SlideView({
         <p
           style={text.style}
           className={cn(
-            "mt-5 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg",
+            "mt-4 max-w-xl text-[15px] leading-relaxed text-white/75 sm:text-base",
             text.className,
           )}
         >
@@ -197,7 +197,7 @@ function SlideView({
 
         <ul
           style={points.style}
-          className={cn("mt-6 hidden flex-wrap gap-x-6 gap-y-2 sm:flex", points.className)}
+          className={cn("mt-5 hidden flex-wrap gap-x-5 gap-y-2 sm:flex", points.className)}
         >
           {slide.points.map((p) => (
             <li key={p} className="flex items-center gap-2 text-sm font-medium text-white/85">
@@ -211,13 +211,13 @@ function SlideView({
         <div
           style={ctas.style}
           className={cn(
-            "mt-8 grid gap-3 sm:mt-9 sm:inline-grid sm:auto-cols-fr sm:grid-flow-col",
+            "mt-6 grid gap-2.5 sm:mt-7 sm:inline-grid sm:auto-cols-fr sm:grid-flow-col",
             ctas.className,
           )}
         >
           <Link
             to={slide.primary.to}
-            className="group inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-white px-6 text-[0.95rem] font-semibold text-[#2b1450] shadow-lg shadow-black/25 transition duration-200 hover:-translate-y-0.5 hover:bg-pink-50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#2b1450] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+            className="group inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-white px-5 text-sm font-semibold text-[#2b1450] shadow-lg shadow-black/25 transition duration-200 hover:-translate-y-0.5 hover:bg-pink-50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#2b1450] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
           >
             {slide.primary.label}
             <ArrowRight
@@ -227,7 +227,7 @@ function SlideView({
           </Link>
           <Link
             to={slide.secondary.to}
-            className="inline-flex h-12 items-center justify-center whitespace-nowrap rounded-xl border border-white/30 bg-white/10 px-6 text-[0.95rem] font-semibold text-white backdrop-blur-sm transition duration-200 hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#2b1450] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+            className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-lg border border-white/30 bg-white/10 px-5 text-sm font-semibold text-white backdrop-blur-sm transition duration-200 hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#2b1450] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
           >
             {slide.secondary.label}
           </Link>
@@ -244,7 +244,7 @@ function SlideView({
 
         <div
           className={cn(
-            "relative overflow-hidden rounded-3xl shadow-2xl shadow-black/40 ring-1 ring-white/25",
+            "relative overflow-hidden rounded-2xl shadow-lg shadow-black/40 ring-1 ring-white/25",
             // Posters keep their own 4:3 shape so the whole design is visible; photos fill a wide frame.
             slide.imageFit === "contain"
               ? "mx-auto aspect-[4/3] max-h-[70vh] bg-white lg:max-h-none"
@@ -345,7 +345,7 @@ export default function HeroSlider() {
         }}
       />
 
-      <div className="container px-5 py-12 sm:px-8 sm:py-14 lg:py-20">
+      <div className="container py-10 sm:py-12">
         {/* Stage: every slide shares one grid cell → constant height, no layout shift */}
         <div className="grid" aria-live={paused ? "polite" : "off"}>
           {slides.map((s, i) => (
@@ -360,7 +360,7 @@ export default function HeroSlider() {
         </div>
 
         {/* Controls */}
-        <div className="mt-8 flex items-center justify-between lg:mt-12">
+        <div className="mt-6 flex items-center justify-between">
           <div className="-ml-1 flex items-center gap-1" role="tablist" aria-label="Choose slide">
             {slides.map((s, i) => (
               <button
@@ -391,9 +391,9 @@ export default function HeroSlider() {
                 key={label}
                 aria-label={label}
                 onClick={() => go(to)}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-sm transition duration-200 hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-sm transition duration-200 hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none"
               >
-                <Icon className="h-5 w-5" aria-hidden="true" />
+                <Icon className="h-4 w-4" aria-hidden="true" />
               </button>
             ))}
           </div>

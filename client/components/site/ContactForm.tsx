@@ -95,7 +95,7 @@ export default function ContactForm({ showHeading = true }: { showHeading?: bool
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-gradient-to-b from-blue-50/70 via-white to-violet-50/50 py-20 md:py-24"
+      className="relative overflow-hidden bg-gradient-to-b from-blue-50/70 via-white to-violet-50/50 py-14 md:py-16"
     >
       {/* Soft decorative glows, kept inside the section so nothing overflows sideways */}
       <div aria-hidden="true" className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
@@ -135,7 +135,7 @@ export default function ContactForm({ showHeading = true }: { showHeading?: bool
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-8"
+            className="flex h-full flex-col rounded-2xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-8"
           >
             <div className="mb-6 flex items-center gap-3">
               <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-violet-600 text-white shadow-md shadow-primary/25">
@@ -223,7 +223,7 @@ export default function ContactForm({ showHeading = true }: { showHeading?: bool
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex h-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-900/5"
+            className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-900/5"
           >
             <div className="p-6 pb-2 sm:p-8 sm:pb-2">
               <div className="mb-6 flex items-center gap-3">

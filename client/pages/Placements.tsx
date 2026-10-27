@@ -368,7 +368,7 @@ function JobApplicationModal({ job, isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh] border border-gray-200">
+      <DialogContent className="sm:max-w-[600px] bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg overflow-y-auto max-h-[90vh] border border-gray-200">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-blue-900 to-indigo-900 bg-clip-text text-transparent">
             {job ? `Apply for ${job.title} at ${job.company}` : "Job Application"}
@@ -614,19 +614,19 @@ export default function Placements() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-slate-50">
       <Header />
 
       {/* Hero Section */}
-      <section className="relative py-24 bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-600/20 via-transparent to-transparent"></div>
+      <section className="relative py-10 sm:py-12 lg:py-14 bg-gradient-to-br from-[#1e0e3a] via-[#33185c] to-[#5a2a7e] text-white overflow-hidden">
+        
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-fuchsia-500/20 via-transparent to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center space-y-6">
-            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+          <div className="text-center space-y-3">
+            <h1 className="text-[1.75rem] sm:text-4xl font-bold text-white">
               Launch Your Career
             </h1>
-            <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg text-blue-100 max-w-3xl mx-auto leading-relaxed">
               Join 2500+ students who transformed their careers with our placement program
             </p>
           </div>
@@ -634,15 +634,15 @@ export default function Placements() {
       </section>
 
       {/* Placement Statistics */}
-      <section className="py-20 relative">
+      <section className="py-14 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/5 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center space-y-4 mb-16">
+          <div className="text-center space-y-4 mb-10">
             <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-1 text-sm font-semibold mb-4 rounded-full">
               Placement Excellence
             </Badge>
             <h2 className="text-4xl font-bold text-gray-900">Proven Track Record</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
               Our results speak volumes about our commitment to student success
             </p>
           </div>
@@ -665,14 +665,14 @@ export default function Placements() {
       </section>
 
       {/* Jobs Section with Integrated JobSearch Functionality */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      <section className="py-14 bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-4 mb-16">
+          <div className="text-center space-y-4 mb-10">
             <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-1 text-sm font-semibold mb-4 rounded-full">
               Current Openings
             </Badge>
             <h2 className="text-4xl font-bold text-gray-900">Explore Job Opportunities</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
               Discover the latest job openings and take the next step in your career
             </p>
           </div>
@@ -991,7 +991,7 @@ export default function Placements() {
       </section>
 
       {/* Success Stories and Placement Process */}
-      {/* <section className="py-20 bg-white">
+      {/* <section className="py-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Tabs defaultValue="success-stories" className="space-y-12">
             <div className="text-center">
@@ -1016,7 +1016,7 @@ export default function Placements() {
                   Our Alumni
                 </Badge>
                 <h2 className="text-4xl font-bold text-gray-900">Success Stories</h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
                   Discover how our students achieved their dream careers with SS Infotech
                 </p>
               </div>
@@ -1050,7 +1050,7 @@ export default function Placements() {
                   Our Process
                 </Badge>
                 <h2 className="text-4xl font-bold text-gray-900">Our Placement Process</h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
                   Step-by-step guidance from training to placement - your journey to success
                 </p>
               </div>
@@ -1085,14 +1085,14 @@ export default function Placements() {
       </section> */}
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gradient-to-br from-slate-50 via-white to-blue-100">
+      <section className="py-14 bg-gradient-to-br from-slate-50 via-white to-blue-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-4 mb-16">
+          <div className="text-center space-y-4 mb-10">
             <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-200 px-4 py-1 text-sm font-semibold mb-4 rounded-full">
               Student Voices
             </Badge>
             <h2 className="text-4xl font-bold text-gray-900">What Our Students Say</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
               Hear from our successful alumni about their transformative learning experiences
             </p>
           </div>

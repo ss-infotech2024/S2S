@@ -147,13 +147,13 @@
 //         />
 //       </div>
 
-//       <section className="container py-16 relative">
+//       <section className="container py-12 relative">
 //         {/* Hero Section */}
 //         <motion.div
 //           initial={{ opacity: 0, y: 30 }}
 //           animate={{ opacity: 1, y: 0 }}
 //           transition={{ duration: 0.8 }}
-//           className="mx-auto max-w-4xl text-center mb-16"
+//           className="mx-auto max-w-4xl text-center mb-10"
 //         >
 //           <motion.div
 //             initial={{ opacity: 0, scale: 0.5 }}
@@ -173,7 +173,7 @@
 //             initial={{ opacity: 0, y: 20 }}
 //             animate={{ opacity: 1, y: 0 }}
 //             transition={{ delay: 0.4 }}
-//             className="mt-6 text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed"
+//             className="mt-6 text-base md:text-lg text-foreground/70 max-w-2xl mx-auto leading-relaxed"
 //           >
 //             Transform your workforce with customized training programs,
 //             <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent font-semibold"> industry-aligned learning</span>,
@@ -186,7 +186,7 @@
 //           initial={{ opacity: 0, y: 30 }}
 //           animate={{ opacity: 1, y: 0 }}
 //           transition={{ delay: 0.6 }}
-//           className="mb-20"
+//           className="mb-12"
 //         >
 //           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
 //             {metrics.map((metric, index) => (
@@ -213,13 +213,13 @@
 //           initial={{ opacity: 0, y: 30 }}
 //           animate={{ opacity: 1, y: 0 }}
 //           transition={{ delay: 0.8 }}
-//           className="mb-20"
+//           className="mb-12"
 //         >
-//           <div className="text-center mb-12">
+//           <div className="text-center mb-8">
 //             <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent mb-4">
 //               Why Choose Our Corporate Training?
 //             </h2>
-//             <p className="text-xl text-foreground/70 max-w-2xl mx-auto">
+//             <p className="text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
 //               Comprehensive solutions designed for enterprise success and team growth
 //             </p>
 //           </div>
@@ -313,13 +313,13 @@
 //           initial={{ opacity: 0, y: 30 }}
 //           animate={{ opacity: 1, y: 0 }}
 //           transition={{ delay: 1.4 }}
-//           className="mb-20"
+//           className="mb-12"
 //         >
-//           <div className="text-center mb-12">
+//           <div className="text-center mb-8">
 //             <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent mb-4">
 //               Our Training Domains
 //             </h2>
-//             <p className="text-xl text-foreground/70 max-w-2xl mx-auto">
+//             <p className="text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
 //               Comprehensive coverage of modern technologies and methodologies
 //             </p>
 //           </div>
@@ -359,7 +359,7 @@
 //           initial={{ opacity: 0, y: 30 }}
 //           animate={{ opacity: 1, y: 0 }}
 //           transition={{ delay: 1.8 }}
-//           className="grid lg:grid-cols-2 gap-12 items-start"
+//           className="grid lg:grid-cols-2 gap-8 items-start"
 //         >
 //           {/* Form Section */}
 //           <div className="rounded-2xl bg-gradient-to-br from-primary/5 to-purple-600/5 border border-border/30 p-8 backdrop-blur-sm">
@@ -789,7 +789,7 @@ export default function CorporateTraining() {
             <div className="pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full bg-pink-500/20 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" />
 
-            <div className="container grid items-center gap-8 py-12 md:grid-cols-[1.1fr_0.9fr] md:gap-10 md:py-16">
+            <div className="container grid items-center gap-8 py-12 md:grid-cols-[1.1fr_0.9fr] md:gap-10 md:py-12">
               <motion.div initial="hidden" animate="show" variants={stagger}>
                 <motion.span
                   variants={fadeInUp()}
@@ -857,12 +857,12 @@ export default function CorporateTraining() {
                 initial={{ opacity: 0, scale: 0.94, y: 12 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
-                className="grid grid-cols-2 gap-3 rounded-3xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm sm:gap-4 sm:p-5"
+                className="grid grid-cols-2 gap-3 rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm sm:gap-4 sm:p-5"
               >
                 {metrics.map((m) => (
                   <li key={m.label} className="rounded-2xl border border-white/10 bg-white/5 p-4">
                     <m.icon className="mb-2 h-5 w-5 text-pink-300" aria-hidden="true" />
-                    <p className="text-2xl font-extrabold sm:text-3xl">{m.value}</p>
+                    <p className="text-lg font-extrabold sm:text-3xl">{m.value}</p>
                     <p className="mt-0.5 text-sm text-indigo-100/80">{m.label}</p>
                   </li>
                 ))}
@@ -1092,7 +1092,7 @@ export default function CorporateTraining() {
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 text-white shadow-xl shadow-purple-500/20"
+                  className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 text-white shadow-xl shadow-purple-500/20"
                 >
                   <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-pink-400/20 blur-3xl" />
                   <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-blue-300/20 blur-3xl" />
@@ -1136,7 +1136,7 @@ export default function CorporateTraining() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 }}
-                  className="rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-8"
+                  className="rounded-2xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-8"
                 >
                   <h3 className="text-xl font-bold text-[#171034]">Request a Corporate Program</h3>
 

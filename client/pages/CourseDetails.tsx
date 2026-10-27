@@ -44,7 +44,7 @@ const COLORS = {
 };
 
 const SPACING = {
-  section: "py-10 sm:py-14 md:py-16",
+  section: "py-10 sm:py-14 md:py-12",
   card: "p-6 sm:p-8",
 };
 
@@ -561,7 +561,7 @@ export default function CourseDetails() {
   if (!course) {
     return (
       <Layout>
-        <div className="container py-24 text-center">
+        <div className="container py-16 text-center">
           <motion.div {...fadeInUp}>
             <SparklesIcon className="mx-auto mb-6 h-16 w-16 text-indigo-400" aria-hidden="true" />
             <h1 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-4xl font-bold text-transparent">
@@ -915,7 +915,7 @@ export default function CourseDetails() {
 
             {/* Final CTA */}
             <motion.div variants={itemVariant}>
-              <div className="overflow-hidden rounded-[20px] bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-8 text-center sm:p-12">
+              <div className="overflow-hidden rounded-[20px] bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-8 text-center sm:p-8">
                 <SparklesIcon className="mx-auto h-8 w-8 text-white/90" aria-hidden="true" />
                 <h3 className="mt-3 text-2xl font-bold text-white sm:text-3xl">
                   Ready to start your {course.title} journey?

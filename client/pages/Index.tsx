@@ -11,8 +11,7 @@ import {
   SparklesIcon,
   AcademicCapIcon,
   ChartBarIcon,
-  UserGroupIcon,
-  EyeIcon,
+    EyeIcon,
   ChatBubbleLeftRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -147,42 +146,42 @@ export default function Index() {
         <AboutSection />
 
         {/* Professional Testimonials Section */}
-        <section id="testimonials" className="py-20 bg-white">
+        <section id="testimonials" className="py-14 bg-white">
           <div className="container">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="mx-auto max-w-4xl text-center mb-16"
+              className="mx-auto max-w-3xl text-center mb-8"
             >
               <motion.div
                 initial={{ opacity: 0, scale: 0.5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2, type: "spring" }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6"
+                className="eyebrow mb-4"
               >
                 <ChatBubbleLeftRightIcon className="w-4 h-4 text-primary" />
                 <span className="text-sm font-semibold text-primary">Success Stories</span>
               </motion.div>
 
-              <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent">
+              <h2 className="section-title">
                 What Our Students Say
               </h2>
-              <p className="mt-6 text-xl text-foreground/70 max-w-2xl mx-auto">
+              <p className="section-lead max-w-2xl mx-auto">
                 Real stories from our alumni who transformed their careers with Skill Training Center
               </p>
             </motion.div>
 
             <div
-              className="relative max-w-6xl mx-auto"
+              className="relative max-w-5xl mx-auto"
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
             >
-              <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200">
-                <div className="grid lg:grid-cols-2">
-                  <div className="p-8 md:p-12">
+              <div className="relative bg-white rounded-2xl shadow-sm overflow-hidden border border-border">
+                <div className="grid lg:grid-cols-[1.4fr_1fr]">
+                  <div className="p-6 md:p-8">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={activeTestimonial}
@@ -192,38 +191,38 @@ export default function Index() {
                         transition={{ duration: 0.5 }}
                         className="h-full flex flex-col justify-center"
                       >
-                        <div className="w-12 h-12 bg-gradient-to-r from-primary to-purple-600 rounded-2xl flex items-center justify-center mb-6">
-                          <ChatBubbleLeftRightIcon className="w-6 h-6 text-white" />
+                        <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+                          <ChatBubbleLeftRightIcon className="w-5 h-5 text-primary" />
                         </div>
 
-                        <div className="flex gap-1 mb-6">
+                        <div className="flex gap-0.5 mb-4">
                           {[...Array(testimonials[activeTestimonial].rating)].map((_, i) => (
-                            <StarIcon key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                            <StarIcon key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                           ))}
                         </div>
 
-                        <blockquote className="text-xl md:text-2xl text-foreground/80 leading-relaxed mb-8 font-light italic">
+                        <blockquote className="text-base md:text-lg text-foreground/80 leading-relaxed mb-6">
                           "{testimonials[activeTestimonial].quote}"
                         </blockquote>
 
                         <div className="flex items-center gap-4">
-                          <div className="w-16 h-16 rounded-2xl bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                          <div className="w-11 h-11 shrink-0 rounded-full bg-primary flex items-center justify-center text-white font-semibold text-sm">
                             {testimonials[activeTestimonial].author.split(' ').map(n => n[0]).join('')}
                           </div>
                           <div>
-                            <div className="font-bold text-lg text-foreground">
+                            <div className="font-semibold text-foreground">
                               {testimonials[activeTestimonial].author}
                             </div>
-                            <div className="text-foreground/60">
+                            <div className="text-sm text-foreground/60">
                               {testimonials[activeTestimonial].role} at {testimonials[activeTestimonial].company}
                             </div>
-                            <div className="text-primary font-semibold text-sm mt-1">
+                            <div className="text-primary font-medium text-xs mt-0.5">
                               Completed: {testimonials[activeTestimonial].course}
                             </div>
                           </div>
                         </div>
 
-                        <div className="flex flex-wrap gap-2 mt-6">
+                        <div className="flex flex-wrap gap-2 mt-5">
                           {testimonials[activeTestimonial].achievements.map((achievement, index) => (
                             <motion.span
                               key={achievement}
@@ -240,7 +239,7 @@ export default function Index() {
                     </AnimatePresence>
                   </div>
 
-                  <div className="bg-gradient-to-br from-primary/5 to-purple-600/5 p-8 md:p-12 flex items-center justify-center">
+                  <div className="hidden lg:flex bg-gradient-to-br from-primary/5 to-fuchsia-500/5 p-8 items-center justify-center border-l border-border">
                     <motion.div
                       key={activeTestimonial}
                       initial={{ opacity: 0, scale: 0.8 }}
@@ -248,11 +247,11 @@ export default function Index() {
                       transition={{ duration: 0.5 }}
                       className="text-center"
                     >
-                      <div className="w-48 h-48 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white text-6xl font-bold shadow-2xl">
+                      <div className="w-28 h-28 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary to-fuchsia-600 flex items-center justify-center text-white text-4xl font-bold shadow-md">
                         {testimonials[activeTestimonial].author.split(' ').map(n => n[0]).join('')}
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-foreground mb-2">
+                        <div className="text-lg font-semibold text-foreground mb-1">
                           {testimonials[activeTestimonial].author.split(' ')[0]}
                         </div>
                         <div className="text-foreground/60 text-sm">
@@ -264,44 +263,47 @@ export default function Index() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between mt-8">
+              <div className="flex items-center justify-between mt-5">
                 <div className="flex gap-2">
                   {testimonials.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => goToTestimonial(index)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      aria-label={`Show testimonial ${index + 1}`}
+                      className={`h-2 w-2 rounded-full transition-all duration-300 ${
                         activeTestimonial === index
-                          ? "bg-primary w-8"
+                          ? "bg-primary w-6"
                           : "bg-slate-300 hover:bg-primary/50"
                       }`}
                     />
                   ))}
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={prevTestimonial}
-                    className="p-3 rounded-2xl bg-white border border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300"
+                    aria-label="Previous testimonial"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg bg-white border border-border shadow-sm hover:border-primary/40 hover:text-primary transition-colors"
                   >
-                    <ChevronLeftIcon className="w-6 h-6" />
+                    <ChevronLeftIcon className="w-4 h-4" />
                   </motion.button>
 
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={nextTestimonial}
-                    className="p-3 rounded-2xl bg-white border border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300"
+                    aria-label="Next testimonial"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg bg-white border border-border shadow-sm hover:border-primary/40 hover:text-primary transition-colors"
                   >
-                    <ChevronRightIcon className="w-6 h-6" />
+                    <ChevronRightIcon className="w-4 h-4" />
                   </motion.button>
                 </div>
               </div>
 
-              <div className="text-center mt-6">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm border border-primary/20">
+              <div className="text-center mt-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-muted-foreground text-xs">
                   <div className={`w-2 h-2 rounded-full ${isPaused ? 'bg-yellow-500' : 'bg-green-500 animate-pulse'}`} />
                   {isPaused ? 'Paused' : 'Auto-playing'}
                 </div>
@@ -313,7 +315,7 @@ export default function Index() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.6 }}
-              className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto"
+              className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto"
             >
               {[
                 { value: "10,000+", label: "Students Trained" },
@@ -326,57 +328,19 @@ export default function Index() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.8 + index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="text-center p-6 rounded-2xl bg-white border border-slate-200 shadow-lg backdrop-blur-sm"
+                  className="text-center px-4 py-4 rounded-xl bg-white border border-border"
                 >
-                  <div className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                  <div className="text-xl font-bold text-primary">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-foreground/60 mt-1">{stat.label}</div>
+                  <div className="text-xs text-foreground/60 mt-0.5">{stat.label}</div>
                 </motion.div>
               ))}
             </motion.div>
           </div>
         </section>
 
-        <section id="contact" className="container py-20 bg-white">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="mx-auto max-w-4xl text-center mb-16"
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2, type: "spring" }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6"
-            >
-              <UserGroupIcon className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">Get In Touch</span>
-            </motion.div>
-
-            <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent">
-              Start Your Journey Today
-            </h2>
-            <p className="mt-6 text-xl text-foreground/70 max-w-2xl mx-auto">
-              Reach out to us for more information about our services and training programs.
-              Let's build your success story together.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-10"
-          >
-            <ContactForm />
-          </motion.div>
-        </section>
+        <ContactForm />
       </div>
     </Layout>
   );

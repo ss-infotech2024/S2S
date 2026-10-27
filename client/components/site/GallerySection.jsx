@@ -850,6 +850,9 @@ export default function GallerySection({ section: sectionProp }) {
 
   // Which college is selected in the list. null = "All Colleges" (default)
   const [selectedCollegeIndex, setSelectedCollegeIndex] = useState(null);
+  // Masonry starts with a short preview so the section does not run thousands of pixels long
+  const PREVIEW_COUNT = 12;
+  const [showAllPhotos, setShowAllPhotos] = useState(false);
 
   // Lightbox state: the list of media currently being browsed, the index and the direction last moved
   const [lightbox, setLightbox] = useState(null); // { items, index, dir }
@@ -924,7 +927,7 @@ export default function GallerySection({ section: sectionProp }) {
   // Nothing tagged for this page yet
   if (tabs.length === 0) {
     return (
-      <section className="mb-20 text-center">
+      <section className="mb-12 text-center">
         <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Explore Our Learning Journey</h2>
         <p className="text-lg text-foreground/70">Photos coming soon.</p>
       </section>
@@ -939,14 +942,14 @@ export default function GallerySection({ section: sectionProp }) {
   });
 
   return (
-    <section className="ssg mb-20" aria-labelledby="learning-journey-heading">
+    <section className="ssg mb-12" aria-labelledby="learning-journey-heading">
       <style>{galleryCss}</style>
 
       {/* Header */}
-      <div className="mx-auto mb-10 max-w-2xl text-center md:mb-12">
+      <div className="mx-auto mb-6 max-w-2xl text-center">
         <motion.div
           {...rise()}
-          className="mb-5 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-white px-4 py-1.5 shadow-sm"
+          className="mb-4 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-white px-3 py-1 shadow-sm"
         >
           <EyeIcon className="h-4 w-4 text-violet-600" aria-hidden="true" />
           <span className="text-xs font-semibold uppercase tracking-[0.12em] text-violet-700">
@@ -956,11 +959,11 @@ export default function GallerySection({ section: sectionProp }) {
         <motion.h2
           {...rise(0.08)}
           id="learning-journey-heading"
-          className="mb-4 text-3xl font-bold leading-tight tracking-tight text-foreground md:text-[2.5rem]"
+          className="mb-3 text-2xl font-bold leading-tight tracking-tight text-foreground md:text-3xl"
         >
           Explore Our Learning Journey
         </motion.h2>
-        <motion.p {...rise(0.16)} className="text-base leading-relaxed text-foreground/60 md:text-lg">
+        <motion.p {...rise(0.16)} className="text-[15px] leading-relaxed text-foreground/60 md:text-base">
           {sectionCopy[section] ?? defaultCopy}
         </motion.p>
       </div>
@@ -978,6 +981,7 @@ export default function GallerySection({ section: sectionProp }) {
               onClick={() => {
                 setSelectedTab(tab.id);
                 setSelectedCollegeIndex(null);
+                setShowAllPhotos(false);
               }}
               className={`ssg-pill${isActive ? " is-active" : ""}`}
             >
@@ -1114,7 +1118,7 @@ export default function GallerySection({ section: sectionProp }) {
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="ssg-masonry ssg-masonry--wide"
           >
-            {galleryList.map((media, index) => (
+            {(showAllPhotos ? galleryList : galleryList.slice(0, PREVIEW_COUNT)).map((media, index) => (
               <GalleryCard
                 key={media.key}
                 media={media}
@@ -1126,6 +1130,19 @@ export default function GallerySection({ section: sectionProp }) {
             ))}
           </motion.div>
         </AnimatePresence>
+      )}
+
+      {!isCollegeTab && galleryList.length > PREVIEW_COUNT && (
+        <div className="mt-6 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setShowAllPhotos((value) => !value)}
+            aria-expanded={showAllPhotos}
+            className="inline-flex h-9 items-center gap-2 rounded-lg border border-violet-200 bg-white px-4 text-sm font-semibold text-violet-700 shadow-sm transition-colors hover:border-violet-300 hover:bg-violet-50"
+          >
+            {showAllPhotos ? "Show fewer photos" : `Show all ${galleryList.length} photos`}
+          </button>
+        </div>
       )}
 
       {/* Full-screen lightbox — rendered on document.body so it always sits above the page */}

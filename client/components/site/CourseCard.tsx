@@ -40,7 +40,7 @@
 //       whileHover="hover"
 //       onHoverStart={() => setIsHovered(true)}
 //       onHoverEnd={() => setIsHovered(false)}
-//       className="relative bg-white rounded-2xl border border-gray-200 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden group cursor-pointer max-w-sm mx-auto"
+//       className="relative bg-white rounded-2xl border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group cursor-pointer max-w-sm mx-auto"
 //       style={{
 //         background: "white",
 //         borderColor: "rgb(229 231 235)"
@@ -218,7 +218,7 @@
 //       {/* Enhanced Hover Border Effect */}
 //       <motion.div
 //         animate={{ opacity: isHovered ? 1 : 0 }}
-//         className="absolute inset-0 border-2 border-blue-200 rounded-2xl pointer-events-none shadow-2xl"
+//         className="absolute inset-0 border-2 border-blue-200 rounded-2xl pointer-events-none shadow-lg"
 //       />
 //     </motion.article>
 //   );

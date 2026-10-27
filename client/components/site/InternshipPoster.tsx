@@ -13,12 +13,12 @@ const highlights = [
 export default function InternshipPoster() {
   return (
     <section className="bg-gradient-to-br from-violet-100 via-fuchsia-50 to-white">
-      <div className="container grid items-center gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:py-16">
+      <div className="container grid items-center gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:py-12">
         <a
           href="/honeBanner/internship.png"
           target="_blank"
           rel="noreferrer"
-          className="mx-auto block w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl shadow-violet-900/15 ring-1 ring-violet-100 transition hover:-translate-y-1 hover:shadow-violet-900/25"
+          className="mx-auto block w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-lg shadow-violet-900/15 ring-1 ring-violet-100 transition hover:-translate-y-1 hover:shadow-violet-900/25"
           aria-label="Open the full internship poster"
         >
           <img

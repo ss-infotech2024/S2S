@@ -13,8 +13,8 @@ const COLORS = {
 };
 
 const TYPOGRAPHY = {
-  h1: "text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter",
-  subtitle: "text-lg sm:text-xl text-foreground/70",
+  h1: "text-[1.75rem] sm:text-4xl font-bold tracking-tight",
+  subtitle: "text-[15px] sm:text-base text-foreground/70",
 };
 
 const stagger = {
@@ -75,25 +75,25 @@ export default function Courses() {
       </div>
 
       <section className={`min-h-screen ${COLORS.bg}`}>
-        <div className="container py-12 sm:py-16 md:py-20 relative">
-          <div className="grid gap-10 lg:gap-14 md:grid-cols-12">
+        <div className="container py-8 md:py-12 relative">
+          <div className="grid gap-8 lg:gap-10 md:grid-cols-12">
             
             {/* ===================== LEFT SIDE - Main Content ===================== */}
-            <div className="md:col-span-8 space-y-12">
+            <div className="md:col-span-8 space-y-8">
               {/* Header */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center md:text-left"
               >
-                <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-3xl bg-white/80 dark:bg-zinc-900/80 border border-violet-200 dark:border-violet-800 mb-6 backdrop-blur-md">
-                  <SparklesIcon className="w-6 h-6 text-pink-500" />
-                  <span className="font-medium text-violet-600 dark:text-violet-300 tracking-wide">DISCOVER YOUR NEXT SKILL</span>
+                <div className="eyebrow mb-4">
+                  <SparklesIcon className="w-3.5 h-3.5 text-primary" />
+                  <span className="uppercase tracking-wider">Discover your next skill</span>
                 </div>
                 <h1 className={`${TYPOGRAPHY.h1} bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500 bg-clip-text text-transparent`}>
                   Our Popular Courses
                 </h1>
-                <p className={`${TYPOGRAPHY.subtitle} mt-6 max-w-2xl md:mx-0 mx-auto`}>
+                <p className={`${TYPOGRAPHY.subtitle} mt-3 max-w-2xl md:mx-0 mx-auto`}>
                   Interactive, job-ready programs with hands-on projects, real-world case studies, and expert mentor support.
                 </p>
               </motion.div>
@@ -104,18 +104,18 @@ export default function Courses() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
               >
-                <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl rounded-3xl border border-violet-200/80 dark:border-violet-800/80 p-6 md:p-8 shadow-xl">
-                  <div className="flex flex-col lg:flex-row gap-4">
+                <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl rounded-xl border border-border dark:border-violet-800/80 p-3 shadow-sm">
+                  <div className="flex flex-col lg:flex-row gap-2.5">
                     {/* Search */}
                     <div className="relative flex-1">
-                      <div className="absolute left-5 top-1/2 -translate-y-1/2 text-violet-400">
-                        <MagnifyingGlassIcon className="w-5 h-5" />
+                      <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground">
+                        <MagnifyingGlassIcon className="w-4 h-4" />
                       </div>
                       <input
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search courses by title or keywords..."
-                        className="w-full pl-12 pr-5 py-4 bg-white dark:bg-zinc-800 border border-violet-200 dark:border-violet-700 rounded-2xl focus:outline-none focus:border-pink-400 text-base placeholder:text-muted-foreground"
+                        className="h-10 w-full pl-10 pr-4 bg-white dark:bg-zinc-800 border border-input dark:border-violet-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-primary text-sm placeholder:text-muted-foreground"
                       />
                     </div>
 
@@ -123,7 +123,7 @@ export default function Courses() {
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      className="px-6 py-4 bg-white dark:bg-zinc-800 border border-violet-200 dark:border-violet-700 rounded-2xl focus:outline-none focus:border-pink-400 text-base cursor-pointer min-w-[180px]"
+                      className="h-10 px-3 bg-white dark:bg-zinc-800 border border-input dark:border-violet-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-primary text-sm cursor-pointer min-w-[170px]"
                     >
                       <option value="">All Categories</option>
                       {categories.map((cat) => (
@@ -137,7 +137,7 @@ export default function Courses() {
                     <select
                       value={level}
                       onChange={(e) => setLevel(e.target.value)}
-                      className="px-6 py-4 bg-white dark:bg-zinc-800 border border-violet-200 dark:border-violet-700 rounded-2xl focus:outline-none focus:border-pink-400 text-base cursor-pointer min-w-[160px]"
+                      className="h-10 px-3 bg-white dark:bg-zinc-800 border border-input dark:border-violet-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-primary text-sm cursor-pointer min-w-[140px]"
                     >
                       <option value="">All Levels</option>
                       {levels.map((lvl) => (
@@ -151,7 +151,7 @@ export default function Courses() {
                     {(query || category || level) && (
                       <button
                         onClick={clearFilters}
-                        className="flex items-center justify-center gap-2 px-8 py-4 bg-white dark:bg-zinc-800 hover:bg-pink-50 dark:hover:bg-pink-950 border border-violet-200 dark:border-violet-700 hover:border-pink-400 rounded-2xl text-pink-500 hover:text-pink-600 transition-all font-medium"
+                        className="flex h-10 items-center justify-center gap-2 px-4 text-sm bg-white dark:bg-zinc-800 hover:bg-pink-50 dark:hover:bg-pink-950 border border-violet-200 dark:border-violet-700 hover:border-pink-400 rounded-lg text-pink-500 hover:text-pink-600 transition-all font-medium"
                       >
                         <XMarkIcon className="w-5 h-5" />
                         Clear
@@ -167,7 +167,7 @@ export default function Courses() {
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true }}
-                className="grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
+                className="grid gap-5 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
               >
                 {filtered.map((course, index) => (
                   <motion.div
@@ -185,18 +185,18 @@ export default function Courses() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center py-20"
+                  className="text-center py-14"
                 >
-                  <div className="mx-auto w-20 h-20 bg-violet-100 dark:bg-violet-900/50 rounded-3xl flex items-center justify-center mb-6">
-                    <SparklesIcon className="w-10 h-10 text-violet-400" />
+                  <div className="mx-auto w-12 h-12 bg-violet-100 dark:bg-violet-900/50 rounded-xl flex items-center justify-center mb-4">
+                    <SparklesIcon className="w-6 h-6 text-violet-500" />
                   </div>
-                  <h3 className="text-2xl font-semibold text-foreground mb-3">No courses found</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-1">No courses found</h3>
                   <p className="text-foreground/60 max-w-sm mx-auto">
                     We couldn't find any courses matching your filters. Try adjusting your search or filters.
                   </p>
                   <button
                     onClick={clearFilters}
-                    className="mt-8 text-pink-500 hover:text-pink-600 font-medium flex items-center gap-2 mx-auto"
+                    className="mt-4 text-sm text-primary hover:text-primary/80 font-medium flex items-center gap-2 mx-auto"
                   >
                     Clear all filters <XMarkIcon className="w-4 h-4" />
                   </button>
@@ -205,39 +205,39 @@ export default function Courses() {
             </div>
 
             {/* ===================== RIGHT SIDE - Sidebar (Sticky) ===================== */}
-            <div className="md:col-span-4 space-y-8 lg:sticky lg:top-10 self-start">
+            <div className="md:col-span-4 space-y-5 lg:sticky lg:top-20 self-start">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                <div className="rounded-3xl bg-gradient-to-br from-violet-50 to-pink-50 dark:from-violet-950 dark:to-pink-950 p-9 border border-violet-200 dark:border-violet-800 shadow-2xl shadow-pink-500/10">
+                <div className="rounded-2xl bg-gradient-to-br from-violet-50 to-pink-50 dark:from-violet-950 dark:to-pink-950 p-6 border border-violet-200 dark:border-violet-800 shadow-sm">
                   <div className="text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-400 to-pink-400 text-white mb-6">
-                      <SparklesIcon className="w-9 h-9" />
+                    <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-fuchsia-500 text-white mb-4">
+                      <SparklesIcon className="w-5 h-5" />
                     </div>
-                    <h3 className="text-3xl font-bold text-violet-700 dark:text-violet-300 tracking-tight">
+                    <h3 className="text-xl font-bold text-foreground dark:text-violet-300 tracking-tight">
                       Ready to Start Learning?
                     </h3>
-                    <p className="mt-4 text-foreground/70 leading-relaxed">
+                    <p className="mt-2 text-sm text-foreground/70 leading-relaxed">
                       Join thousands of learners who transformed their careers with our premium AI &amp; tech courses.
                     </p>
                   </div>
 
-                  <div className="mt-10 space-y-6 text-sm">
-                    <div className="flex justify-between py-3 border-b border-violet-200 dark:border-violet-800">
+                  <div className="mt-5 text-sm">
+                    <div className="flex justify-between py-2.5 border-b border-violet-200/70 dark:border-violet-800">
                       <span className="text-muted-foreground">Hands-on Projects</span>
                       <span className="font-medium text-emerald-500">✓ Included</span>
                     </div>
-                    <div className="flex justify-between py-3 border-b border-violet-200 dark:border-violet-800">
+                    <div className="flex justify-between py-2.5 border-b border-violet-200/70 dark:border-violet-800">
                       <span className="text-muted-foreground">Lifetime Access</span>
                       <span className="font-medium text-emerald-500">✓ Included</span>
                     </div>
-                    <div className="flex justify-between py-3 border-b border-violet-200 dark:border-violet-800">
+                    <div className="flex justify-between py-2.5 border-b border-violet-200/70 dark:border-violet-800">
                       <span className="text-muted-foreground">Certificate</span>
                       <span className="font-medium text-emerald-500">✓ Included</span>
                     </div>
-                    <div className="flex justify-between py-3">
+                    <div className="flex justify-between py-2.5">
                       <span className="text-muted-foreground">Mentor Support</span>
                       <span className="font-medium text-emerald-500">✓ Included</span>
                     </div>
@@ -246,7 +246,7 @@ export default function Courses() {
                   <motion.a
                     href="/courses"
                     whileHover={{ scale: 1.02 }}
-                    className="mt-10 block w-full text-center bg-gradient-to-r from-violet-500 to-pink-500 text-white font-semibold text-lg py-4 px-8 rounded-2xl shadow-lg shadow-pink-500/30 hover:shadow-xl transition-all"
+                    className="mt-5 flex h-10 w-full items-center justify-center bg-primary text-primary-foreground font-semibold text-sm px-5 rounded-lg hover:bg-primary/90 transition-colors"
                   >
                     Browse All Courses
                   </motion.a>
@@ -259,11 +259,11 @@ export default function Courses() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <div className="rounded-3xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-violet-200/60 dark:border-violet-800/60 p-8">
-                  <h4 className="font-semibold text-xl mb-4 text-violet-700 dark:text-violet-300">
+                <div className="rounded-2xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-border dark:border-violet-800/60 p-5">
+                  <h4 className="font-semibold text-base mb-3 text-foreground dark:text-violet-300">
                     Why Choose Us?
                   </h4>
-                  <ul className="space-y-4 text-sm text-foreground/70">
+                  <ul className="space-y-2.5 text-sm text-foreground/70">
                     <li className="flex gap-3">
                       <span className="text-pink-400 mt-1">★</span>
                       Industry-aligned curriculum

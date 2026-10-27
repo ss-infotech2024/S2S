@@ -97,7 +97,7 @@ export default function MyEnrollments() {
           <p className="text-sm font-semibold uppercase tracking-widest text-indigo-600">
             Student Portal
           </p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-900 dark:text-white">
+          <h1 className="mt-2 text-2xl font-bold text-slate-900 dark:text-white">
             My Enrollments
           </h1>
           <p className="mt-2 text-slate-500">
@@ -114,14 +114,14 @@ export default function MyEnrollments() {
         )}
 
         {!loading && !error && enrollments.length === 0 && (
-          <div className="rounded-2xl border border-slate-200 p-8 text-center dark:border-slate-700">
+          <div className="rounded-xl border border-slate-200 p-6 text-center dark:border-slate-700">
             <h2 className="text-xl font-semibold">No enrollments found</h2>
             <p className="mt-2 text-slate-500">
               Your enrollments will appear here after you submit a course application on this browser.
             </p>
             <Link
               to="/courses"
-              className="mt-5 inline-block rounded-lg bg-indigo-600 px-5 py-3 font-semibold text-white hover:bg-indigo-700"
+              className="mt-5 inline-flex h-10 items-center rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
             >
               Explore Courses
             </Link>
@@ -133,7 +133,7 @@ export default function MyEnrollments() {
             {enrollments.map((item) => (
               <article
                 key={item.id}
-                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900 sm:p-6"
+                className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900 sm:p-5"
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>

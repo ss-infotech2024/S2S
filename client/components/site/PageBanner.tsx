@@ -54,27 +54,27 @@ export default function PageBanner({
         }}
       />
 
-      <div className="container px-5 py-14 text-center sm:px-8 sm:py-16 lg:py-20">
+      <div className="container py-10 text-center sm:py-12 lg:py-14">
         {eyebrow && (
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-pink-100 backdrop-blur-sm sm:text-xs">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-pink-100 backdrop-blur-sm sm:text-xs">
             <span className="h-1.5 w-1.5 rounded-full bg-pink-300" aria-hidden="true" />
             {eyebrow}
           </span>
         )}
 
-        <h1 className="mx-auto mt-5 max-w-3xl text-[2.25rem] font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+        <h1 className="mx-auto mt-4 max-w-3xl text-[1.75rem] font-bold leading-tight tracking-tight sm:text-4xl">
           {title}
         </h1>
 
         {text && (
-          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg">
+          <p className="mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-white/75 sm:text-base">
             {text}
           </p>
         )}
 
         {crumbs.length > 0 && (
-          <nav aria-label="Breadcrumb" className="mt-7 flex justify-center">
-            <ol className="flex flex-wrap items-center justify-center gap-1.5 text-sm text-white/60">
+          <nav aria-label="Breadcrumb" className="mt-5 flex justify-center">
+            <ol className="flex flex-wrap items-center justify-center gap-1.5 text-[13px] text-white/60">
               <li className="flex items-center gap-1.5">
                 <Link to="/" className="flex items-center gap-1 transition-colors hover:text-white">
                   <Home className="h-3.5 w-3.5" aria-hidden="true" />

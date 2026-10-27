@@ -139,7 +139,7 @@ export default function Enroll() {
   if (!course) {
     return (
       <Layout>
-        <section className="container py-20 text-center">
+        <section className="container py-14 text-center">
           <h1 className="text-2xl font-bold">Course not found</h1>
           <p className="mt-2 text-slate-600">The course you are trying to enroll in does not exist.</p>
           <Button asChild className="mt-6">
@@ -153,10 +153,10 @@ export default function Enroll() {
   return (
     <Layout>
       <section className="bg-gradient-to-br from-violet-100 via-fuchsia-50 to-white">
-        <div className="container px-5 py-10 sm:px-8 lg:py-16">
-          <div className="mx-auto grid max-w-5xl overflow-hidden rounded-3xl border border-violet-100 bg-white shadow-2xl shadow-violet-900/10 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="container px-5 py-10 sm:px-8 lg:py-12">
+          <div className="mx-auto grid max-w-5xl overflow-hidden rounded-xl border border-violet-100 bg-white shadow-lg shadow-violet-900/10 lg:grid-cols-[0.9fr_1.1fr]">
             <aside
-              className="flex flex-col gap-6 p-7 text-white sm:p-10"
+              className="flex flex-col gap-6 p-6 text-white sm:p-6"
               style={{
                 backgroundColor: "#1e0e3a",
                 backgroundImage: [
@@ -169,7 +169,7 @@ export default function Enroll() {
                 You are enrolling in
               </span>
               <div>
-                <h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">{course.title}</h2>
+                <h2 className="text-2xl font-extrabold leading-tight sm:text-2xl">{course.title}</h2>
                 {course.short && <p className="mt-3 text-white/75">{course.short}</p>}
               </div>
               <dl className="space-y-3 text-sm">
@@ -186,7 +186,7 @@ export default function Enroll() {
               </dl>
             </aside>
 
-            <div className="p-6 sm:p-10">
+            <div className="p-5 sm:p-6">
               <h1 className="text-2xl font-bold tracking-tight text-[#2b1450]">Enrollment form</h1>
               <p className="mb-6 mt-1 text-sm text-slate-600">
                 Fill in your details and our admissions team will get in touch.
@@ -220,9 +220,9 @@ export default function Enroll() {
       </section>
 
       <Dialog open={!!saved} onOpenChange={(open) => !open && setSaved(null)}>
-        <DialogContent className="max-w-[calc(100%-2rem)] rounded-2xl sm:max-w-md">
+        <DialogContent className="max-w-[calc(100%-2rem)] rounded-xl sm:max-w-md">
           <DialogHeader className="items-center text-center sm:text-center">
-            <span className="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
+            <span className="mb-2 flex h-11 w-14 items-center justify-center rounded-full bg-green-100">
               <CheckCircle2 className="h-8 w-8 text-green-600" />
             </span>
             <DialogTitle className="text-xl text-[#2b1450]">Enrollment Submitted Successfully!</DialogTitle>

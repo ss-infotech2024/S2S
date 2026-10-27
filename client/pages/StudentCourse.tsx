@@ -137,7 +137,7 @@ export default function StudentCourse() {
           {loading && <p className="mt-6 flex items-center gap-2 text-slate-500"><Loader2 className="h-4 w-4 animate-spin" /> Loading course...</p>}
 
           {!loading && error && (
-            <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-8 text-center">
+            <div className="mt-6 rounded-xl border border-slate-200 bg-white p-6 text-center">
               <h1 className="text-lg font-semibold">{error}</h1>
               <Link to="/student-dashboard" className="mt-4 inline-block text-sm font-semibold text-primary hover:underline">Back to dashboard</Link>
             </div>
@@ -145,9 +145,9 @@ export default function StudentCourse() {
 
           {!loading && course && completion && (
             <>
-              <header className="mt-5 overflow-hidden rounded-2xl border border-violet-100 bg-white shadow-sm sm:flex">
+              <header className="mt-5 overflow-hidden rounded-xl border border-violet-100 bg-white shadow-sm sm:flex">
                 {image && <img src={image} alt="" className="h-40 w-full object-cover sm:h-auto sm:w-60" />}
-                <div className="flex-1 p-6">
+                <div className="flex-1 p-5">
                   <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                     {[course.category, course.level, course.duration].filter(Boolean).join(" · ")}
                   </p>
@@ -190,14 +190,14 @@ export default function StudentCourse() {
               <div className="mt-6">
                 {tab === "learn" && (
                   lessons.length === 0 ? (
-                    <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+                    <div className="rounded-xl border border-slate-200 bg-white p-6 text-center">
                       <PlayCircle className="mx-auto h-8 w-8 text-slate-400" />
                       <h2 className="mt-3 text-lg font-semibold">Lessons are not published yet</h2>
                       <p className="mt-1 text-sm text-slate-500">Your trainer will publish the learning content here. Check the About tab for the course outline.</p>
                     </div>
                   ) : (
                     <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
-                      <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-3 lg:sticky lg:top-28">
+                      <aside className="h-fit rounded-xl border border-slate-200 bg-white p-3 lg:sticky lg:top-28">
                         {course.curriculum.map((module, mi) => (
                           <div key={module.id} className="mb-2">
                             <p className="px-2 pb-1 pt-2 text-xs font-bold uppercase tracking-wide text-slate-400">
@@ -223,7 +223,7 @@ export default function StudentCourse() {
                       </aside>
 
                       {current && (
-                        <article className="min-w-0 space-y-5 rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
+                        <article className="min-w-0 space-y-5 rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
                           <div>
                             <p className="text-xs font-semibold uppercase tracking-wide text-violet-500">
                               Lesson {currentIndex + 1} of {lessons.length}{!current.required && " · Optional"}
@@ -313,7 +313,7 @@ function AssignmentsPanel({ courseId, onAuthError, onChange }: {
   if (!items) return <p className="flex items-center gap-2 text-slate-500"><Loader2 className="h-4 w-4 animate-spin" /> Loading assignments...</p>;
   if (!items.length) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+      <div className="rounded-xl border border-slate-200 bg-white p-6 text-center">
         <ClipboardList className="mx-auto h-8 w-8 text-slate-400" />
         <h2 className="mt-3 text-lg font-semibold">No assignments yet</h2>
         <p className="mt-1 text-sm text-slate-500">Assignments for this course will appear here.</p>
@@ -376,7 +376,7 @@ function AssignmentCard({ courseId, assignment: a, onSaved, onAuthError }: {
   };
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+    <article className="rounded-xl border border-slate-200 bg-white p-5 sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 className="text-lg font-bold text-slate-900">
@@ -488,7 +488,7 @@ function CertificatePanel({ courseId, initial, completion, onAuthError }: {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
-      <section className="rounded-2xl border border-slate-200 bg-white p-6">
+      <section className="rounded-xl border border-slate-200 bg-white p-5">
         <h2 className="text-lg font-bold text-slate-900">Completion requirements</h2>
         {status.requirements.length === 0 ? (
           <p className="mt-3 text-sm text-slate-500">Completion requirements for this course have not been set up yet.</p>
@@ -509,7 +509,7 @@ function CertificatePanel({ courseId, initial, completion, onAuthError }: {
         )}
       </section>
 
-      <section className="rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-600 to-fuchsia-600 p-6 text-white shadow-lg">
+      <section className="rounded-xl border border-violet-100 bg-gradient-to-br from-violet-600 to-fuchsia-600 p-5 text-white shadow-lg">
         <Award className="h-9 w-9" />
         <h2 className="mt-3 text-xl font-bold">Certificate</h2>
         {cert?.status === "issued" ? (
@@ -544,7 +544,7 @@ function AboutPanel({ course }: { course: AssignedCourseDetails }) {
   const outline = course.modules?.length ? course.modules : catalogue?.modules;
   const List = ({ title, items }: { title: string; items?: string[] }) =>
     items?.length ? (
-      <section className="rounded-2xl border border-slate-200 bg-white p-6">
+      <section className="rounded-xl border border-slate-200 bg-white p-5">
         <h2 className="text-lg font-bold text-slate-900">{title}</h2>
         <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-slate-700">{items.map((x, i) => <li key={i}>{x}</li>)}</ul>
       </section>
@@ -553,14 +553,14 @@ function AboutPanel({ course }: { course: AssignedCourseDetails }) {
   return (
     <div className="space-y-6">
       {course.description && (
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
+        <section className="rounded-xl border border-slate-200 bg-white p-5">
           <h2 className="text-lg font-bold text-slate-900">About this course</h2>
           <p className="mt-2 text-sm leading-relaxed text-slate-600">{course.description}</p>
         </section>
       )}
 
       {course.batches.length > 0 && (
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
+        <section className="rounded-xl border border-slate-200 bg-white p-5">
           <h2 className="text-lg font-bold text-slate-900">My Batch</h2>
           <div className="mt-3 grid gap-4 md:grid-cols-2">
             {course.batches.map((batch) => (
@@ -584,7 +584,7 @@ function AboutPanel({ course }: { course: AssignedCourseDetails }) {
       )}
 
       {outline?.length ? (
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
+        <section className="rounded-xl border border-slate-200 bg-white p-5">
           <h2 className="text-lg font-bold text-slate-900">Course outline</h2>
           <ol className="mt-3 space-y-3">
             {outline.map((m, i) => (

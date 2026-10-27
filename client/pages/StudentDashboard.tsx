@@ -77,7 +77,7 @@ export default function StudentDashboard() {
                   <p className="text-sm font-semibold uppercase tracking-widest text-primary">
                     Student Dashboard
                   </p>
-                  <h1 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
+                  <h1 className="mt-1 text-2xl font-bold text-slate-900 sm:text-2xl">
                     Welcome, {student.name}
                   </h1>
                   <p className="mt-1 text-sm text-slate-600">
@@ -99,7 +99,7 @@ export default function StudentDashboard() {
                 </h2>
 
                 {courses.length === 0 ? (
-                  <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+                  <div className="rounded-xl border border-slate-200 bg-white p-6 text-center">
                     <BookOpen className="mx-auto h-8 w-8 text-slate-400" />
                     <h3 className="mt-3 text-lg font-semibold">No courses assigned yet</h3>
                     <p className="mt-1 text-sm text-slate-500">
@@ -122,7 +122,7 @@ export default function StudentDashboard() {
                         <Link
                           key={course.id}
                           to={`/student-dashboard/courses/${encodeURIComponent(course.id)}`}
-                          className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                          className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                         >
                           <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-violet-100 to-fuchsia-100">
                             {image ? (
