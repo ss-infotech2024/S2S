@@ -8,6 +8,8 @@ import Dashboard from "./Dashboard";
 import Enquiries from "./Enquiries";
 import WebsiteContent from "./WebsiteContent";
 import StudentAccounts from "./StudentAccounts";
+import Assignments from "./Assignments";
+import Certificates from "./Certificates";
 
 const ID = import.meta.env.VITE_ADMIN_ID ?? "admin@123";
 const PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD ?? "admin@123";
@@ -109,6 +111,8 @@ export default function App() {
             <Route path="/enquiries" element={<Enquiries />} />
             <Route path="/website-content" element={<WebsiteContent />} />
             <Route path="/student-accounts" element={<StudentAccounts />} />
+            <Route path="/assignments" element={<Assignments />} />
+            <Route path="/certificates" element={<Certificates />} />
             <Route path="/:name" element={<ResourcePage />} />
           </Routes>
         </main>

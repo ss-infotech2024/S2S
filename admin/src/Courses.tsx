@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { listRows, saveRow, deleteRow, download, usageOf, describeUsage, cascadeRename, uniqueClash, Row } from "./store";
 import { resources } from "./resources";
 import { Form } from "./ResourcePage";
+import CourseContent from "./CourseContent";
 
 const cfg = resources.courses;
 const initials = (t: string) => t.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]?.toUpperCase()).join("") || "?";
@@ -18,8 +19,9 @@ export default function Courses() {
   const [cat, setCat] = useState("");
   const [tab, setTab] = useState<"all" | "live" | "draft">("all");
   const [editing, setEditing] = useState<Row | null>(null);
+  const [content, setContent] = useState<Row | null>(null);
   const [toast, setToast] = useState("");
-  const say = (m: string) => { setToast(m); setTimeout(() => setToast(""), 2500); };
+  const say = (m: string) => { setToast(m); setTimeout(() => setToast(""), m.length > 60 ? 6000 : 2500); };
 
   const load = async () => {
     const [c, o, k, s] = await Promise.all(["courses", "online_training", "classroom_training", "enrollments"].map(listRows));
@@ -63,7 +65,7 @@ export default function Courses() {
     try { used = describeUsage(await usageOf("courses", r)); } catch { /* warn only if we can tell */ }
     const warn = used ? `\n\nStill used by: ${used}. They will keep the course name but it will no longer exist. Unpublishing is safer.` : "";
     if (!confirm(`Delete course "${r.title}"? This can't be undone.${warn}`)) return;
-    try { await deleteRow("courses", r.id); } catch { return say("Could not delete."); }
+    try { await deleteRow("courses", r.id); } catch (e) { return say(e instanceof Error && e.message ? e.message : "Could not delete."); }
     say("Course deleted"); load();
   };
   const exportCsv = () => {
@@ -127,6 +129,7 @@ export default function Courses() {
               </div>
               <div className="cm-act">
                 <button onClick={() => setEditing(r)}>Edit</button>
+                <button onClick={() => setContent(r)} title="Modules, lessons, resources and certificate rules">Content ({(r.curriculum ?? []).reduce((n: number, m: Row) => n + (m.lessons?.length ?? 0), 0)})</button>
                 <button className="danger" onClick={() => remove(r)}>Delete</button>
               </div>
             </article>
@@ -138,6 +141,7 @@ export default function Courses() {
         <p className="empty">{rows.length ? "No courses match your filters." : "No courses yet. Select “Add course” to create one."}</p>
       )}
       {editing && <Form cfg={cfg} row={editing} onSave={save} onClose={() => setEditing(null)} />}
+      {content && <CourseContent course={content} onClose={() => setContent(null)} onSaved={(m) => { say(m); setContent(null); load(); }} />}
       {toast && <div className="toast" role="status">{toast}</div>}
     </>
   );

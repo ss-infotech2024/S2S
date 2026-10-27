@@ -143,8 +143,19 @@ export default function StudentDashboard() {
                             {summary && (
                               <p className="mt-2 line-clamp-3 text-sm text-slate-600">{summary}</p>
                             )}
+                            {course.totalLessons ? (
+                              <div className="mt-4">
+                                <div className="mb-1 flex justify-between text-xs text-slate-500">
+                                  <span>{course.progress ? "In progress" : "Not started"}</span>
+                                  <span className="font-semibold text-primary">{course.progress ?? 0}%</span>
+                                </div>
+                                <div className="h-1.5 overflow-hidden rounded-full bg-violet-100">
+                                  <div className="h-full rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500" style={{ width: `${course.progress ?? 0}%` }} />
+                                </div>
+                              </div>
+                            ) : null}
                             <span className="mt-4 inline-block text-sm font-semibold text-primary">
-                              Open course →
+                              {course.progress ? "Continue learning →" : "Open course →"}
                             </span>
                           </div>
                         </Link>

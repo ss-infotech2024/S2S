@@ -104,10 +104,10 @@ export default function Dashboard() {
   const done = batches.length - upcoming - ongoing;
 
   const leads = ([
-    ...rows("enquiries").map((r) => ({ ...r, _kind: "Contact", _to: "/enquiries", _who: r.name, _what: r.message })),
+    ...rows("enquiries").map((r) => ({ ...r, created_at: r.created_at ?? r.createdAt, _kind: "Contact", _to: "/enquiries", _who: r.name, _what: r.message ?? r.enquiryFor })),
     ...rows("corp_enquiries").map((r) => ({ ...r, _kind: "Corporate", _to: "/corporate-training", _who: r.company, _what: r.message || r.program })),
     ...rows("overseas_enquiries").map((r) => ({ ...r, _kind: "Overseas", _to: "/overseas", _who: r.name, _what: r.message || [r.interest, r.country].filter(Boolean).join(" · ") })),
-  ] as Row[]).sort((a, b) => b.created_at.localeCompare(a.created_at));
+  ] as Row[]).sort((a, b) => String(b.created_at ?? b.createdAt ?? "").localeCompare(String(a.created_at ?? a.createdAt ?? "")));
   const newLeads = leads.filter((r) => r.status === "new");
   const students = rows("enrollments");
   const recentStudents = students.slice(0, 6);

@@ -28,3 +28,6 @@ dist-ssr
 
 # Backend secrets (Mongo URI, admin token, SMTP)
 backend/.env
+
+# Uploaded lesson resources and assignment files
+backend/uploads/

@@ -17,7 +17,7 @@ const SECTIONS: Sec[] = [
   { k: "blog", label: "Blog", table: "posts", to: "/blog", sub: "Tips, guides and career advice." },
 ];
 const isLive = (r: Row, s: Sec) => (s.live ? s.live(r) : !!r.published);
-const sorted = (rows: Row[]) => [...rows].sort((a, b) => (Number(a.position) || 999) - (Number(b.position) || 999) || a.created_at.localeCompare(b.created_at));
+const sorted = (rows: Row[]) => [...rows].sort((a, b) => (Number(a.position) || 999) - (Number(b.position) || 999) || String(a.created_at ?? "").localeCompare(String(b.created_at ?? "")));
 
 export default function WebsiteContent() {
   const [tab, setTab] = useState<"banners" | "hero" | "sections">("banners");

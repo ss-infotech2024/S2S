@@ -26,6 +26,8 @@ export const nav: { to: string; label: string; keys?: string[] }[] = [
   { to: "blog", label: "Blog", keys: ["posts"] },
   { to: "students", label: "Students / Users", keys: ["students"] },
   { to: "student-accounts", label: "Student Accounts" },
+  { to: "assignments", label: "Assignments" },
+  { to: "certificates", label: "Certificates" },
   { to: "enquiries", label: "Contact Enquiries", keys: ["enquiries"] },
   { to: "settings", label: "Settings" },
 ];
@@ -407,6 +409,7 @@ export const resources: Record<string, Resource> = {
       { key: "name", label: "Name", list: true, required: true },
       { key: "phone", label: "Phone", type: "phone", list: true, required: true },
       { key: "email", label: "Email", type: "email" },
+      { key: "college", label: "College" },
       { key: "city", label: "City" },
       { ...course, required: false },
       { key: "batch_name", label: "Enrolled batch", list: true, readonly: true, hint: "Assign students from Online / Classroom Training → Students." },

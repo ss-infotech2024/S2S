@@ -7,6 +7,10 @@ import crypto from "node:crypto";
 import { MongoClient } from "mongodb";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
+import {
+  createLms, LMS_TABLES, UPLOAD_MAX_BYTES,
+  normalizeCurriculum, normalizeCompletion, publishedCurriculum
+} from "./lms.js";
 
 const SESSION_COOKIE = "s2s_student_session";
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
@@ -98,8 +102,13 @@ const TABLES = [
   "overseas_courses", "overseas_countries", "overseas_languages",
   "placement_companies", "placement_stats", "jobs", "testimonials",
   "enrollments", "enquiries", "corp_enquiries", "overseas_enquiries",
-  "banners", "site_content"
+  "banners", "site_content",
+  ...LMS_TABLES
 ];
+
+// LMS records that only change through their dedicated, validated endpoints.
+const NO_GENERIC_WRITE = new Set(["assignment_submissions", "lesson_progress", "certificates", "files"]);
+const NO_GENERIC_DELETE = new Set(["lesson_progress", "files"]);
 
 const PUBLIC_WRITE = new Set([
   "enrollments", "enquiries", "corp_enquiries",
@@ -148,7 +157,7 @@ const readBody = req => new Promise((resolve, reject) => {
   let raw = "";
   req.on("data", chunk => {
     raw += chunk;
-    if (raw.length > 8e6) {
+    if (raw.length > Math.max(8e6, UPLOAD_MAX_BYTES * 1.4 + 1e5)) {
       reject(new Error("too large"));
       req.destroy();
     }
@@ -186,6 +195,11 @@ const clean = doc => {
 };
 
 const publicView = (admin, table, row) => {
+  if (!admin && table === "courses") {
+    // Lesson content is only served to assigned students through /api/student/courses.
+    const { curriculum, completion, ...rest } = row;
+    return rest;
+  }
   if (admin || !BATCH_TABLES.has(table)) return row;
   const copy = { ...row };
   for (const field of PRIVATE_BATCH_FIELDS) delete copy[field];
@@ -271,6 +285,92 @@ async function sendPasswordSetupEmail(email, studentId, token) {
   });
 }
 
+const HR_EMAIL = process.env.HR_NOTIFICATION_EMAIL || "hr@ssinfotech.co.in";
+const EMAIL_TIMEOUT_MS = 15000;
+
+const escapeHtml = value =>
+  String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[ch]);
+
+// Trim, drop control characters and collapse runs of whitespace.
+const tidy = value =>
+  typeof value === "string"
+    ? value.replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim()
+    : "";
+
+function validateEnrollment(body) {
+  const fields = {};
+  const name = tidy(body.name);
+  const email = tidy(body.email).toLowerCase();
+  const rawPhone = tidy(body.phone).replace(/[\s()-]/g, "");
+  const college = tidy(body.college);
+  const courseId = tidy(body.courseId);
+
+  if (name.length < 2 || name.length > 100 || !/^[\p{L}][\p{L} .'-]*$/u.test(name)) {
+    fields.name = "Enter your full name (letters only).";
+  }
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    fields.email = "Enter a valid email address.";
+  }
+  const phoneMatch = rawPhone.match(/^(?:\+?91|0)?([6-9]\d{9})$/);
+  if (!phoneMatch) {
+    fields.phone = "Enter a valid 10-digit Indian mobile number.";
+  }
+  if (college.length < 2 || college.length > 150) {
+    fields.college = "Enter your college name.";
+  }
+  if (!courseId || courseId.length > 100) {
+    fields.courseId = "Choose a course to enroll in.";
+  }
+
+  return {
+    fields,
+    value: { name, email, phone: phoneMatch?.[1] ?? "", college, courseId }
+  };
+}
+
+const withTimeout = (promise, ms) =>
+  Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error("email timed out")), ms))
+  ]);
+
+async function sendHrEnrollmentEmail(enrollment) {
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER) {
+    throw new Error("SMTP configuration is missing");
+  }
+
+  const when = new Date(enrollment.created_at).toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+  const rows = [
+    ["Student Name", enrollment.name],
+    ["Student Email", enrollment.email],
+    ["Phone Number", enrollment.phone],
+    ["College Name", enrollment.college],
+    ["Course Name", enrollment.course],
+    ["Enrollment Date & Time", `${when} IST`],
+    ["Enrollment ID", enrollment.enrollment_id]
+  ];
+
+  await withTimeout(
+    mailer.sendMail({
+      from: process.env.SMTP_USER,
+      to: HR_EMAIL,
+      replyTo: enrollment.email,
+      subject: `New enrollment: ${enrollment.course} — ${enrollment.name}`,
+      text: rows.map(([label, value]) => `${label}: ${value}`).join("\n"),
+      html: `<h2>New course enrollment</h2><table cellpadding="6">${rows
+        .map(([label, value]) => `<tr><th align="left">${escapeHtml(label)}</th><td>${escapeHtml(value)}</td></tr>`)
+        .join("")}</table>`
+    }),
+    EMAIL_TIMEOUT_MS
+  );
+}
+
 async function start() {
   if (!URI) throw new Error("MONGODB_URI is missing in .env");
   if (!TOKEN || TOKEN === "change-me") {
@@ -287,6 +387,37 @@ async function start() {
   const collections = Object.fromEntries(
     TABLES.map(table => [table, database.collection(table)])
   );
+
+  // Lets a retried website enrollment find the record it already created.
+  await collections.enrollments.createIndex(
+    { submission_id: 1 },
+    { unique: true, partialFilterExpression: { submission_id: { $type: "string" } } }
+  );
+
+  // Sends the HR email for a saved enrollment and records the outcome on the enrollment.
+  async function notifyHr(enrollment) {
+    const attempts = (enrollment.hr_notification?.attempts ?? 0) + 1;
+    let result;
+
+    try {
+      await sendHrEnrollmentEmail(enrollment);
+      result = { status: "sent", attempts, sent_at: new Date().toISOString() };
+    } catch (error) {
+      console.error("HR enrollment email failed:", error.message);
+      result = {
+        status: "failed",
+        attempts,
+        last_error: String(error.message).slice(0, 200),
+        last_attempt_at: new Date().toISOString()
+      };
+    }
+
+    await collections.enrollments.updateOne(
+      { id: enrollment.id },
+      { $set: { hr_notification: result } }
+    );
+    return result.status === "sent";
+  }
 
   // Resolve the logged-in student from the HttpOnly session cookie only — never from request data.
   async function getSessionStudent(req, res) {
@@ -323,6 +454,11 @@ async function start() {
     return { student };
   }
 
+  const lms = createLms({
+    collections, send, readBody, isObject, isAdmin, getSessionStudent, assignedCourseIds
+  });
+  await lms.setup();
+
   // Seed each collection only when it is empty.
   const seed = JSON.parse(fs.readFileSync(SEED, "utf8"));
   for (const table of TABLES) {
@@ -336,6 +472,44 @@ async function start() {
       }));
       if (rows.length) await collection.insertMany(rows);
     }
+  }
+
+  // Shape-checks course content and assignments written through the generic admin routes.
+  async function prepareLmsRow(table, row) {
+    if (table === "courses") {
+      if ("curriculum" in row) row.curriculum = normalizeCurriculum(row.curriculum);
+      if ("completion" in row) row.completion = normalizeCompletion(row.completion);
+    }
+    if (table === "assignments") {
+      row.title = tidy(row.title).slice(0, 200);
+      if (!row.title) return "Assignment title is required";
+      if (!(await collections.courses.findOne({ id: row.course_id }))) return "Choose a valid course";
+      row.instructions = typeof row.instructions === "string" ? row.instructions.slice(0, 20000) : "";
+      row.max_marks = Math.max(0, Number(row.max_marks) || 0);
+      row.pass_marks = Math.min(row.max_marks, Math.max(0, Number(row.pass_marks) || 0));
+      row.due_date = /^\d{4}-\d{2}-\d{2}/.test(String(row.due_date ?? "")) ? String(row.due_date).slice(0, 10) : "";
+      for (const key of ["required", "is_final", "allow_file"]) row[key] = row[key] === true;
+      row.allow_text = row.allow_text !== false;
+      row.active = row.active !== false;
+      if (!row.allow_text && !row.allow_file) return "Allow a text answer, a file, or both";
+    }
+    return "";
+  }
+
+  // Returns a reason when deleting would break student data, otherwise "".
+  async function deleteBlocker(table, id) {
+    if (table === "courses") {
+      const assigned = await collections.students.countDocuments({ assignedCourseIds: id });
+      if (assigned) return `This course is assigned to ${assigned} student(s). Unpublish it, or remove it from their accounts in Student Accounts first.`;
+      const certs = await collections.certificates.countDocuments({ course_id: id });
+      if (certs) return "Certificates have been issued for this course, so it cannot be deleted. Unpublish it instead.";
+      await collections.assignments.deleteMany({ course_id: id });
+    }
+    if (table === "assignments") {
+      const subs = await collections.assignment_submissions.countDocuments({ assignment_id: id });
+      if (subs) return `This assignment has ${subs} submission(s). Deactivate it instead of deleting.`;
+    }
+    return "";
   }
 
   const server = http.createServer(async (req, res) => {
@@ -367,6 +541,16 @@ async function start() {
     if (req.method === "OPTIONS") {
       res.writeHead(204);
       return res.end();
+    }
+
+    try {
+      if (await lms.handle(req, res, parts)) return;
+    } catch (error) {
+      console.error("LMS API error:", error);
+      if (res.headersSent) return res.end();
+      return send(res, error.message === "too large" ? 413 : 500, {
+        error: error.message === "too large" ? "request too large" : "server error"
+      });
     }
 
 
@@ -420,6 +604,17 @@ async function start() {
             existingStudent.status === "pending_setup"
           ) {
             student = existingStudent;
+          } else if (existingStudent.email === email && existingStudent.status === "active") {
+            // The applicant already has a working login (e.g. self-registered): link it, no setup email needed.
+            await collections.enrollments.updateOne(
+              { id },
+              { $set: { status: "confirmed", studentId: existingStudent.studentId, approved_at: new Date().toISOString() } }
+            );
+            return send(res, 200, {
+              message: "Enrollment approved and linked to the student's existing account",
+              studentId: existingStudent.studentId,
+              linked: true
+            });
           } else {
             return send(res, 409, {
               error: "A student account already exists for this enrollment or email"
@@ -807,12 +1002,13 @@ return send(
           // Keep the order in which the admin assigned the courses.
           const byId = new Map(courses.map(course => [course.id, course]));
 
-          return send(res, 200, {
-            courses: courseIds
-              .map(value => byId.get(value))
-              .filter(Boolean)
-              .map(courseCard)
-          });
+          const cards = [];
+          for (const course of courseIds.map(value => byId.get(value)).filter(Boolean)) {
+            const status = await lms.completionStatus(course, student.studentId);
+            cards.push({ ...courseCard(course), progress: status.progress, totalLessons: status.totalLessons });
+          }
+
+          return send(res, 200, { courses: cards });
         }
 
         // Authorise against the session's assignments before loading anything.
@@ -859,9 +1055,21 @@ return send(
           }
         }
 
-        const { _id, published, ...details } = course;
+        const { _id, published, curriculum, completion, ...details } = course;
+        const status = await lms.completionStatus(course, student.studentId);
+        const certificate = await collections.certificates.findOne({ studentId: student.studentId, course_id: course.id });
 
-        return send(res, 200, { course: { ...details, batches } });
+        return send(res, 200, {
+          course: {
+            ...details,
+            batches,
+            curriculum: publishedCurriculum(course),
+            completion: status,
+            certificate: certificate
+              ? { certificate_id: certificate.certificate_id, status: certificate.status, issued_at: certificate.issued_at ?? null }
+              : null
+          }
+        });
       } catch (error) {
         console.error("Student courses lookup failed:", error);
         return send(res, 500, { error: "Unable to load your courses right now" });
@@ -1042,6 +1250,216 @@ return send(
         return send(res, 500, {
           error: "Could not set password. Please try again."
         });
+      }
+    }
+
+    // Website enrollment form (admins creating enrollments still use the generic route below)
+    if (
+      parts[1] === "api" &&
+      parts[2] === "enrollments" &&
+      parts.length === 3 &&
+      req.method === "POST" &&
+      !isAdmin(req)
+    ) {
+      try {
+        const body = await readBody(req);
+
+        if (!isObject(body)) {
+          return send(res, 400, { error: "Invalid enrollment details" });
+        }
+
+        const { fields, value } = validateEnrollment(body);
+
+        if (Object.keys(fields).length) {
+          return send(res, 400, { error: "Please correct the highlighted fields.", fields });
+        }
+
+        const submissionId =
+          typeof body.submissionId === "string" && /^[A-Za-z0-9-]{16,64}$/.test(body.submissionId)
+            ? body.submissionId
+            : null;
+
+        const course = await collections.courses.findOne({
+          $or: [{ id: value.courseId }, { slug: value.courseId }],
+          published: { $ne: false }
+        });
+
+        if (!course) {
+          return send(res, 400, {
+            error: "This course is not open for enrollment.",
+            fields: { courseId: "This course is not open for enrollment." }
+          });
+        }
+
+        const respond = (code, enrollment, trackingToken, hrNotified) =>
+          send(res, code, {
+            message: "Enrollment submitted successfully",
+            id: enrollment.id,
+            enrollment_id: enrollment.enrollment_id,
+            course: enrollment.course,
+            status: enrollment.status,
+            created_at: enrollment.created_at,
+            trackingToken,
+            hrNotified
+          });
+
+        // A retry of the same form submission returns the saved record instead of creating another.
+        const replay = async () => {
+          const existing = submissionId
+            ? await collections.enrollments.findOne({ submission_id: submissionId })
+            : null;
+          if (!existing) return null;
+
+          // Only the original response carried the tracking token, so issue a fresh one.
+          const trackingToken = crypto.randomBytes(32).toString("hex");
+          await collections.enrollments.updateOne(
+            { id: existing.id },
+            { $set: { trackingTokenHash: crypto.createHash("sha256").update(trackingToken).digest("hex") } }
+          );
+          // Retry a failed HR email once; a request already sending it is left alone.
+          let hrNotified = existing.hr_notification?.status === "sent";
+          if (existing.hr_notification?.status === "failed") {
+            const claim = await collections.enrollments.updateOne(
+              { id: existing.id, "hr_notification.status": "failed" },
+              { $set: { "hr_notification.status": "sending" } }
+            );
+            if (claim.modifiedCount === 1) hrNotified = await notifyHr(existing);
+          }
+          return respond(200, existing, trackingToken, hrNotified);
+        };
+
+        const replayed = await replay();
+        if (replayed) return replayed;
+
+        const trackingToken = crypto.randomBytes(32).toString("hex");
+        const enrollment = {
+          id: crypto.randomUUID(),
+          enrollment_id: `SS-${crypto.randomInt(100000, 1000000)}`,
+          name: value.name,
+          email: value.email,
+          phone: value.phone,
+          college: value.college,
+          course: course.title,
+          course_id: course.id,
+          course_slug: course.slug ?? "",
+          status: "pending",
+          source: "website",
+          trackingTokenHash: crypto.createHash("sha256").update(trackingToken).digest("hex"),
+          ...(submissionId ? { submission_id: submissionId } : {}),
+          hr_notification: { status: "sending", attempts: 0 },
+          created_at: new Date().toISOString()
+        };
+
+        try {
+          await collections.enrollments.insertOne(enrollment);
+        } catch (error) {
+          // Two identical submissions raced; the other one was saved.
+          if (error?.code === 11000) {
+            const raced = await replay();
+            if (raced) return raced;
+          }
+          throw error;
+        }
+
+        const hrNotified = await notifyHr(enrollment);
+        return respond(201, enrollment, trackingToken, hrNotified);
+      } catch (error) {
+        console.error("Website enrollment failed:", error);
+        if (error.message === "too large" || error.message === "invalid JSON") {
+          return send(res, 400, { error: "Invalid enrollment details" });
+        }
+        return send(res, 500, { error: "We could not save your enrollment. Please try again." });
+      }
+    }
+
+    // Admin: record payment verification and give the enrolled student access to the course
+    if (
+      parts[1] === "api" &&
+      parts[2] === "enrollments" &&
+      parts[4] === "grant-access" &&
+      parts.length === 5 &&
+      req.method === "POST"
+    ) {
+      if (!isAdmin(req)) {
+        return send(res, 401, { error: "unauthorized" });
+      }
+
+      try {
+        const body = await readBody(req).catch(() => ({}));
+        const enrollment = await collections.enrollments.findOne({ id });
+
+        if (!enrollment) {
+          return send(res, 404, { error: "Enrollment not found" });
+        }
+        if (!enrollment.studentId || !["confirmed", "joined"].includes(enrollment.status)) {
+          return send(res, 409, { error: "Approve the enrollment first so the student has an account." });
+        }
+
+        const course = enrollment.course_id
+          ? await collections.courses.findOne({ id: enrollment.course_id })
+          : await collections.courses.findOne({ title: enrollment.course });
+
+        if (!course) {
+          return send(res, 409, { error: "The enrolled course no longer exists. Assign a course from Student Accounts instead." });
+        }
+
+        const student = await collections.students.findOne({ studentId: enrollment.studentId });
+        if (!student) {
+          return send(res, 404, { error: "Student account not found" });
+        }
+
+        const now = new Date().toISOString();
+        await collections.students.updateOne(
+          { id: student.id },
+          { $addToSet: { assignedCourseIds: course.id }, $set: { courses_updated_at: now } }
+        );
+        await collections.enrollments.updateOne(
+          { id },
+          {
+            $set: {
+              payment_status: "verified",
+              payment_reference: isObject(body) ? tidy(body.payment_reference).slice(0, 100) : "",
+              payment_verified_at: now,
+              course_id: course.id
+            }
+          }
+        );
+
+        return send(res, 200, {
+          message: `Payment verified. ${student.name || student.email} can now open ${course.title}.`,
+          studentId: student.studentId,
+          courseId: course.id
+        });
+      } catch (error) {
+        console.error("Grant access failed:", error);
+        return send(res, 500, { error: "Could not grant course access" });
+      }
+    }
+
+    // Admin: retry the HR notification email for an enrollment
+    if (
+      parts[1] === "api" &&
+      parts[2] === "enrollments" &&
+      parts[4] === "notify-hr" &&
+      parts.length === 5 &&
+      req.method === "POST"
+    ) {
+      if (!isAdmin(req)) {
+        return send(res, 401, { error: "unauthorized" });
+      }
+
+      try {
+        const enrollment = await collections.enrollments.findOne({ id });
+        if (!enrollment) {
+          return send(res, 404, { error: "Enrollment not found" });
+        }
+        const sent = await notifyHr(enrollment);
+        return sent
+          ? send(res, 200, { message: `Notification sent to ${HR_EMAIL}` })
+          : send(res, 502, { error: "Email could not be sent. Check the SMTP settings." });
+      } catch (error) {
+        console.error("HR notification retry failed:", error);
+        return send(res, 500, { error: "Could not send the notification" });
       }
     }
 
@@ -1233,6 +1651,7 @@ if (
           return send(res, 401, { error: "unauthorized" });
         }
         if (id) return send(res, 405, { error: `POST goes to /api/${table}` });
+        if (NO_GENERIC_WRITE.has(table)) return send(res, 405, { error: "method not allowed" });
 
        
         const body = await readBody(req);
@@ -1273,6 +1692,9 @@ if (
           }
         }
 
+        const invalid = await prepareLmsRow(table, row);
+        if (invalid) return send(res, 400, { error: invalid });
+
         if (row.slug && await collection.findOne({ slug: row.slug })) {
           return send(res, 409, { error: `slug "${row.slug}" is already used` });
         }
@@ -1290,6 +1712,7 @@ if (
 
       if (req.method === "PUT" || req.method === "PATCH") {
         if (!id) return send(res, 400, { error: "id required" });
+        if (NO_GENERIC_WRITE.has(table)) return send(res, 405, { error: "method not allowed" });
 
         const existing = await collection.findOne({ id });
         if (!existing) return send(res, 404, { error: "not found" });
@@ -1306,6 +1729,9 @@ if (
           created_at: existing.created_at
         };
 
+        const invalid = await prepareLmsRow(table, next);
+        if (invalid) return send(res, 400, { error: invalid });
+
         if (next.slug && await collection.findOne({
           slug: next.slug,
           id: { $ne: id }
@@ -1319,6 +1745,10 @@ if (
 
       if (req.method === "DELETE") {
         if (!id) return send(res, 400, { error: "id required" });
+        if (NO_GENERIC_DELETE.has(table)) return send(res, 405, { error: "method not allowed" });
+
+        const blocked = await deleteBlocker(table, id);
+        if (blocked) return send(res, 409, { error: blocked });
 
         const result = await collection.deleteOne({ id });
         if (!result.deletedCount) {

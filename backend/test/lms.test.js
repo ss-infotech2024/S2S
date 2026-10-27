@@ -142,7 +142,7 @@ test("a student ID supplied by the client is ignored", async () => {
 test("meeting link is shown only to a student with an approved enrollment in that batch", async () => {
   // A public form submission cannot attach itself to an account or batch.
   const pub = await api("/api/enrollments", {
-    method: "POST", body: { name: "Mallory", email: "m@example.com", course: ctx.c1.title, studentId: ctx.b.studentId, batch_id: ctx.batch.id, status: "confirmed" },
+    method: "POST", body: { name: "Mallory", email: "m@example.com", phone: "9876543210", college: "Test College", courseId: ctx.c1.slug, studentId: ctx.b.studentId, batch_id: ctx.batch.id, status: "confirmed" },
   });
   assert.equal(pub.status, 201);
   assert.equal(pub.data.studentId, undefined);
@@ -185,7 +185,7 @@ test("login, me and logout keep working and logout ends the session", async () =
 });
 
 test("approval with a failed setup email rolls back and can be retried", async () => {
-  const { data: enrollment } = await api("/api/enrollments", { method: "POST", body: { name: "Dan", email: "dan-retry@example.com", course: ctx.c1.title } });
+  const { data: enrollment } = await api("/api/enrollments", { method: "POST", body: { name: "Dan", email: "dan-retry@example.com", phone: "9876543210", college: "Test College", courseId: ctx.c1.slug } });
   assert.equal((await api(`/api/enrollments/${enrollment.id}/approve`, { method: "POST", headers: admin })).status, 502);
   assert.equal(await db.collection("students").countDocuments({ email: "dan-retry@example.com" }), 0);
   assert.equal((await db.collection("enrollments").findOne({ id: enrollment.id })).status, "pending");

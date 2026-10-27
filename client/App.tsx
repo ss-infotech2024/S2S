@@ -27,6 +27,7 @@ import SetPassword from "./pages/SetPassword";
 import ProtectedStudentRoute from "./components/ProtectedStudentRoute";
 import StudentDashboard from "./pages/StudentDashboard";
 import StudentCourse from "./pages/StudentCourse";
+import VerifyCertificate from "./pages/VerifyCertificate";
 
 
 
@@ -63,6 +64,8 @@ const App = () => (
   <Route path="/login" element={<Auth />} />
   <Route path="/register" element={<Auth />} />
   <Route path="/set-password" element={<SetPassword />} />
+  <Route path="/verify-certificate" element={<VerifyCertificate />} />
+  <Route path="/verify-certificate/:certificateId" element={<VerifyCertificate />} />
   <Route path="/portal" element={<Navigate to="/student-dashboard" replace />} />
 
   {/* Student LMS: requires a valid student session (the API enforces access too) */}

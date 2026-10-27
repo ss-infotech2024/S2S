@@ -29,7 +29,7 @@ function read(table: string): Row[] {
 }
 
 async function localList(table: string): Promise<Row[]> {
-  return read(table).sort((a, b) => b.created_at.localeCompare(a.created_at));
+  return read(table).sort((a, b) => String(b.created_at ?? "").localeCompare(String(a.created_at ?? "")));
 }
 async function localSave(table: string, row: Row): Promise<void> {
   const rows = read(table);
@@ -105,6 +105,11 @@ export const approveEnrollment = async (enrollmentId: string) => {
 };
 
 
+export const retryHrNotification = async (enrollmentId: string) => {
+  if (!API) throw new Error("Backend API is not configured.");
+  return call(`enrollments/${encodeURIComponent(enrollmentId)}/notify-hr`, { method: "POST" });
+};
+
 export const resendStudentSetup = async (studentId: string) => {
   if (!API) throw new Error("Backend API is not configured.");
   return call(`students/${encodeURIComponent(studentId)}/resend-setup`, {
@@ -112,6 +117,53 @@ export const resendStudentSetup = async (studentId: string) => {
   });
 };
 
+
+/* ---------- LMS (backend only) ---------- */
+const needApi = () => { if (!API) throw new Error("Backend API is not configured."); };
+const readBase64 = (file: File) => new Promise<string>((ok, no) => {
+  const r = new FileReader();
+  r.onload = () => ok(String(r.result).replace(/^data:[^,]*,/, ""));
+  r.onerror = () => no(new Error("Could not read the file"));
+  r.readAsDataURL(file);
+});
+
+/** Uploads a lesson resource to the backend's file storage. */
+export const uploadLessonFile = async (file: File): Promise<{ id: string; name: string; size: number }> => {
+  needApi();
+  return call("admin/files", { method: "POST", body: JSON.stringify({ file: { name: file.name, data: await readBase64(file) } }) });
+};
+
+/** Opens an uploaded file (lesson resource or submission) — needs the admin token, so it is fetched as a blob. */
+export const openAdminFile = async (id: string, name = "file") => {
+  needApi();
+  const r = await fetch(`${API!.replace(/\/$/, "")}/api/admin/files/${encodeURIComponent(id)}`, {
+    headers: { "x-admin-token": (import.meta.env.VITE_ADMIN_TOKEN as string | undefined) ?? "" },
+  });
+  if (!r.ok) throw new Error(r.status === 404 ? "File not found" : `API ${r.status}`);
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(await r.blob());
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+};
+
+export const listSubmissions = async (q: { assignment_id?: string; course_id?: string }): Promise<Row[]> => {
+  needApi();
+  return call(`admin/submissions?${new URLSearchParams(q as Record<string, string>)}`);
+};
+export const evaluateSubmission = async (id: string, body: { marks: number; feedback: string; release: boolean }) => {
+  needApi();
+  return call(`assignment_submissions/${encodeURIComponent(id)}/evaluate`, { method: "POST", body: JSON.stringify(body) });
+};
+export const approveCertificate = async (id: string) => {
+  needApi();
+  return call(`certificates/${encodeURIComponent(id)}/approve`, { method: "POST" });
+};
+/** Records payment verification for an approved enrollment and opens the course for the student. */
+export const grantCourseAccess = async (enrollmentId: string, payment_reference: string) => {
+  needApi();
+  return call(`enrollments/${encodeURIComponent(enrollmentId)}/grant-access`, { method: "POST", body: JSON.stringify({ payment_reference }) });
+};
 
 // Student login accounts (the `students` collection) — separate from the enrollment leads in "Students / Users".
 export const listStudentAccounts = async (): Promise<Row[]> => {

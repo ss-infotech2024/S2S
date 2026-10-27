@@ -3,7 +3,7 @@ import type { Field, Resource } from "./resources";
 import { useEffect, useRef, useState, FormEvent } from "react";
 import { Navigate, useParams, useSearchParams } from "react-router-dom";
 
-import { listRows, saveRow, deleteRow, deleteMany, download, usageOf, describeUsage, cascadeRename, uniqueClash, approveEnrollment,resendStudentSetup, Row ,} from "./store";
+import { listRows, saveRow, deleteRow, deleteMany, download, usageOf, describeUsage, cascadeRename, uniqueClash, approveEnrollment, resendStudentSetup, retryHrNotification, grantCourseAccess, Row } from "./store";
 
 import Courses from "./Courses";
 import Batches from "./Batches";
@@ -146,6 +146,30 @@ const resendSetupLink = async (r: Row) => {
   }
 };
 
+  const grantAccess = async (r: Row) => {
+    const ref = prompt(`Confirm payment received from ${r.name || r.email} for "${r.course}".
+
+Payment reference (UPI / receipt no., optional):`, "");
+    if (ref === null) return;
+    try {
+      const result = await grantCourseAccess(r.id, ref);
+      say(result.message || "Course access granted.", 6000);
+      await load();
+    } catch (e) {
+      say(fail("Could not grant access", e), 6000);
+    }
+  };
+
+  const retryHr = async (r: Row) => {
+    try {
+      const result = await retryHrNotification(r.id);
+      say(result.message || "HR notification sent.", 6000);
+      await load();
+    } catch (e) {
+      say(fail("HR email failed", e), 6000);
+    }
+  };
+
   const duplicate = (r: Row) => {
     const copy: Row = { ...r };
     delete copy.id; delete copy.created_at; delete copy.batch_id; delete copy.batch_name;
@@ -287,6 +311,22 @@ const resendSetupLink = async (r: Row) => {
     Approve
   </button>
 }
+
+{cfg.table === "enrollments" &&
+  r.studentId &&
+  ["confirmed", "joined"].includes(r.status) &&
+  (r.payment_status === "verified"
+    ? <span className="tag on" title={r.payment_reference ? `Ref: ${r.payment_reference}` : undefined}>Paid · access granted</span>
+    : <button type="button" className="primary" onClick={() => grantAccess(r)} title="Record the payment and open the course in the student's dashboard">
+        Verify payment &amp; grant access
+      </button>)}
+
+{cfg.table === "enrollments" &&
+  r.hr_notification?.status === "failed" && (
+    <button type="button" onClick={() => retryHr(r)} title={r.hr_notification.last_error || "HR email was not sent"}>
+      Retry HR email
+    </button>
+  )}
 
 {cfg.table === "enrollments" &&
   r.studentId &&
